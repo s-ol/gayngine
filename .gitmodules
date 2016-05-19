@@ -1,0 +1,4 @@
+[submodule "lib/artal"]
+	path = lib/artal
+	url = git://github.com/unXedDani/Artal.git
+	branch = master
