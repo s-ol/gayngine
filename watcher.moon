@@ -1,7 +1,7 @@
 ffi = require "ffi"
 
+local kernel
 if love.system.getOS! == "Windows"
-  ffi.load "kernel32"
   ffi.cdef "
     typedef void            VOID;
     typedef char            CHAR;
@@ -19,12 +19,13 @@ if love.system.getOS! == "Windows"
       HANDLE hChangeHandle
     );
 
-    HANDLE FindFirstChangeNotification(
+    HANDLE FindFirstChangeNotificationA(
       LPCTSTR lpPathName,
       BOOL    bWatchSubtree,
       DWORD   dwNotifyFilter
     );
   "
+  kernel = ffi.load "kernel32"
 
 weakmt = __mode: 'v'
 class Watcher
@@ -33,7 +34,8 @@ class Watcher
 
     switch love.system.getOS!
       when "Windows"
-        @handle = ffi.C.FindFirstChangeNotification ".", true, 0x00000010
+        @handle = ffi.C.FindFirstChangeNotificationA ".", true, 0x00000010
+        --@handle = kern.FindFirstChangeNotification ".", true, 0x00000010
       when "Linux"
         inotify = require "inotify"
         @handle = inotify.init blocking: false
