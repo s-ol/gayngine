@@ -1,6 +1,5 @@
 ffi = require "ffi"
 
-local kernel
 if love.system.getOS! == "Windows"
   ffi.cdef "
     typedef void            VOID;
@@ -25,7 +24,6 @@ if love.system.getOS! == "Windows"
       DWORD   dwNotifyFilter
     );
   "
-  kernel = ffi.load "kernel32"
 
 weakmt = __mode: 'v'
 class Watcher
@@ -35,7 +33,6 @@ class Watcher
     switch love.system.getOS!
       when "Windows"
         @handle = ffi.C.FindFirstChangeNotificationA ".", true, 0x00000010
-        --@handle = kern.FindFirstChangeNotification ".", true, 0x00000010
       when "Linux"
         inotify = require "inotify"
         @handle = inotify.init blocking: false
@@ -59,6 +56,7 @@ class Watcher
     if changes
       for name, objs in pairs @files
         modified = love.filesystem.getLastModified name
+        print name
         if objs.modified < modified
           print "old #{objs.modified}, new #{modified}"
           objs.modified = modified
