@@ -2,6 +2,7 @@ function love.conf(t)
   t.identity = "gayngine"
   t.version = "0.10.1"
   t.gammacorrect = true
+  t.console = true
 
   t.window.title = "gayngine"
   t.window.width = 320 * 4

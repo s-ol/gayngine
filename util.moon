@@ -13,7 +13,8 @@ class Mixin
     @module = info.source\match "@%./(.*)%.moon"
     @module = @module\gsub "/", "."
 
-    WATCHER\register file, @
+    if WATCHER
+      WATCHER\register file, @
 
   reload: (filename) =>
     print "reloading #{@module}..."

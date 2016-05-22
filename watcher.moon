@@ -3,9 +3,10 @@ ffi = require "ffi"
 if love.system.getOS! == "Windows"
   ffi.cdef "
     typedef void            VOID;
+    typedef char            CHAR;
     typedef unsigned long   DWORD;
     typedef int             BOOL;
-    typedef const CHAR      *LPCSTR, *PCSTR;
+    typedef const CHAR      *LPCTSTR;
     typedef VOID            *HANDLE;
 
     DWORD WaitForSingleObject(

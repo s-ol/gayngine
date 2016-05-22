@@ -15,16 +15,13 @@ class PSDScene
     return module[name] if _ and module[name]
 
     _, mixin = pcall require, "game.common.#{name}"
-    if _
-      return mixin if mixin
-    else
-      LOG_ERROR mixin
+    return mixin if not _ and mixin
 
     _, module = pcall require, "game.common"
     return module[name] if _ and module[name]
 
     LOG_ERROR "couldn't find mixin '#{name}' for scene '#{@scene}'"
-    ->
+    nil
 
   reload: (filename) =>
     filename = "assets/#{@scene}.psd" unless filename
