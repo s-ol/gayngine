@@ -15,7 +15,7 @@ class PSDScene
     return module[name] if _ and module[name]
 
     _, mixin = pcall require, "game.common.#{name}"
-    return mixin if not _ and mixin
+    return mixin if _ and mixin
 
     _, module = pcall require, "game.common"
     return module[name] if _ and module[name]
@@ -62,8 +62,11 @@ class PSDScene
           name = table.remove params, 1
 
           mixin = @load name
-          LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
-          mixin layer, unpack params
+          if mixin
+            LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
+            mixin layer, unpack params
+          else
+            LOG_ERROR "couln't find mixin for '#{@scene}/#{name}'", indent
         else
           LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'", indent
 

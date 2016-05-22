@@ -1,6 +1,7 @@
 ffi = require "ffi"
 
 if love.system.getOS! == "Windows"
+  ffi.load "kernel32"
   ffi.cdef "
     typedef void            VOID;
     typedef char            CHAR;
