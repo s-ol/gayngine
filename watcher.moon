@@ -35,7 +35,7 @@ class Watcher
       when "Linux"
         inotify = require "inotify"
         @handle = inotify.init blocking: false
-        @handle\addwatch "assets", inotify.IN_MODIFY, inotify.IN_ACCESS
+        @handle\addwatch ".", inotify.IN_MODIFY, inotify.IN_ACCESS
 
   register: (filename, obj) =>
     if @files[filename]
@@ -56,6 +56,7 @@ class Watcher
       for name, objs in pairs @files
         modified = love.filesystem.getLastModified name
         if objs.modified < modified
+          print "old #{objs.modified}, new #{modified}"
           objs.modified = modified
           for _, obj in pairs objs
             if "number" == type _

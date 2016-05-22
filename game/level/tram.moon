@@ -1,16 +1,14 @@
 import wrapping_, Mixin from  require "util"
 
 wrapping_ class SubAnim extends Mixin
+  SPEED = 120
   new: (@frametime=0.1) =>
     super!
 
-    @time = 0
-    @frame = 1
+    @pos = 0
 
   update: (dt) =>
-    @time += dt
-
-    @frame = 1 + (math.floor(@time/@frametime) % #@)
+    @pos = (@pos + SPEED*dt) % WIDTH
 
   draw: (recursive_draw) =>
-    recursive_draw {@[@frame]}
+    love.graphics.draw @image, @pos/4 - @ox - 120, -@oy

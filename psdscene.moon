@@ -15,7 +15,10 @@ class PSDScene
     return module[name] if _ and module[name]
 
     _, mixin = pcall require, "game.common.#{name}"
-    return mixin if _ and mixin
+    if _
+      return mixin if mixin
+    else
+      LOG_ERROR mixin
 
     _, module = pcall require, "game.common"
     return module[name] if _ and module[name]
