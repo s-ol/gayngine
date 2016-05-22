@@ -50,7 +50,7 @@ class PSDScene
         LOG "- #{layer.name}", indent
         table.insert target, layer
 
-      cmd, params = layer.name\match "^([^:]+):(.+)"
+      cmd, params = layer.name\match "([^: ]+):(.+)"
       switch cmd
         when nil
           ""
