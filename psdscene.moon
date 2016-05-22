@@ -90,6 +90,7 @@ class PSDScene
         layer\draw @\draw
       elseif layer.image
         {:image, :ox, :oy} = layer
+        love.graphics.setColor 255, 255, 255, layer.opacity or 255
         love.graphics.draw image, x, y, nil, nil, nil, ox, oy
       elseif layer.type == "open"
         @draw layer
