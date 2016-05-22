@@ -11,9 +11,17 @@ import PSDScene from require "psdscene"
 import Interactive from require "interactive"
 export ^
 
-LOG_ERROR = (...) ->
+LOG = (msg, indent=0) ->
+  indent = " "\rep indent
+
+  print "LOG", indent .. msg
+
+LOG_ERROR = (msg, indent=0) ->
+  indent = " "\rep indent
   {:name, :source, :currentline} = debug.getinfo 2
-  print "ERR", "#{name}#{source}:#{currentline}", ...
+
+  print "ERR", indent .. "#{name}#{source}:#{currentline}", msg
+
   unless DEBUG or true
     error "error logged in STDOUT"
 

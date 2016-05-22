@@ -14,13 +14,13 @@ class PSDScene
     _, module = pcall require, "game.#{scene}"
     return module[name] if _ and module[name]
 
-    _, mixin = pcall require, "game.shared.#{name}"
+    _, mixin = pcall require, "game.common.#{name}"
     return mixin if _ and mixin
 
-    _, module = pcall require, "game.shared"
+    _, module = pcall require, "game.common"
     return module[name] if _ and module[name]
 
-    LOG_ERROR "couldn't find mixin '#{name}' for scene #{@scene}"
+    LOG_ERROR "couldn't find mixin '#{name}' for scene '#{@scene}'"
     ->
 
   reload: (filename) =>
@@ -31,7 +31,7 @@ class PSDScene
     target = @tree
     local group
 
-    level = 0
+    indent = 0
 
     psd = artal.newPSD filename
     for layer in *psd
@@ -39,14 +39,15 @@ class PSDScene
         table.insert target, layer
         layer.parent = target
         target = layer
-        print "#{" "\rep level}+ #{layer.name}"
-        level += 1
+        LOG "+ #{layer.name}", indent
+        indent += 1
+        continue -- skip until close
       elseif layer.type == "close"
+        layer = target
         target = target.parent
-        level -= 1
-        continue -- skip loading
+        indent -= 1
       else
-        print "#{" "\rep level}- #{layer.name}"
+        LOG "- #{layer.name}", indent
         table.insert target, layer
 
       cmd, params = layer.name\match "^([^:]+):(.+)"
@@ -58,36 +59,37 @@ class PSDScene
         when "load"
           params = [str for str in params\gmatch "[^,]+"]
           name = table.remove params, 1
-          --name, r, rest = params\match "^([^,]+)(,(.+))?"
-          --print params, ".", name, r, rest
-
-          --parameters = {}
-          --param, rest = rest\match "^([^,]+),(.+)"
-          --while param
-          --  table.insert parameters, param
-          --  param, rest = rest\match "^([^,]+),(.+)"
 
           mixin = @load name
-          print "loading mixin '#{@scene}/#{name}' for layer '#{layer.name}' (#{table.concat params, ", "})"
+          LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
           mixin layer, unpack params
         else
-          LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'"
+          LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'", indent
 
-    require "moon.all"
-    p @tree
+  update: (dt, group=@tree) =>
+    if group == false
+      return
 
-  update: (dt) =>
+    for layer in *group
+      if layer.update
+        layer\update dt, @\update
+      elseif layer.type == "open"
+        @update dt, layer
 
   draw: (group=@tree) =>
-    love.graphics.scale 4 if group == @tree
+    if group == false
+      return
+    elseif group == @tree
+      love.graphics.scale 4
+
     for layer in *group
       if layer.draw
-        layer\draw!
+        layer\draw @\draw
       elseif layer.image
         {:image, :ox, :oy} = layer
         love.graphics.draw image, x, y, nil, nil, nil, ox, oy
       elseif layer.type == "open"
-        @draw layer unless layer.name == "puddles"
+        @draw layer
 
 {
   :PSDScene,
