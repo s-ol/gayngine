@@ -8,9 +8,9 @@ wrapping_ = (klass) ->
 class Mixin
   new: =>
     info = debug.getinfo 2
-    file = string.match info.source, "@%.?/?(.*)"
+    file = string.match info.source, "@%.?[/\\]?(.*)"
 
-    @module = info.source\match "@%.?/?(.*)%.moon"
+    @module = info.source\match "@%.?[/\\]?(.*)%.moon"
     @module = @module\gsub "/", "."
 
     if WATCHER
