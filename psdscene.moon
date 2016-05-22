@@ -30,7 +30,7 @@ class PSDScene
     filename = "assets/#{@scene}.psd" unless filename
     print "reloading scene #{filename}..."
 
-    @tree, @layers = {}, {}
+    @tree, @tags = {}, {}
     target = @tree
     local group
 
@@ -57,8 +57,9 @@ class PSDScene
       switch cmd
         when nil
           ""
-        when "layer"
-          @layers[params] = layer
+        when "tag"
+          @tags[params] = tag
+          layer.tag = params
         when "load"
           params = [str for str in params\gmatch "[^,]+"]
           name = table.remove params, 1

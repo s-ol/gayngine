@@ -23,6 +23,16 @@ class Mixin
 
     setmetatable @, new.__base
 
+  find_tag: =>
+    layer = @
+    while not layer.tag
+      layer = layer.parent
+
+      if not layer
+        return nil
+
+    layer.tag
+
 {
   :wrapping_,
   :Mixin
