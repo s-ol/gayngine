@@ -59,7 +59,7 @@ class Watcher
           objs.modified = modified
           for _, obj in pairs objs
             if "number" == type _
-              obj\reload!
+              obj\reload name
 
       if love.system.getOS! == "Windows"
           ffi.C.FindNextChangeNotification @handle
