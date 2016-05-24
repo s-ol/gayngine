@@ -8,7 +8,9 @@ import PSDScene from require "psdscene"
 import Interactive from require "interactive"
 export ^
 
-love.graphics.setNewFont "assets/font/SomepxNew.ttf", 16
+DIALOG_STATE = 0
+
+love.graphics.setNewFont "assets/SomepxNew.ttf", 16
 
 LOG = (msg, indent=0) ->
   indent = " "\rep indent
@@ -36,6 +38,8 @@ love.keypressed = (key) ->
   switch key
     when "escape"
       le.push "quit"
+    when "space"
+      DIALOG_STATE += 1
 
 love.update = (dt) ->
   WATCHER\update!
