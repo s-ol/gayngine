@@ -87,8 +87,6 @@ class PSDScene
           if mixin
             LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
             mixin layer, unpack params
-          else
-            LOG_ERROR "couln't find mixin for '#{@scene}/#{name}'", indent
         else
           LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'", indent
 
@@ -102,14 +100,12 @@ class PSDScene
       elseif layer.type == "open"
         @update dt, layer
 
-  i = 0
   draw: () =>
     lg.setCanvas @target_canvas
     lg.clear!
     lg.setCanvas!
 
-    i = 0
-    @drawgroup @tree
+    @draw_group @tree
 
     lg.push!
     lg.scale 4
@@ -119,23 +115,22 @@ class PSDScene
   _canvas = nil
   _blendmode = nil
 
-  setup_shader: (blendmode, opacity, image, ox, oy) =>
+  draw_layer: (layer) =>
+    {:image, :blend, :opacity, :ox, :oy} = layer
+
     @target_canvas, @source_canvas = @source_canvas, @target_canvas
     _canvas = lg.getCanvas!
     _blendmode = lg.getBlendMode!
 
     lg.setCanvas!
     lg.setShader!
-    lg.draw @source_canvas, 800, i*200
 
     lg.setCanvas @target_canvas
     lg.setBlendMode "replace", "premultiplied"
 
-    shader = psshaders[blendmode]
-    pcall shader.send, shader, "opacity", opacity/255
---    pcall shader.send, shader, "background", @source_canvas
---    pcall shader.send, shader, "background_size", { @source_canvas\getDimensions! }
     image\setWrap "clampzero", "clampzero"
+    shader = psshaders[blend]
+    pcall shader.send, shader, "opacity", opacity/255
     pcall shader.send, shader, "foreground", image
     pcall shader.send, shader, "foreground_size", { image\getDimensions! }
     pcall shader.send, shader, "foreground_offset", { ox, oy }
@@ -144,29 +139,27 @@ class PSDScene
 
     lg.draw @source_canvas
 
-  teardown_shader: =>
     lg.setShader!
     lg.setCanvas _canvas
     lg.setBlendMode _blendmode
-    lg.draw @source_canvas, 1000, i*200
 
-  drawgroup: (group) =>
+  draw_group: (group) =>
     if group == false
       return
 
     for layer in *group
       if layer.draw
-        layer\draw @\drawgroup
+        lg.setCanvas @target_canvas
+        layer\draw @\draw_group, @\draw_layer
+        lg.setCanvas!
       elseif layer.image
-        {:image, :blend, :opacity, :ox, :oy} = layer
-
-        i += 1
-        @setup_shader blend, opacity, image, ox, oy
+        @draw_layer layer
+        --@setup_shader blend, opacity, image, ox, oy
         --lg.draw image, -ox, -oy
-        @teardown_shader!
+        --@teardown_shader!
 
       elseif layer.type == "open"
-        @drawgroup layer
+        @draw_group layer
 
 {
   :PSDScene,

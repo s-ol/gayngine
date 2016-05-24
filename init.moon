@@ -8,6 +8,8 @@ import PSDScene from require "psdscene"
 import Interactive from require "interactive"
 export ^
 
+love.graphics.setNewFont "assets/font/SomepxNew.ttf", 16
+
 LOG = (msg, indent=0) ->
   indent = " "\rep indent
 
