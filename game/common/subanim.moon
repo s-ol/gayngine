@@ -1,7 +1,7 @@
 import wrapping_, Mixin from  require "util"
 
 wrapping_ class SubAnim extends Mixin
-  new: (@frametime=0.1) =>
+  new: (scene, @frametime=0.1) =>
     super!
 
     @time = 0

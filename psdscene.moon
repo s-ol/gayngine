@@ -10,6 +10,9 @@ class PSDScene
     if WATCHER
       WATCHER\register "assets/#{@scene}.psd", @
 
+  init: =>
+    require "game.#{@scene}"
+
   load: (name, ...) =>
     _, mixin = pcall require, "game.#{@scene}.#{name}"
     return mixin if _ and mixin
@@ -39,6 +42,15 @@ class PSDScene
     lg.setShader!
     lg.setCanvas!
 
+  find_tag: =>
+    layer = @
+    while not layer.tag
+      layer = layer.parent
+
+      if not layer
+        return nil
+
+    layer.tag
 
   reload: (filename) =>
     filename = "assets/#{@scene}.psd" unless filename
@@ -86,7 +98,7 @@ class PSDScene
           mixin = @load name
           if mixin
             LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
-            mixin layer, unpack params
+            mixin layer, @, unpack params
         else
           LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'", indent
 

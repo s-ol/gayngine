@@ -1,6 +1,6 @@
 MOON   = $(shell find -name '*.moon')
 NATIVE = $(shell find lib -name '*.lua') main.lua conf.lua
-ASSETS = $(shell find assets)
+ASSETS = $(shell find assets) $(shell find shaders)
 COMPILED  = $(MOON:.moon=.lua)
 
 LOVE = $(NATIVE) $(ASSETS) $(COMPILED) heythere.txt

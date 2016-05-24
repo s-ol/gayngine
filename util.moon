@@ -10,7 +10,7 @@ class Mixin
     info = debug.getinfo 2
     file = string.match info.source, "@%.?[/\\]?(.*)"
 
-    @module = info.source\match "@%.?[/\\]?(.*)%.moon"
+    @module = info.source\match "@%.?[/\\]?(.*)%.%a+"
     @module = @module\gsub "/", "."
 
     if WATCHER

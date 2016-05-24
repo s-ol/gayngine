@@ -2,7 +2,7 @@ import wrapping_, Mixin from  require "util"
 
 wrapping_ class SubAnim extends Mixin
   SPEED = 440
-  new: (@frametime=0.1) =>
+  new: (scene) =>
     super!
 
     @pos = 0

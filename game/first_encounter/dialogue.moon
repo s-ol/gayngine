@@ -1,44 +1,56 @@
+{ graphics: lg, mouse: lm } = love
+
 import wrapping_, Mixin from  require "util"
 Vector = require "lib.hump.vector"
 
-require "moon.all"
 dummy = Vector!
 
-text =
-  hector: {
-    "what's up boyo?",
-    "are you doing fine?",
-    "",
-  }
-  raymond: {
-    "",
-    "",
-    "fuck off.",
-  }
-
-
 wrapping_ class Dialogue extends Mixin
-  new: (@character) =>
+  new: (scene, @character) =>
     super!
+
+    --scene.tags[@character] = @
 
     one, two = unpack @mask.paths[1]
     one, two = dummy.clone(one.cp), dummy.clone two.cp
     if two.x < one.x
       @align = "right"
-      @pos = two
+      @textpos = two
       @limit = math.abs (one - two).x
     else
       @align = "left"
-      @pos = one
+      @textpos = one
       @limit = math.abs (one - two).x
 
-  print: (text, x, y, limit, align) =>
-    love.graphics.setColor 0, 0, 0, 180
-    love.graphics.printf text, x+1, y, limit, align
-    love.graphics.printf text, x+1, y+1, limit, align
+  print: (text, x, y, limit, align, background) =>
+    lg.setColor 0, 0, 0, 180
 
-    love.graphics.setColor 255, 255, 255, 255
-    love.graphics.printf text, x, y, limit, align
+    if background
+      lg.rectangle "fill", x-1, y+4, limit, 7
+    else
+      lg.printf text, x+1, y, limit, align
+      lg.printf text, x+1, y+1, limit, align
 
-  draw: (recursive_draw) =>
-    @print text[@character][DIALOG_STATE] or "", @pos.x, @pos.y - 7, @limit, @align
+    lg.setColor 255, 255, 255, 255
+    lg.printf text, x, y, limit, align
+
+  draw: (draw_group, draw_layer) =>
+    text = DIALOGUE\get @character
+    return unless text
+
+    { textpos: { :x, :y }, :limit, :align } = @
+
+    if "string" == type text
+      @print text, x, y - 7, limit, align
+    else
+      mx, my = lm.getPosition!
+      mx, my = mx/4, my/4
+      close = mx >= x and mx <= x + limit
+
+      for no, choice in ipairs text
+        hit = close and my >= y - 3 and my <= y + 4
+        @print choice, x, y - 7, limit, align, hit
+        y += 7
+
+        if hit and lm.isDown 1
+          DIALOGUE\select no

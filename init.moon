@@ -29,20 +29,21 @@ LOG_ERROR = (msg, indent=0) ->
 PROJ   = Vector 1, .45
 UNPROJ = Vector 1, 1/PROJ.y
 
-WATCHER = Watcher!
+WATCHER = Watcher! unless _BUILD
 WIDTH, HEIGHT = lg.getDimensions!
 
 SCENE = PSDScene "first_encounter"
+SCENE\init!
 
 love.keypressed = (key) ->
   switch key
     when "escape"
       le.push "quit"
     when "space"
-      DIALOG_STATE += 1
+      DIALOGUE\advance!
 
 love.update = (dt) ->
-  WATCHER\update!
+  WATCHER\update! unless _BUILD
 
   SCENE\update dt
 
