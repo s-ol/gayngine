@@ -1,4 +1,7 @@
+{ graphics: lg } = love
+
 artal = require "lib.artal.artal"
+psshaders = require "shaders"
 
 class PSDScene
   new: (@scene) =>
@@ -23,6 +26,20 @@ class PSDScene
     LOG_ERROR "couldn't find mixin '#{name}' for scene '#{@scene}'"
     nil
 
+  draw_with_shader: (shader, ...) =>
+    @target_canvas, @source_canvas = @source_canvas, @target_canvas
+
+    lg.setCanvas @target_canvas
+    lg.clear!
+
+    lg.setShader shader
+    shader\send "background", @source_canvas
+
+    lg.draw ...
+    lg.setShader!
+    lg.setCanvas!
+
+
   reload: (filename) =>
     filename = "assets/#{@scene}.psd" unless filename
     print "reloading scene #{filename}..."
@@ -34,6 +51,11 @@ class PSDScene
     indent = 0
 
     psd = artal.newPSD filename
+    @width, @height = psd.width, psd.height
+
+    @target_canvas = lg.newCanvas @width, @height
+    @source_canvas = lg.newCanvas @width, @height
+
     for layer in *psd
       if layer.type == "open"
         table.insert target, layer
@@ -80,21 +102,71 @@ class PSDScene
       elseif layer.type == "open"
         @update dt, layer
 
-  draw: (group=@tree) =>
+  i = 0
+  draw: () =>
+    lg.setCanvas @target_canvas
+    lg.clear!
+    lg.setCanvas!
+
+    i = 0
+    @drawgroup @tree
+
+    lg.push!
+    lg.scale 4
+    lg.draw @target_canvas
+    lg.pop!
+
+  _canvas = nil
+  _blendmode = nil
+
+  setup_shader: (blendmode, opacity, image, ox, oy) =>
+    @target_canvas, @source_canvas = @source_canvas, @target_canvas
+    _canvas = lg.getCanvas!
+    _blendmode = lg.getBlendMode!
+
+    lg.setCanvas!
+    lg.setShader!
+    lg.draw @source_canvas, 800, i*200
+
+    lg.setCanvas @target_canvas
+    lg.setBlendMode "replace", "premultiplied"
+
+    shader = psshaders[blendmode]
+    pcall shader.send, shader, "opacity", opacity/255
+--    pcall shader.send, shader, "background", @source_canvas
+--    pcall shader.send, shader, "background_size", { @source_canvas\getDimensions! }
+    image\setWrap "clampzero", "clampzero"
+    pcall shader.send, shader, "foreground", image
+    pcall shader.send, shader, "foreground_size", { image\getDimensions! }
+    pcall shader.send, shader, "foreground_offset", { ox, oy }
+
+    lg.setShader shader
+
+    lg.draw @source_canvas
+
+  teardown_shader: =>
+    lg.setShader!
+    lg.setCanvas _canvas
+    lg.setBlendMode _blendmode
+    lg.draw @source_canvas, 1000, i*200
+
+  drawgroup: (group) =>
     if group == false
       return
-    elseif group == @tree
-      love.graphics.scale 4
 
     for layer in *group
       if layer.draw
-        layer\draw @\draw
+        layer\draw @\drawgroup
       elseif layer.image
-        {:image, :ox, :oy} = layer
-        love.graphics.setColor 255, 255, 255, layer.opacity or 255
-        love.graphics.draw image, x, y, nil, nil, nil, ox, oy
+        {:image, :blend, :opacity, :ox, :oy} = layer
+
+        i += 1
+        @setup_shader blend, opacity, image, ox, oy
+        --lg.draw image, -ox, -oy
+        @teardown_shader!
+
       elseif layer.type == "open"
-        @draw layer
+        @drawgroup layer
 
 {
   :PSDScene,

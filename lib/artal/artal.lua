@@ -233,7 +233,7 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 			local cPixelPos
 			if image.channelID[CC] == -1 then
 				cPixelPos = 3
-				alphaOpacity = image.opacity / 255
+				--alphaOpacity = image.opacity / 255
 			elseif image.channelID[CC] == 0 then
 				cPixelPos = 0
 			elseif image.channelID[CC] == 1 then
