@@ -1,0 +1,8 @@
+*.lua
+!main.lua
+!conf.lua
+!lib/*
+
+*.love
+bin
+node_modules
