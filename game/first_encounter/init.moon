@@ -5,13 +5,17 @@ class Dialogue
     @current = 0
 
   advance: =>
-    @current += 1 unless @timeline[@current] and @timeline[@current].choice
+    @current += 1 unless "table" == type(@timeline[@current]) and @timeline[@current].type == "choice"
 
   select: (index) =>
-    print "selected ##{index}"
+    @last_choice = index
     @current += 1
 
-  get: (slot) => (@timeline[@current] or {})[slot]
+  get: (slot) =>
+    text = (@timeline[@current] or {})[slot]
+    if "table" == type(text) and text.type == "response"
+      text = text[@last_choice]
+    text
 
 DIALOGUE = Dialogue {
   {
@@ -21,11 +25,18 @@ DIALOGUE = Dialogue {
     hector: "do you like choices?"
   },
   {
-    _choice: true
-    raymond: { "yes", "no", "fuck off" }
+    raymond: {
+      type: "choice"
+      "yes", "no", "fuck off"
+    }
   },
   {
-    hector: "oh come on crybaby."
+    hector: {
+      type: "response",
+      "great, cause you just had to make one",
+      "too bad",
+      "woah chill out there buddy",
+    }
   },
   {
     hector: "we all have issues"
