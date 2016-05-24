@@ -28,7 +28,7 @@ UNPROJ = Vector 1, 1/PROJ.y
 WATCHER = Watcher!
 WIDTH, HEIGHT = lg.getDimensions!
 
-SCENE = PSDScene "level"
+SCENE = PSDScene "first_encounter"
 
 love.keypressed = (key) ->
   switch key

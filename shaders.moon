@@ -30,13 +30,8 @@ mapping = {
   lum:  "luminosity"
 }
 
-psdShader = require "lib.artal.psdShader"
 setmetatable {}, { __index: (name) =>
   pixel = love.filesystem.read "shaders/#{mapping[name]}.glsl"
-  --pixel = psdShader.createShaderString "mul"
-  with shader = love.graphics.newShader pixel; print "
-    vec4 position(mat4 transform_projection, vec4 vertex_position) {
-          return transform_projection * vertex_position;
-    }"
+  with shader = love.graphics.newShader pixel
     @[name] = shader
 }
