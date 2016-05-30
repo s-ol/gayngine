@@ -15,8 +15,6 @@ class Dialogue
     @last_choice = index if index
     @current += 1
 
-    print "choice: #{index}"
-
     for name, slot in pairs @slots
       slot\new_text @get name
 

@@ -24,11 +24,11 @@ wrapping_ class Dialogue extends Mixin
 
     DIALOGUE\register @, @character
 
-  print: (text, x, y, limit, align, background) =>
+  print: (text, x, y, limit, height, align, background) =>
     lg.setColor 0, 0, 0, 180
 
     if background
-      lg.rectangle "fill", x, y, limit, 7
+      lg.rectangle "fill", x, y, limit, height
     else
       lg.printf text, x+2, y-4, limit, align
       lg.printf text, x+2, y-3, limit, align
@@ -48,17 +48,20 @@ wrapping_ class Dialogue extends Mixin
       text = { text }
       isChoice = false
 
+    font = lg.getFont!
     { textpos: { :x, :y }, :limit, :align } = @
     @choices = for no, text in ipairs text
-      shape = @scene.hit\rectangle x, y, limit, 7
+      height = 7 * #(select '2', font\getWrap(text, limit))
+      shape = @scene.hit\rectangle x, y, limit, height
       with hit = {
           :text,
           :shape,
           :x, :y,
+          :height
         }
         hit.shape.mousepressed = -> DIALOGUE\select isChoice and no
-        y += 7
+        y += height
 
   draw: (draw_group, draw_layer) =>
-    for { :text, :x, :y, :shape } in *@choices
-      @print text, x, y, @limit, align, @scene.hoveritems[shape]
+    for { :text, :x, :y, :height, :shape } in *@choices
+      @print text, x, y, @limit, height, align, @scene.hoveritems[shape]

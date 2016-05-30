@@ -7,7 +7,7 @@ import Watcher from require "watcher"
 import PSDScene from require "psdscene"
 export ^
 
-love.graphics.setNewFont "assets/SomepxNew.ttf", 16
+love.graphics.setNewFont("assets/SomepxNew.ttf", 16)\setLineHeight 0.56
 
 LOG = (msg, indent=0) ->
   indent = " "\rep indent
