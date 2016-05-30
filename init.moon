@@ -5,7 +5,6 @@ lg.setDefaultFilter "nearest", "nearest"
 Vector = require "lib.hump.vector"
 import Watcher from require "watcher"
 import PSDScene from require "psdscene"
-import Interactive from require "interactive"
 export ^
 
 love.graphics.setNewFont "assets/SomepxNew.ttf", 16
@@ -37,8 +36,6 @@ love.keypressed = (key) ->
   switch key
     when "escape"
       le.push "quit"
-    when "space"
-      DIALOGUE\advance!
 
 love.update = (dt) ->
   WATCHER\update! unless _BUILD

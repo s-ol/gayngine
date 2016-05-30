@@ -2,14 +2,26 @@ export DIALOGUE
 
 class Dialogue
   new: (@timeline) =>
+    @slots = {}
     @current = 0
 
-  advance: =>
-    @current += 1 unless "table" == type(@timeline[@current]) and @timeline[@current].type == "choice"
+  start: =>
+    @current = 1
+
+    for name, slot in pairs @slots
+      slot\new_text @get name
 
   select: (index) =>
-    @last_choice = index
+    @last_choice = index if index
     @current += 1
+
+    print "choice: #{index}"
+
+    for name, slot in pairs @slots
+      slot\new_text @get name
+
+  register: (slot, name) =>
+    @slots[name] = slot
 
   get: (slot) =>
     text = (@timeline[@current] or {})[slot]

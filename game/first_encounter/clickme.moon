@@ -22,7 +22,7 @@ wrapping_ class SubAnim extends Mixin
     @hitarea.mousepressed = @\mousepressed
 
   mousepressed: =>
-    print "CLEEK"
+    DIALOGUE\start!
 
   draw: (draw_group, draw_layer) =>
     if @scene.hoveritems[@hitarea]
