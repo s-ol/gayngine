@@ -8,8 +8,6 @@ import PSDScene from require "psdscene"
 import Interactive from require "interactive"
 export ^
 
-DIALOG_STATE = 0
-
 love.graphics.setNewFont "assets/SomepxNew.ttf", 16
 
 LOG = (msg, indent=0) ->
@@ -51,3 +49,4 @@ love.draw = ->
   SCENE\draw!
 
 love.mousepressed = (x, y, btn) ->
+  SCENE\mousepressed x, y, btn

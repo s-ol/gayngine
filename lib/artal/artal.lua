@@ -231,7 +231,9 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 
 			local alphaOpacity = 1
 			local cPixelPos
-			if image.channelID[CC] == -1 then
+			if image.channelID[CC] == -2 then
+        cPixelPos = -1
+			elseif image.channelID[CC] == -1 then
 				cPixelPos = 3
 				--alphaOpacity = image.opacity / 255
 			elseif image.channelID[CC] == 0 then
@@ -245,7 +247,6 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 				--assert(false,"Artal: Unsupported channel id/mode.")
 			end
 
-			
 			if channelCompression == 1 then
 				for LINE = 1 , image.totalHeight do
 					-- Bytes per line
@@ -278,7 +279,9 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 											-- Here be valid pixels
 											local pos = cPixelPos + (xPixelPos*4) + (yPixelPos*(clampW+clampX)*4)
 											--print(CC,xPixelPos,yPixelPos,pos,pixelValue,(clampW+clampX))
-											C_data[pos] = pixelValue
+                      if cPixelPos > -1 then
+                        C_data[pos] = pixelValue
+                      end
 										end
 										xPixelPos = xPixelPos + 1
 									end
@@ -290,7 +293,9 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 											-- Here be valid pixels
 											local pos = cPixelPos + (xPixelPos*4) + (yPixelPos*(clampW+clampX)*4)
 											--print(CC,xPixelPos,yPixelPos,pos,pixelValue,(clampW+clampX))
-											C_data[pos] = pixelValue
+                      if cPixelPos > -1 then
+                        C_data[pos] = pixelValue
+                      end
 										end
 										xPixelPos = xPixelPos + 1
 									end
@@ -315,7 +320,9 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 						--print(x,y)
 						local pixelPos = (y*(clampW)+x)*4+cPixelPos
 						local dataPos = y*(clampW)+x
-						C_data[pixelPos] = C_fileData[artal.count + dataPos] * alphaOpacity
+            if cPixelPos > -1 then
+              C_data[pixelPos] = C_fileData[artal.count + dataPos] * alphaOpacity
+            end
 						--print(pixelPos, dataPos)
 					end
 				end
@@ -342,6 +349,7 @@ local function defaultLoadImageFunction(artalLayer,layerLoadData,folderStack,lay
 	layer.blend = artalLayer.betterBlend
   layer.mask = artalLayer.mask
   layer.opacity = layerLoadData.opacity
+  print(layer.name, ":::::")
 	if artalLayer.betterCliping == 0 then
 		layer.clip = false
 	else
@@ -403,6 +411,8 @@ local function defaultLoadFolderFunction(artalLayer,layerLoadData)
 
 	layer.name = artalLayer.betterName
 	layer.blend = artalLayer.betterBlend
+	layer.mask = artalLayer.mask
+	layer.opacity = layerLoadData.opacity
 	if artalLayer.betterCliping == 0 then
 		layer.clip = false
 	else
@@ -539,8 +549,8 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
 		--Layer mask / adjustment layer data
 		artal.layer[LC]:ink("maskAdjustment",4)
 		--assert(artal.layer[LC].maskAdjustment == 0, "Artal: maskAdjustment is not 0 as expected. (was " .. artal.layer[LC].maskAdjustment .. ")")
+    artal.layer[LC].mask = {}
     if artal.layer[LC].maskAdjustment == 20 then
-      artal.layer[LC].mask = {}
       artal.layer[LC].mask.top = artal.layer[LC]:ink(nil, 4)
       artal.layer[LC].mask.left = artal.layer[LC]:ink(nil, 4)
       artal.layer[LC].mask.bottom = artal.layer[LC]:ink(nil, 4)
@@ -565,7 +575,6 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
 		if ((artal.layer[LC].nameLength+1)/4) ~= math.floor((artal.layer[LC].nameLength+1)/4) then
 			artal.layer[LC].count = artal.layer[LC].count + math.ceil((artal.layer[LC].nameLength+1)/4)*4 - ((artal.layer[LC].nameLength+1)/4)*4
 		end
-
 
 		-- Additional Layer Information
 		while artal.layer[LC]:inkString(nil , 4) == "8BIM" do

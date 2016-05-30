@@ -1,17 +1,22 @@
-{ graphics: lg } = love
+{ graphics: lg, mouse: lm } = love
 
 artal = require "lib.artal.artal"
 psshaders = require "shaders"
+Vector = require "lib.hump.vector"
+HC = require "lib.HC"
 
 class PSDScene
   new: (@scene) =>
+    @hit = HC.new!
+    @cursor = HC.point 0, 0
+
     @reload!
 
     if WATCHER
       WATCHER\register "assets/#{@scene}.psd", @
 
   init: =>
-    require "game.#{@scene}"
+    pcall require, "game.#{@scene}"
 
   load: (name, ...) =>
     _, mixin = pcall require, "game.#{@scene}.#{name}"
@@ -77,6 +82,7 @@ class PSDScene
         indent += 1
         continue -- skip until close
       elseif layer.type == "close"
+        target.mask = layer.mask
         layer = target
         target = target.parent
         indent -= 1
@@ -102,15 +108,28 @@ class PSDScene
         else
           LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'", indent
 
-  update: (dt, group=@tree) =>
-    if group == false
-      return
+  update: (dt) =>
+    @update_group dt, @tree
+
+    mouse = 1/4 * Vector lm.getPosition!
+    @cursor\moveTo mouse\unpack!
+    @hoveritems = @hit\collisions @cursor
+
+  mousepressed: (x, y, btn) =>
+    @cursor\moveTo x/4, y/4
+    items = @hit\collisions @cursor
+    for shape, _ in pairs items
+      shape\mousepressed x, y, btn if shape.mousepressed
+
+ 
+  update_group: (dt, group) =>
+    return unless group
 
     for layer in *group
       if layer.update
         layer\update dt, @\update
       elseif layer.type == "open"
-        @update dt, layer
+        @update_group dt, layer
 
   draw: () =>
     lg.setCanvas @target_canvas
@@ -166,10 +185,6 @@ class PSDScene
         lg.setCanvas!
       elseif layer.image
         @draw_layer layer
-        --@setup_shader blend, opacity, image, ox, oy
-        --lg.draw image, -ox, -oy
-        --@teardown_shader!
-
       elseif layer.type == "open"
         @draw_group layer
 

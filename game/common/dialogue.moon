@@ -9,8 +9,6 @@ wrapping_ class Dialogue extends Mixin
   new: (scene, @character) =>
     super!
 
-    --scene.tags[@character] = @
-
     one, two = unpack @mask.paths[1]
     one, two = dummy.clone(one.cp), dummy.clone two.cp
     if two.x < one.x
