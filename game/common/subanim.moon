@@ -12,5 +12,5 @@ wrapping_ class SubAnim extends Mixin
 
     @frame = 1 + (math.floor(@time/@frametime) % #@)
 
-  draw: (recursive_draw) =>
-    recursive_draw {@[@frame]}
+  draw: (draw_group, draw_layer) =>
+    draw_group {@[@frame]}

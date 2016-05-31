@@ -2,10 +2,18 @@
 
 lg.setDefaultFilter "nearest", "nearest"
 
+DEBUG = not _BUILD
+
 Vector = require "lib.hump.vector"
-import Watcher from require "watcher"
 import PSDScene from require "psdscene"
 export ^
+
+if DEBUG
+  import Watcher from require "watcher"
+  MOON = require "moon"
+
+  WATCHER = Watcher!
+
 
 love.graphics.setNewFont("assets/SomepxNew.ttf", 16)\setLineHeight 0.56
 
@@ -20,16 +28,12 @@ LOG_ERROR = (msg, indent=0) ->
 
   print "ERR", indent .. "#{name}#{source}:#{currentline}", msg
 
-  unless DEBUG or true
+  unless DEBUG
     error "error logged in STDOUT"
 
-PROJ   = Vector 1, .45
-UNPROJ = Vector 1, 1/PROJ.y
-
-WATCHER = Watcher! unless _BUILD
 WIDTH, HEIGHT = lg.getDimensions!
 
-SCENE = PSDScene "first_encounter"
+SCENE = PSDScene arg[2] or "police_station"
 SCENE\init!
 
 love.keypressed = (key) ->
@@ -38,7 +42,7 @@ love.keypressed = (key) ->
       le.push "quit"
 
 love.update = (dt) ->
-  WATCHER\update! unless _BUILD
+  WATCHER\update! if WATCHER
 
   SCENE\update dt
 

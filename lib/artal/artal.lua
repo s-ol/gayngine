@@ -349,7 +349,6 @@ local function defaultLoadImageFunction(artalLayer,layerLoadData,folderStack,lay
 	layer.blend = artalLayer.betterBlend
   layer.mask = artalLayer.mask
   layer.opacity = layerLoadData.opacity
-  print(layer.name, ":::::")
 	if artalLayer.betterCliping == 0 then
 		layer.clip = false
 	else

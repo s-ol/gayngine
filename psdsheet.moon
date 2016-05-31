@@ -16,7 +16,6 @@ class PSDSheet
   reload: =>
     print "reloading #{@filename}..."
 
-
     @frames = {}
     target = @frames
     local group
