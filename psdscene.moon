@@ -92,23 +92,14 @@ class PSDScene
         LOG "- #{layer.name}", indent
         table.insert target, layer
 
-      cmd, params = layer.name\match "([^: ]+):(.+)"
-      switch cmd
-        when nil
-          ""
-        when "tag"
-          @tags[params] = tag
-          layer.tag = params
-        when "load"
-          params = [str for str in params\gmatch "[^,]+"]
-          name = table.remove params, 1
+      name, params = layer.name\match "([a-z]+)%((.*)%)"
+      if name
+        params = [str for str in params\gmatch "[^,]+"]
 
-          mixin = @load name
-          if mixin
-            LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
-            mixin layer, @, unpack params
-        else
-          LOG_ERROR "unknown cmd '#{cmd}' for layer '#{layer.name}'", indent
+        mixin = @load name
+        if mixin
+          LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
+          mixin layer, @, unpack params
 
   update: (dt) =>
     @update_group dt, @tree
