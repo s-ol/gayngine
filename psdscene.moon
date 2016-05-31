@@ -15,22 +15,22 @@ class PSDScene
     @reload!
 
     if WATCHER
-      WATCHER\register "assets/#{@scene}.psd", @
+      WATCHER\register "game/scenes/#{@scene}/main.psd", @
 
   init: =>
-    pcall require, "game.#{@scene}"
+    pcall require, "game.scenes.#{@scene}"
 
   load: (name, ...) =>
-    _, mixin = pcall require, "game.#{@scene}.#{name}"
+    _, mixin = pcall require, "game.scenes.#{@scene}.#{name}"
     return mixin if _ and mixin
 
-    _, module = pcall require, "game.#{scene}"
+    _, module = pcall require, "game.scenes.#{scene}"
     return module[name] if _ and module[name]
 
-    _, mixin = pcall require, "game.common.#{name}"
+    _, mixin = pcall require, "game.scenes.common.#{name}"
     return mixin if _ and mixin
 
-    _, module = pcall require, "game.common"
+    _, module = pcall require, "game.scenes.common"
     return module[name] if _ and module[name]
 
     LOG_ERROR "couldn't find mixin '#{name}' for scene '#{@scene}'"
@@ -60,7 +60,7 @@ class PSDScene
     layer.tag
 
   reload: (filename) =>
-    filename = "assets/#{@scene}.psd" unless filename
+    filename = "game/scenes/#{@scene}/main.psd" unless filename
     print "reloading scene #{filename}..."
 
     @tree, @tags = {}, {}

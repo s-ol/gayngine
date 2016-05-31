@@ -5,7 +5,7 @@ ORIGIN = Vector 0, 40
 
 class Player extends PSDSheet
   new: (@skin, @pos=Vector!) =>
-    super "assets/characters/#{@skin}.psd"
+    super "game/characters/#{@skin}.psd"
 
   draw: =>
     { :x, :y } = @pos - ORIGIN
