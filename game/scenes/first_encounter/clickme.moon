@@ -6,8 +6,6 @@ wrapping_ class SubAnim extends Mixin
 
     for lyr in *@
       switch lyr.name
-        when "clickarea"
-          @mask = lyr.mask
         when "idle"
           @idle = lyr
         when "hover"

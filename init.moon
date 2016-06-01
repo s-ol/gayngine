@@ -9,11 +9,11 @@ import PSDScene from require "psdscene"
 export ^
 
 if DEBUG
+  export MOON, WATCHER
   import Watcher from require "watcher"
   MOON = require "moon"
 
   WATCHER = Watcher!
-
 
 love.graphics.setNewFont("assets/SomepxNew.ttf", 16)\setLineHeight 0.56
 
@@ -40,6 +40,13 @@ love.keypressed = (key) ->
   switch key
     when "escape"
       le.push "quit"
+    when "r"
+      if DEBUG
+        SCENE\reload!
+    when "right"
+      SCENE.scroll -= Vector 4, 0
+    when "left"
+      SCENE.scroll += Vector 4, 0
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER

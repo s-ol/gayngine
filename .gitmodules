@@ -4,3 +4,6 @@
 [submodule "lib/HC"]
 	path = lib/HC
 	url = git://github.com/vrld/HC.git
+[submodule "lib/jumper"]
+	path = lib/jumper
+	url = git://github.com/Yonaba/Jumper.git

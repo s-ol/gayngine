@@ -5,7 +5,7 @@ wrapping_ = (klass) ->
 
   klass
 
-class Mixin
+class Reloadable
   new: =>
     info = debug.getinfo 2
     file = string.match info.source, "@%.?[/\\]?(.*)"
@@ -20,10 +20,9 @@ class Mixin
     print "reloading #{@module}..."
 
     package.loaded[@module] = nil
-    new = require @module
+    require @module
 
-    setmetatable @, new.__base
-
+class Mixin extends Reloadable
   find_tag: =>
     layer = @
     while not layer.tag
@@ -34,7 +33,13 @@ class Mixin
 
     layer.tag
 
+  reload: (...) =>
+    new = super ...
+
+    setmetatable @, new.__base
+
 {
   :wrapping_,
-  :Mixin
+  :Reloadable,
+  :Mixin,
 }

@@ -1,13 +1,16 @@
 import wrapping_, Mixin from  require "util"
-import Player from require "game.common.player"
+import Player from require "game.player"
 Vector = require "lib.hump.vector"
 
 wrapping_ class PlayerSpawn extends Mixin
   new: (scene, @skin) =>
     super!
 
-    pos = Vector math.floor(@image\getWidth!/2) - @ox, math.floor(@image\getHeight!/2) - @oy
-    @player = Player @skin, pos
+    point = @mask.paths[1][1]
+    pos = Vector point.cp.x, point.cp.y
+    @player = Player scene, @skin, scene\unproject_3d pos
+
+    scene.tags.player = @player
 
   update: (dt) =>
     @player\update dt

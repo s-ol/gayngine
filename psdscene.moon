@@ -5,10 +5,13 @@ psshaders = require "shaders"
 Vector = require "lib.hump.vector"
 HC = require "lib.HC"
 
+SCALE = 4
+
 class PSDScene
   new: (@scene) =>
     @hit = HC.new!
     @cursor = HC.point 0, 0
+    @scroll = Vector!
 
     @init!
 
@@ -35,29 +38,6 @@ class PSDScene
 
     LOG_ERROR "couldn't find mixin '#{name}' for scene '#{@scene}'"
     nil
-
-  draw_with_shader: (shader, ...) =>
-    @target_canvas, @source_canvas = @source_canvas, @target_canvas
-
-    lg.setCanvas @target_canvas
-    lg.clear!
-
-    lg.setShader shader
-    shader\send "background", @source_canvas
-
-    lg.draw ...
-    lg.setShader!
-    lg.setCanvas!
-
-  find_tag: =>
-    layer = @
-    while not layer.tag
-      layer = layer.parent
-
-      if not layer
-        return nil
-
-    layer.tag
 
   reload: (filename) =>
     filename = "game/scenes/#{@scene}/main.psd" unless filename
@@ -101,20 +81,32 @@ class PSDScene
           LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
           mixin layer, @, unpack params
 
+  unproject_2d: (vec) => vec / SCALE - @scroll
+  project_2d: (vec) => (vec + @scroll) * SCALE
+
+  unproject_3d: (vec) => vec\permul Vector 1, 3/2
+  project_3d: (vec) => vec\permul Vector 1, 2/3
+
   update: (dt) =>
     @update_group dt, @tree
 
-    mouse = 1/4 * Vector lm.getPosition!
+    mouse = @unproject_2d Vector lm.getPosition!
     @cursor\moveTo mouse\unpack!
     @hoveritems = @hit\collisions @cursor
 
   mousepressed: (x, y, btn) =>
-    @cursor\moveTo x/4, y/4
-    items = @hit\collisions @cursor
-    for shape, _ in pairs items
-      shape\mousepressed x, y, btn if shape.mousepressed
+    mouse = @unproject_2d Vector x, y
 
- 
+    if btn == 1
+      @cursor\moveTo mouse.x, mouse.y
+
+      items = @hit\collisions @cursor
+      for shape, _ in pairs items
+        shape\mousepressed x, y, btn if shape.mousepressed
+    elseif btn == 2
+      mouse = @unproject_3d mouse
+      @tags.player\moveTo mouse.x, mouse.y
+
   update_group: (dt, group) =>
     return unless group
 
@@ -132,7 +124,9 @@ class PSDScene
     @draw_group @tree
 
     lg.push!
-    lg.scale 4
+    lg.scale SCALE
+    lg.setColor 255, 255, 255
+    lg.translate @scroll.x, @scroll.y
     lg.draw @target_canvas
     lg.pop!
 
@@ -161,6 +155,7 @@ class PSDScene
 
     lg.setShader shader
 
+    lg.setColor 255, 255, 255
     lg.draw @source_canvas
 
     lg.setShader!

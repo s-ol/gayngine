@@ -45,6 +45,7 @@ class PSDSheet
 
   draw: (x, y, rot) =>
     {:image, :ox, :oy} = @frames[@frame]
+    love.graphics.setColor 255, 255, 255
     love.graphics.draw image, x, y, rot, nil, nil, ox, oy if image
 
 {
