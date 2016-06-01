@@ -5,10 +5,10 @@ Grid = require "lib.jumper.jumper.grid"
 Pathfinder = require "lib.jumper.jumper.pathfinder"
 
 wrapping_ class NavMesh extends Mixin
-  X_STEP = 40
-  Y_STEP = 8
+  STEP = Vector 20, 20
+  UNSTEP = Vector 1/STEP.x, 1/STEP.y
 
-  new: =>
+  new: (@scene) =>
     super!
 
     points = {}
@@ -18,29 +18,45 @@ wrapping_ class NavMesh extends Mixin
 
     polygon = Polygon unpack points
 
-    @map = {}
-    sy = 0
-    for y=-@oy, @image\getHeight! - @oy, Y_STEP
-      sy += 1
-      sx = 0
-      @map[sy] = {}
-      for x=-@ox, @image\getWidth! - @ox, X_STEP
-        sx += 1
-        @map[sy][sx] = if polygon\contains x, y then 1 else 0
+    vec_step_iter = (start, stop, step) ->
+      pos = start\clone!
+      pos.x -= step.x -- patch first iteration
+      ->
+        if pos.x < stop.x
+          pos.x += step.x
+        elseif pos.y < stop.y - step.y
+          pos.x = start.x
+          pos.y += step.y
+        else
+          return nil
+        pos
 
-    @grid = Grid @map
-    @finder = Pathfinder @grid, "THETASTAR", 1
+    @map = {}
+    @startpos = @scene\unproject_3d Vector -@ox, -@oy -- screen- to worldspace
+    endpos = @scene\unproject_3d Vector(@image\getDimensions!) - Vector @ox, @oy
+    for world in vec_step_iter @startpos, endpos, STEP
+      grid = @world_to_grid world
+      @map[grid.y] or= {}
+      screen = @scene\project_3d world
+      @map[grid.y][grid.x] = if polygon\contains screen.x, screen.y then 1 else 0
+
+    @finder = Pathfinder Grid(@map), "THETASTAR", 1
+
+  grid_to_world: (vec) =>
+    @startpos + (vec - Vector 1, 1)\permul STEP
+
+  grid_to_screen: (vec) =>
+    @scene\project_3d @grid_to_world vec
+
+  world_to_grid: (vec) =>
+    Vector(1, 1) + (vec - @startpos)\permul UNSTEP
 
   draw: (draw_group, draw_layer) =>
-    ry = -@oy
     for y=1,#@map
-      rx = -@ox
       for x=1,#@map[y]
         if @map[y][x] == 1
           love.graphics.setColor 255, 0, 0
         else
           love.graphics.setColor 0, 255, 0
-        love.graphics.circle "fill", rx, ry, 2
-        rx += X_STEP
-      ry += Y_STEP
-
+        pos = @grid_to_screen Vector x, y
+        love.graphics.circle "fill", pos.x, pos.y, 2

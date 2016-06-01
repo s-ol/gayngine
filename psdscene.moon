@@ -72,8 +72,7 @@ class PSDScene
         LOG "- #{layer.name}", indent
         table.insert target, layer
 
-      name, params = layer.name\match "([a-z]+)%((.*)%)"
-      if name
+      for name, params in layer.name\gmatch "([a-z]+)%((.-)%)"
         params = [str for str in params\gmatch "[^,]+"]
 
         mixin = @load name
@@ -81,11 +80,24 @@ class PSDScene
           LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
           mixin layer, @, unpack params
 
+      --name, params = layer.name\gmatch "([a-z]+)%((.*)%)"
+      --if name
+      --  params = [str for str in params\gmatch "[^,]+"]
+
+      --  mixin = @load name
+      --  if mixin
+      --    LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
+      --    mixin layer, @, unpack params
+
   unproject_2d: (vec) => vec / SCALE - @scroll
   project_2d: (vec) => (vec + @scroll) * SCALE
 
-  unproject_3d: (vec) => vec\permul Vector 1, 3/2
-  project_3d: (vec) => vec\permul Vector 1, 2/3
+  unproject_3d: (vec) =>
+    Vector vec.x - vec.y, 2*vec.y
+
+  project_3d: (vec) =>
+    x_offset = vec.y/2
+    Vector vec.x + vec.y/2, vec.y/2
 
   update: (dt) =>
     @update_group dt, @tree
