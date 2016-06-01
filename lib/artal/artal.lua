@@ -190,21 +190,21 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 			clampY = image.top
 			--print("Clamped at Y:",clampY)
 		end
-		local clampW
-		if image.left + image.right > image.globalWidth then
-			clampW = image.globalWidth - image.left
-			--print("Clamped at W:",clampW)
-		else
-			clampW = image.right - image.left
-		end
-		local clampH
-		if image.top + image.bottom > image.globalHeight then
-			clampH = image.globalHeight - image.top
-			--print("Clamped at H:",clampH)
-		else
-			clampH = image.bottom - image.top
-		end
 
+	local clampW
+	if image.right > image.globalWidth then
+		clampW = image.globalWidth - image.left
+		--print("Clamped at W:",clampW)
+	else
+		clampW = image.right - image.left
+	end
+	local clampH
+	if image.bottom > image.globalHeight then
+		clampH = image.globalHeight - image.top
+		--print("Clamped at H:",clampH)
+	else
+		clampH = image.bottom - image.top
+	end
 		
 		local dataSize = clampW*clampH*4
 		-- Shouldn't ever be negative. But the docs doesn't spesify.
@@ -669,7 +669,15 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
         end
 
         local skipped = 8
-        local numPoints = (length-10)/26
+
+        local numPoints
+        if (length-8)%26 == 0 then
+          numPoints = (length-8)/26
+        else
+          numPoints = (length-10)/26
+          skipped = 10
+        end
+
         artal.layer[LC].mask.paths = {}
         for point=1,numPoints do
           local p = {}
@@ -682,7 +690,7 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
           elseif p.type == 0 or p.type == 3 then
             artal.layer[LC].count = artal.layer[LC].count + 24
             table.insert(artal.layer[LC].mask.paths, {})
-          elseif p.type == 1 or p.type == 2 or p.type == 3 or p.type == 4 then
+          elseif p.type == 1 or p.type == 2 or p.type == 4 or p.type == 5 then
             p.pre = readPoint()
             p.cp = readPoint()
             p.post = readPoint()
@@ -698,7 +706,9 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
             table.insert(artal.layer[LC].mask.paths[#artal.layer[LC].mask.paths], p)
           end
         end
-        artal.layer[LC]:ink(nil, 2)
+        if skipped == 10 then
+          artal.layer[LC]:ink(nil, 2)
+        end
 				--artal.layer[LC].count = artal.layer[LC].count + length
 			else
 				artal.warning[key] = "Key: \""..key.."\" is not yet handled."
