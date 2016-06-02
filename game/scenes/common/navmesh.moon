@@ -5,7 +5,7 @@ Grid = require "lib.jumper.jumper.grid"
 Pathfinder = require "lib.jumper.jumper.pathfinder"
 
 wrapping_ class NavMesh extends Mixin
-  STEP = Vector 20, 20
+  STEP = Vector 10, 20
   UNSTEP = Vector 1/STEP.x, 1/STEP.y
 
   new: (@scene) =>
@@ -32,7 +32,7 @@ wrapping_ class NavMesh extends Mixin
         pos
 
     @map = {}
-    @startpos = @scene\unproject_3d Vector -@ox, -@oy -- screen- to worldspace
+    @startpos = @scene\unproject_3d Vector -@ox - 200, -@oy -- screen- to worldspace
     endpos = @scene\unproject_3d Vector(@image\getDimensions!) - Vector @ox, @oy
     for world in vec_step_iter @startpos, endpos, STEP
       grid = @world_to_grid world
@@ -52,11 +52,12 @@ wrapping_ class NavMesh extends Mixin
     Vector(1, 1) + (vec - @startpos)\permul UNSTEP
 
   draw: (draw_group, draw_layer) =>
-    for y=1,#@map
-      for x=1,#@map[y]
-        if @map[y][x] == 1
-          love.graphics.setColor 255, 0, 0
-        else
-          love.graphics.setColor 0, 255, 0
-        pos = @grid_to_screen Vector x, y
-        love.graphics.circle "fill", pos.x, pos.y, 2
+    if DEBUG
+      for y=1,#@map
+        for x=1,#@map[y]
+          if @map[y][x] == 1
+            love.graphics.setColor 255, 0, 0
+          else
+            love.graphics.setColor 0, 255, 0
+          pos = @grid_to_screen Vector x, y
+          love.graphics.circle "fill", pos.x, pos.y, 1

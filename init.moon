@@ -2,11 +2,11 @@
 
 lg.setDefaultFilter "nearest", "nearest"
 
-DEBUG = not _BUILD
-
 Vector = require "lib.hump.vector"
 import PSDScene from require "psdscene"
 export ^
+
+DEBUG = not _BUILD
 
 if DEBUG
   export MOON, WATCHER
@@ -15,7 +15,8 @@ if DEBUG
 
   WATCHER = Watcher!
 
-love.graphics.setNewFont("assets/SomepxNew.ttf", 16)\setLineHeight 0.56
+lg.setNewFont("assets/SomepxNew.ttf", 16)\setLineHeight 0.56
+lk.setKeyRepeat true
 
 LOG = (msg, indent=0) ->
   indent = " "\rep indent
@@ -40,6 +41,8 @@ love.keypressed = (key) ->
   switch key
     when "escape"
       le.push "quit"
+    when "d"
+      DEBUG = not DEBUG
     when "r"
       if DEBUG
         SCENE\reload!

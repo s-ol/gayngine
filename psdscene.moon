@@ -93,11 +93,13 @@ class PSDScene
   project_2d: (vec) => (vec + @scroll) * SCALE
 
   unproject_3d: (vec) =>
-    Vector vec.x - vec.y, 2*vec.y
+    --Vector vec.x - vec.y, 2*vec.y
+    vec\permul Vector 1, 3
 
   project_3d: (vec) =>
     x_offset = vec.y/2
-    Vector vec.x + vec.y/2, vec.y/2
+    --Vector vec.x + vec.y/2, vec.y/2
+    vec\permul Vector 1, 1/3
 
   update: (dt) =>
     @update_group dt, @tree
