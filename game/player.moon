@@ -2,8 +2,6 @@ import PSDSheet from require "psdsheet"
 import Reloadable from require "util"
 Vector = require "lib.hump.vector"
 
-dummy = Vector!
-
 round = (n) ->
   if n % 1 >= .5
     math.ceil n
