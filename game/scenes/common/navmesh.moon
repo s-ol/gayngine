@@ -8,7 +8,7 @@ wrapping_ class NavMesh extends Mixin
   STEP = Vector 8, 20
   UNSTEP = Vector 1/STEP.x, 1/STEP.y
 
-  new: (@scene) =>
+  new: (@scene, sx, sy, ex, ey) =>
     super!
 
     points = {}
@@ -31,9 +31,15 @@ wrapping_ class NavMesh extends Mixin
           return nil
         pos
 
+    sx or= -@ox
+    sy or= -@oy
+    ex or= @image\getWidth!
+    ex or= @image\getHeight!
+    sx, sy, ex, ey = tonumber(sx), tonumber(sy), tonumber(ex), tonumber ey
+
     @map = {}
-    @startpos = @scene\unproject_3d Vector -@ox - 200, -@oy -- screen- to worldspace
-    endpos = @scene\unproject_3d Vector(@image\getDimensions!) - Vector @ox, @oy
+    @startpos = @scene\unproject_3d Vector sx, sy
+    endpos = @scene\unproject_3d Vector ex, ey
     for world in vec_step_iter @startpos, endpos, STEP
       grid = @world_to_grid world
       @map[grid.y] or= {}

@@ -584,6 +584,7 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
 
 			if key == "luni" then
 				artal.layer[LC]:inkString("luniName",length)
+        artal.layer[LC].betterName = artal.layer[LC].luniName
 			elseif key == "lnsr" then
 				artal.layer[LC]:inkString("layerID",4)
 			elseif key == "lyid" then
