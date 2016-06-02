@@ -58,7 +58,7 @@ class Player extends Reloadable
 
       goal = @path._nodes[#@path._nodes]
       goal = nav\grid_to_screen Vector goal._x, goal._y
-      love.graphics.circle "fill", goal.x, goal.y, 2
+      love.graphics.circle "fill", goal.x, goal.y, 1
 
       local last
       for node in *@path._nodes

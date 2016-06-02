@@ -5,7 +5,7 @@ Grid = require "lib.jumper.jumper.grid"
 Pathfinder = require "lib.jumper.jumper.pathfinder"
 
 wrapping_ class NavMesh extends Mixin
-  STEP = Vector 10, 20
+  STEP = Vector 8, 20
   UNSTEP = Vector 1/STEP.x, 1/STEP.y
 
   new: (@scene) =>
@@ -60,4 +60,4 @@ wrapping_ class NavMesh extends Mixin
           else
             love.graphics.setColor 0, 255, 0
           pos = @grid_to_screen Vector x, y
-          love.graphics.circle "fill", pos.x, pos.y, 1
+          love.graphics.points pos.x, pos.y

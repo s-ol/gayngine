@@ -1,6 +1,7 @@
 {graphics: lg, keyboard: lk, mouse: lm, audio: la, event: le} = love
 
 lg.setDefaultFilter "nearest", "nearest"
+lg.setLineStyle "rough"
 
 Vector = require "lib.hump.vector"
 import PSDScene from require "psdscene"
