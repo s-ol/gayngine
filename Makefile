@@ -1,9 +1,10 @@
 MOON   = $(shell find -name '*.moon')
 NATIVE = $(shell find lib -name '*.lua') main.lua conf.lua
+SCENES = $(shell find game -name '*.psd')
 ASSETS = $(shell find assets) $(shell find shaders)
 COMPILED  = $(MOON:.moon=.lua)
 
-LOVE = $(NATIVE) $(ASSETS) $(COMPILED) heythere.txt
+LOVE = $(NATIVE) $(SCENES) $(ASSETS) $(COMPILED) heythere.txt
 
 .PHONY: all run cleanmoon cleanlove clean
 all: game.love
