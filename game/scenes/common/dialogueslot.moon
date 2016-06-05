@@ -5,7 +5,8 @@ Vector = require "lib.hump.vector"
 
 dummy = Vector!
 
-wrapping_ class Dialogue extends Mixin
+wrapping_ class DialogueSlot extends Mixin
+  @INSTANCES = {}
   new: (@scene, @character) =>
     super!
 
@@ -22,7 +23,7 @@ wrapping_ class Dialogue extends Mixin
       @textpos = one
       @limit = math.abs (one - two).x
 
-    DIALOGUE\register @, @character
+    @@INSTANCES[@character] = @
 
   print: (text, x, y, limit, height, align, background) =>
     lg.setColor 0, 0, 0, 180
@@ -36,21 +37,38 @@ wrapping_ class Dialogue extends Mixin
     lg.setColor 255, 255, 255, 255
     lg.printf text, x+1, y-4, limit, align
 
-  new_text: (text) =>
+  clear: =>
     for choice in *@choices
       @scene.hit\remove choice.shape
-
     @choices = {}
-    return unless text
 
-    isChoice = true
-    if "string" == type text
-      text = { text }
-      isChoice = false
+  say: (strand, text, next) =>
+    font = lg.getFont!
+    { textpos: { :x, :y }, :limit } = @
+    height = 7 * #(select '2', font\getWrap(text, limit))
+    shape = @scene.hit\rectangle x, y, limit, height
+    choice = {
+      :text,
+      :shape,
+      :x, :y,
+      :height
+    }
+    choice.shape.mousepressed = ->
+      strand\next next
+    @choices = { choice }
+
+  choice: (strand, ...) =>
+    choices = { ... }
 
     font = lg.getFont!
-    { textpos: { :x, :y }, :limit, :align } = @
-    @choices = for no, text in ipairs text
+    { textpos: { :x, :y }, :limit } = @
+    @choices = for choice in *choices
+      key = next choice
+      while key and "_" == key\sub 1, 1
+        key = next choice, key
+
+      text = "- #{choice._label or key}"
+
       height = 7 * #(select '2', font\getWrap(text, limit))
       shape = @scene.hit\rectangle x, y, limit, height
       with hit = {
@@ -59,9 +77,11 @@ wrapping_ class Dialogue extends Mixin
           :x, :y,
           :height
         }
-        hit.shape.mousepressed = -> DIALOGUE\select isChoice and no
+        hit.shape.mousepressed = ->
+          @clear!
+          @say strand, choice[key], key
         y += height
 
   draw: (draw_group, draw_layer) =>
-    for { :text, :x, :y, :height, :shape } in *@choices
+    for { :text, :x, :y, :height, :align, :shape } in *@choices
       @print text, x, y, @limit, height, align, @scene.hoveritems[shape]

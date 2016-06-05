@@ -1,84 +1,26 @@
-export DIALOGUE
+import Dialogue from require "game.dialogue"
 
-class Dialogue
-  new: (@timeline) =>
-    @slots = {}
-    @current = 0
+main = Dialogue =>
+  @hector\say "hi!"
+  @raymond\say "hi"
+  @hector\say "what a crazy night."
+  @raymond\say "uhm. yeah."
+  @hector\say "..."
+  @hector\say "what's troubling you?"
 
-  start: =>
-    @current = 1
+  res = @raymond\choice { life: "my life is a fucking mess", _label: "my life is a mess" },
+                        { work: "it's just about work", _label: "problems at work" },
+                        { nothing: "it's nothing important" }
 
-    for name, slot in pairs @slots
-      slot\new_text @get name
+  @hector\say switch res
+    when "life" then "whose isn't? all of us fools have something to chew on."
+    when "work" then "not surprised. all of us fools have something to chew on"
+    when "nothing" then "it's always important. especially if you're the type that hangs around here."
 
-  select: (index) =>
-    @last_choice = index if index
-    @current += 1
+  @raymond\say "what do you mean?"
+  @hector\say "hey look around. everybody here is a misfit weirdo."
+  @hector\say "if you have problems, this is the place where you find someone to share it with."
+  @raymond\say "now you're clearly suggesting that someone is you."
+  @hector\say "i'm not. but i believe i am qualified."
 
-    for name, slot in pairs @slots
-      slot\new_text @get name
-
-  register: (slot, name) =>
-    @slots[name] = slot
-
-  get: (slot) =>
-    text = (@timeline[@current] or {})[slot]
-    if "table" == type(text) and text.type == "response"
-      text = text[@last_choice]
-    text
-
-DIALOGUE = Dialogue {
-  {
-    hector: "hi!"
-  },
-  {
-    raymond: "hi"
-  },
-  {
-    hector: "what a crazy night."
-  },
-  {
-    raymond: "uhm. yeah."
-  },
-  {
-    hector: "..."
-  },
-  {
-    hector: "what's troubling you?"
-  },
-  {
-    raymond: {
-      type: "choice"
-      "-my life is a mess", "-problems at work", "-nothing"
-    }
-  },
-  {
-    raymond: {
-      type: "response"
-      "my life is a fucking mess", "it's just about work.", "it's nothing important."
-    }
-  },
-  {
-    hector: {
-      type: "response",
-      "whose isn't? all of us fools have something to chew on.",
-      "not surprised. all of us fools have something to chew on",
-      "it's always important. especially if you're the type that hangs around here.",
-    }
-  },
-  {
-    raymond: "what do you mean?"
-  },
-  {
-    hector: "hey look around. everybody here is a misfit weirdo."
-  },
-  {
-    hector: "if you have problems, this is the place where you find someone to share it with."
-  },
-  {
-    raymond: "now you're clearly suggesting that someone is you."
-  },
-  {
-    hector: "i'm not. but i believe i am qualified."
-  }
-}
+main\start!

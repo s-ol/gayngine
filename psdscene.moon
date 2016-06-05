@@ -13,9 +13,10 @@ class PSDScene
     @cursor = HC.point 0, 0
     @scroll = Vector!
 
+    @reload!
+
     @init!
 
-    @reload!
 
     if WATCHER
       WATCHER\register "game/scenes/#{@scene}/main.psd", @
