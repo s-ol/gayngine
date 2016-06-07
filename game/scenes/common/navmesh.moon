@@ -46,7 +46,8 @@ wrapping_ class NavMesh extends Mixin
       screen = @scene\project_3d world
       @map[grid.y][grid.x] = if polygon\contains screen.x, screen.y then 1 else 0
 
-    @finder = Pathfinder Grid(@map), "THETASTAR", 1
+    @grid = Grid @map
+    @finder = Pathfinder @grid, "THETASTAR", 1
 
   grid_to_world: (vec) =>
     @startpos + (vec - Vector 1, 1)\permul STEP

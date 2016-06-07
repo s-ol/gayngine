@@ -72,7 +72,8 @@ class Player extends Reloadable
     nav = @scene.tags.nav
     sx, sy = runpack nav\world_to_grid @pos
     gx, gy = runpack nav\world_to_grid goal
-    @path = nav.finder\getPath sx, sy, gx, gy
+    if nav.grid\isWalkableAt gx, gy
+      @path = nav.finder\getPath sx, sy, gx, gy
 
 {
   :Player,
