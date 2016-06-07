@@ -17,7 +17,6 @@ class PSDScene
 
     @init!
 
-
     if WATCHER
       WATCHER\register "game/scenes/#{@scene}/main.psd", @
 
