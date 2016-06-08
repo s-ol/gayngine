@@ -253,7 +253,8 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 				--assert(false,"Artal: Unsupported channel id/mode.")
 			end
 
-			if channelCompression == 1 then
+      if cPixelPos == -1 then
+      elseif channelCompression == 1 then
 				print("x", "comp")
 				for LINE = 1 , image.totalHeight do
 					-- Bytes per line
