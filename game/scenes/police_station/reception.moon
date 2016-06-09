@@ -3,7 +3,7 @@ import wrapping_, Mixin from  require "util"
 
 reception_dialogue = Dialogue =>
   @receptionist\say "hey, what do you need?"
-  @other\say "nothing, you just suck man"
+  @raymond\say "nothing, you just suck man"
   @receptionist\say "cmon, don't be like that...."
 
 wrapping_ class ReceptionDialogue extends Mixin

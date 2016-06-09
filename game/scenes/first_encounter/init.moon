@@ -8,9 +8,9 @@ main = Dialogue =>
   @hector\say "..."
   @hector\say "what's troubling you?"
 
-  res = @raymond\choice { life: "my life is a fucking mess", _label: "my life is a mess" },
-                        { work: "it's just about work", _label: "problems at work" },
-                        { nothing: "it's nothing important" }
+  res = @raymond\choice { life: "my life is a fucking mess", _label: "life" },
+                        { work: "it's just about work", _label: "work" },
+                        { nothing: "it's nothing important", _label: "nothing"}
 
   @hector\say switch res
     when "life" then "whose isn't? all of us fools have something to chew on."
