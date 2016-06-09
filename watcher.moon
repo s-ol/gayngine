@@ -57,6 +57,7 @@ class Watcher
       for name, objs in pairs @files
         modified = love.filesystem.getLastModified name
         if objs.modified < modified
+          print "modified #{name}"
           objs.modified = modified
           for _, obj in pairs objs
             if "number" == type _

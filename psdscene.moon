@@ -22,7 +22,8 @@ class PSDScene
       WATCHER\register "game/scenes/#{@scene}/main.psd", @
 
   init: =>
-    pcall require, "game.scenes.#{@scene}"
+    if pcall require, "game.scenes.#{@scene}"
+      print "running init for #{@scene}..."
 
   load: (name, ...) =>
     _, mixin = pcall require, "game.scenes.#{@scene}.#{name}"

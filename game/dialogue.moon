@@ -1,12 +1,12 @@
 DialogueSlot = require "game.scenes.common.dialogueslot"
 
 class Dialogue
-  new: (script) =>
-    @script = coroutine.wrap script
+  new: (@script) =>
 
   start: =>
-    wrapped = {}
+    @routine = coroutine.create @script
 
+    wrapped = {}
     for name, slot in pairs DialogueSlot.INSTANCES
       slot\clear!
       wrapped[name] = setmetatable {}, __index: (_, key) ->
@@ -14,11 +14,11 @@ class Dialogue
           slot[key] slot, @, ...
           coroutine.yield!
 
-    @.script wrapped
+    coroutine.resume @routine, wrapped
 
   next: (...) =>
     for name, slot in pairs DialogueSlot.INSTANCES
       slot\clear!
-    @.script ...
+    coroutine.resume @routine, ...
 
 { :Dialogue }
