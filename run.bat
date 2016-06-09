@@ -1,1 +1,1 @@
-"D:\Program Files (x86)\LOVE\love" .
+"love" .

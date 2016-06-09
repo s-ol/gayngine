@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\LOVE\love.exe" . police_station
+"love.exe" . police_station

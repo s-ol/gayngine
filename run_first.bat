@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\LOVE\love.exe" . first_encounter
+"love.exe" . first_encounter
