@@ -1,4 +1,4 @@
-package.path = package.path .. ";./?/init.lua"
+package.path = package.path .. ";./?/init.lua;?.lua"
 
 _BUILD = true
 if not pcall(require, "init") then
