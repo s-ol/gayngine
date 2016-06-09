@@ -12,6 +12,7 @@ class PSDScene
     @hit = HC.new!
     @cursor = HC.point 0, 0
     @scroll = Vector!
+    @state = {}
 
     @reload!
 
