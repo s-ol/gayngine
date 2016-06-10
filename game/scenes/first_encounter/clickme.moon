@@ -1,6 +1,8 @@
 import wrapping_, Mixin from  require "util"
 import PSDScene from require "psdscene"
 
+export SCENE
+
 wrapping_ class SubAnim extends Mixin
   new: (@scene) =>
     super!
