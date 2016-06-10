@@ -84,4 +84,4 @@ wrapping_ class DialogueSlot extends Mixin
 
   draw: (draw_group, draw_layer) =>
     for { :text, :x, :y, :height, :shape } in *@choices
-      @print text, x, y, @limit, height, @align, @scene.hoveritems[shape]
+      @print text, x, y, @limit, height, @align, @scene.hoveritems[shape] and #@choices != 1
