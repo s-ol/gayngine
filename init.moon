@@ -36,7 +36,6 @@ LOG_ERROR = (msg, indent=0) ->
 WIDTH, HEIGHT = lg.getDimensions!
 
 SCENE = PSDScene arg[2] or "police_station"
-SCENE\init!
 
 love.keypressed = (key) ->
   switch key

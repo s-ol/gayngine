@@ -1,4 +1,5 @@
 import wrapping_, Mixin from  require "util"
+import PSDScene from require "psdscene"
 
 wrapping_ class SubAnim extends Mixin
   new: (@scene) =>
@@ -20,7 +21,8 @@ wrapping_ class SubAnim extends Mixin
     @hitarea.mousepressed = @\mousepressed
 
   mousepressed: =>
-    DIALOGUE\start!
+    SCENE = PSDScene "police_station"
+
 
   draw: (draw_group, draw_layer) =>
     if @scene.hoveritems[@hitarea]
