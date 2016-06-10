@@ -92,10 +92,8 @@ local function directFileReader(C_fileData)
 		
 		assert(stepLength == 1 or stepLength == 2 or stepLength == 4 ,"Artal: ink must be a power of 2. No higher than 4.")
 
-			      _ = stepLength == 1 and NEROE and print("frst", self.count)
 		if self.count > 1099843 then return 0 end
 		local first = C_fileData[self.count]
-			      --_ = stepLength == 1 and NEROE and print("snd")
 		local second
 		local third
 		local forth
@@ -176,9 +174,7 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 	assert(layerLoadData ~= nil, "Artal: newLayer layerLoadData is nil"..commonAssertMsg)
 
 	local image = layerLoadData
-	print("x", 1)
 
-	print("SAIZE", image.fileData:getSize())
 	local C_fileData = ffi.cast("uint8_t *", image.fileData:getPointer())
 	local artal = directFileReader(C_fileData)
 
@@ -212,7 +208,6 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 	end
 		
 		local dataSize = clampW*clampH*4
-		print("seize", dataSize, dataSize > image.fileData:getSize())
 		-- Shouldn't ever be negative. But the docs doesn't spesify.
 		if dataSize < 0 then dataSize = 0 end
 
@@ -255,7 +250,6 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 
       if cPixelPos == -1 then
       elseif channelCompression == 1 then
-				print("x", "comp")
 				for LINE = 1 , image.totalHeight do
 					-- Bytes per line
 					lineInfo[LINE] = artal:ink(nil,2)
@@ -277,21 +271,12 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 							local xPixelPos = clampX
 							while artal.count < countEnd do
 								if artal.count > 1000000 then break end
-				NERO = (NERO or 0) + 1
-				--if NERO % 1000 == 0 then print(NERO) end
-				if not NEROE and NERO > 220000 then
-					io.stdout:setvbuf("no")
-					NERO = 0
-				NEROE = true
-				end
 								local headByte = artal:ink(nil,1,"int")
 								--print("head",headByte)
 								if headByte >= 0 then
 			--						print("A")
 									for i = 1, 1 + headByte do
 										-- Literal pixels
-			--_ = NEROE and print("rek", artal.count, "/", countEnd)
-			    --_= NEROE and print("rak")
 										local v = artal:ink(nil, 1)
 										local pixelValue = v * alphaOpacity
 										if xPixelPos >= 0 and xPixelPos < clampX+clampW then
@@ -356,7 +341,6 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 			end
 		end
 
-	print("x", 7)
 	if dataSize == 0 then
 		return nil
 	else
@@ -365,7 +349,6 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 end
 
 local function defaultLoadImageFunction(artalLayer,layerLoadData,folderStack,layerNumber)
-	print(1)
 	local layer = {}
 	layer.name = artalLayer.betterName
 	layer.blend = artalLayer.betterBlend
@@ -377,9 +360,7 @@ local function defaultLoadImageFunction(artalLayer,layerLoadData,folderStack,lay
 		layer.clip = true
 	end
 
-	print(2, layer.name)
 	local imageData = artalNewLayerImageData(layerLoadData)
-	print(3)
 	if imageData then
 		layer.image = love.graphics.newImage(imageData)
 		if layer.clip then
@@ -607,10 +588,8 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
 
 
 			if key == "luni" then
-				print("reading luni")
 				artal.layer[LC]:inkString("luniName",length)
         artal.layer[LC].betterName = artal.layer[LC].luniName
-				print("reading dun")
 			elseif key == "lnsr" then
 				artal.layer[LC]:inkString("layerID",4)
 			elseif key == "lyid" then
@@ -707,7 +686,6 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
 
         artal.layer[LC].mask.paths = {}
         for point=1,numPoints do
-		print("point", point)
           local p = {}
           p.type = artal.layer[LC]:ink(nil, 2)
 
