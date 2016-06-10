@@ -17,6 +17,7 @@ wrapping_ class ReceptionDialogue extends Mixin
 
     @hitarea = scene.hit\polygon unpack points
     @hitarea.mousepressed = @\mousepressed
+    @hitarea.prio = 0
 
   mousepressed: =>
     reception_dialogue\start!

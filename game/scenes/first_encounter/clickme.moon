@@ -21,6 +21,7 @@ wrapping_ class SubAnim extends Mixin
 
     @hitarea = scene.hit\polygon unpack points
     @hitarea.mousepressed = @\mousepressed
+    @hitarea.prio = 0
 
   mousepressed: =>
     SCENE = PSDScene "police_station"

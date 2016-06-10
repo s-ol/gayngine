@@ -25,17 +25,22 @@ wrapping_ class DialogueSlot extends Mixin
 
     @@INSTANCES[@character] = @
 
-  print: (text, x, y, limit, height, align, background) =>
-    lg.setColor 0, 0, 0, 180
+  print: (text, x, y, width, height, align, hover) =>
 
-    if background
-      lg.rectangle "fill", x, y, limit, height
+
+    if hover
+      x += 2
+      lg.setColor 0, 0, 0, 200
+      lg.rectangle "fill", x, y, width+2, height
     else
-      lg.printf text, x+2, y-4, limit, align
-      lg.printf text, x+2, y-3, limit, align
+      lg.setColor 0, 0, 0, 120
+      lg.rectangle "fill", x, y, width+1, height
+
+     -- lg.printf text, x+2, y-4, width, align
+     -- lg.printf text, x+2, y-3, width, align
 
     lg.setColor 255, 255, 255, 255
-    lg.printf text, x+1, y-4, limit, align
+    lg.printf text, x+1, y-4, width, align
 
   clear: =>
     for choice in *@choices
@@ -45,16 +50,18 @@ wrapping_ class DialogueSlot extends Mixin
   say: (strand, text, next) =>
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
-    height = 7 * #(select '2', font\getWrap(text, limit))
-    shape = @scene.hit\rectangle x, y, limit, height
+    width, height = font\getWrap text, limit
+    height = 7 * #height
+    shape = @scene.hit\rectangle 0, 0, @scene.width, @scene.height
     choice = {
       :text,
       :shape,
       :x, :y,
-      :height
+      :width, :height
     }
     choice.shape.mousepressed = ->
       strand\next next
+    choice.shape.prio = 200
     @choices = { choice }
 
   choice: (strand, ...) =>
@@ -62,26 +69,28 @@ wrapping_ class DialogueSlot extends Mixin
 
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
-    @choices = for choice in *choices
-      key = next choice
+    @choices = for tbl in *choices
+      key = next tbl
       while key and "_" == key\sub 1, 1
-        key = next choice, key
+        key = next tbl, key
 
-      text = "- #{choice._label or key}"
+      text = "- #{tbl._label or key}"
 
-      height = 7 * #(select '2', font\getWrap(text, limit))
-      shape = @scene.hit\rectangle x, y, limit, height
-      with hit = {
+      width, height = font\getWrap text, limit
+      height = 7 * #height
+      shape = @scene.hit\rectangle x, y, width+3, height
+      with choice = {
           :text,
           :shape,
           :x, :y,
-          :height
+          :width, :height
         }
-        hit.shape.mousepressed = ->
+        choice.shape.mousepressed = ->
           @clear!
-          @say strand, choice[key], key
+          @say strand, tbl[key], key
+        choice.shape.prio = 200
         y += height
 
   draw: (draw_group, draw_layer) =>
-    for { :text, :x, :y, :height, :shape } in *@choices
-      @print text, x, y, @limit, height, @align, @scene.hoveritems[shape] and #@choices != 1
+    for { :text, :x, :y, :width, :height, :shape } in *@choices
+      @print text, x, y, width, height, @align, @scene.hoveritems[shape] and #@choices != 1

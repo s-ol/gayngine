@@ -1,5 +1,7 @@
 DialogueSlot = require "game.scenes.common.dialogueslot"
 
+export DIALOGUE
+
 class Dialogue
   new: (@script) =>
 
@@ -14,11 +16,19 @@ class Dialogue
           slot[key] slot, @, ...
           coroutine.yield!
 
+    DIALOGUE = @
+
     coroutine.resume @routine, wrapped
+
+    if "dead" == coroutine.status @routine
+      DIALOGUE = nil
 
   next: (...) =>
     for name, slot in pairs DialogueSlot.INSTANCES
       slot\clear!
     coroutine.resume @routine, ...
+
+    if "dead" == coroutine.status @routine
+      DIALOGUE = nil
 
 { :Dialogue }

@@ -82,15 +82,6 @@ class PSDScene
           LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
           mixin layer, @, unpack params
 
-      --name, params = layer.name\gmatch "([a-z]+)%((.*)%)"
-      --if name
-      --  params = [str for str in params\gmatch "[^,]+"]
-
-      --  mixin = @load name
-      --  if mixin
-      --    LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
-      --    mixin layer, @, unpack params
-
   unproject_2d: (vec) => vec / SCALE - @scroll
   project_2d: (vec) => (vec + @scroll) * SCALE
 
@@ -117,11 +108,16 @@ class PSDScene
       @cursor\moveTo mouse.x, mouse.y
 
       items = @hit\collisions @cursor
-      for shape, _ in pairs items
+
+      shapes = [shape for shape, _ in pairs items]
+      table.sort shapes, (a, b) -> a.prio > b.prio
+      for shape in *shapes
         shape\mousepressed x, y, btn if shape.mousepressed
-    elseif btn == 2
-      mouse = @unproject_3d mouse
-      @tags.player\moveTo mouse.x, mouse.y
+        break
+    elseif btn == 2 and @tags.player
+      if not DIALOGUE
+        mouse = @unproject_3d mouse
+        @tags.player\moveTo mouse.x, mouse.y
 
   update_group: (dt, group) =>
     return unless group
