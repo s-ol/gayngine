@@ -44,6 +44,8 @@ class Player extends Reloadable
           @pos = goal
         else
           @pos += delta\trimmed travel_dist
+          @path.cb! if @path.cb
+          @path.cb = nil
           break
 
   draw: =>
@@ -67,13 +69,16 @@ class Player extends Reloadable
 
         last = pos
 
-  moveTo: (x, y) =>
-    goal = Vector x, y
+  moveTo: (goal, cb) =>
     nav = @scene.tags.nav
     sx, sy = runpack nav\world_to_grid @pos
     gx, gy = runpack nav\world_to_grid goal
     if nav.grid\isWalkableAt gx, gy
       @path = nav.finder\getPath sx, sy, gx, gy
+      @path.cb = cb
+    else
+      print "not walkable!"
+      cb!
 
 {
   :Player,

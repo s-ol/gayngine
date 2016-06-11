@@ -1,9 +1,14 @@
+Vector = require "lib.hump.vector"
 import Dialogue from require "game.dialogue"
 import wrapping_, Mixin from  require "util"
 
+vector = Vector!
+
 reception_dialogue = Dialogue =>
+  ray = @raymond_reception
+
   @receptionist\say "hey, what do you need?"
-  @raymond\say "nothing, you just suck man"
+  ray\say "nothing, you just suck man"
   @receptionist\say "cmon, don't be like that...."
 
 wrapping_ class ReceptionDialogue extends Mixin
@@ -19,5 +24,12 @@ wrapping_ class ReceptionDialogue extends Mixin
     @hitarea.mousepressed = @\mousepressed
     @hitarea.prio = 0
 
+    @playerpos = vector.clone @[1].mask.paths[1][1].cp
+    @playerdir = vector.clone(@[1].mask.paths[1][2].cp) - @playerpos
+
   mousepressed: =>
-    reception_dialogue\start!
+    SCENE.tags.player\moveTo SCENE\unproject_3d(@playerpos), ->
+      -- TODO: turn to @playerdir
+      reception_dialogue\start!
+
+  draw: =>
