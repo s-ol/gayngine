@@ -13,7 +13,7 @@ runpack = (vec) ->
 
 class Player extends Reloadable
   ORIGIN = Vector 16, 65
-  SPEED = 120
+  SPEED = 80
   new: (@scene, @skin, @pos=Vector!) =>
     super!
 
