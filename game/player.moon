@@ -81,11 +81,10 @@ class Player extends Reloadable
     gx, gy = runpack nav\world_to_grid goal
     if nav.grid\isWalkableAt gx, gy
       @path = nav.finder\getPath sx, sy, gx, gy
-      if @path
-        @path.cb = cb
+      @path.cb = cb if @path
     else
       print "not walkable!"
-      cb!
+      cb! if cb
 
 {
   :Player,
