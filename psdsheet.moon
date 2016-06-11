@@ -17,17 +17,17 @@ class PSDSheet
     print "reloading #{@filename}..."
 
     @frames = {}
-    target = @frames
+    target = @anims
     local group
 
     psd = artal.newPSD @filename
     for layer in *psd
       if layer.type == "open"
         if not group
+          group = layer.name
           layer.image = love.graphics.newCanvas psd.width, psd.height
           love.graphics.setCanvas layer.image
-          table.insert target, layer
-          group = layer.name
+          @frames[group] = layer
       elseif layer.type == "close"
         if layer.name == group
           love.graphics.setCanvas!
@@ -48,6 +48,70 @@ class PSDSheet
     love.graphics.setColor 255, 255, 255
     love.graphics.draw image, x, y, rot, nil, nil, ox, oy if image
 
+class MultiSheet
+  new: (@filename, @frametime=.1) =>
+    @time   = 0
+    @frame  = 1
+    @anim = "idle"
+
+    @reload!
+
+    if WATCHER
+      WATCHER\register @filename, @
+
+
+  reload: =>
+    print "reloading #{@filename}..."
+
+    @anims = {}
+    local anim
+
+    psd = artal.newPSD @filename
+    for layer in *psd
+      if not anim
+        name = layer.name
+        if layer.type == "open"
+          anim = layer.name
+        else
+          layer = { layer }
+
+        @anims[name] = layer
+      else
+        if layer.type == "close"
+          anim = nil
+        else
+          table.insert @anims[anim], layer
+
+  set: (vec) =>
+    new = if vec\len2! < .1
+      "idle"
+    else
+      if vec.x > 0
+        "right"
+      else
+        "left"
+
+    if new != @anim
+      @time = 0
+      @anim = new
+
+  update: (vec, dt) =>
+    @set vec
+    return unless @anims[@anim]
+
+    @time += dt
+
+    @frame = 1 + (math.floor(@time/@frametime) % #@anims[@anim])
+
+  draw: (x, y, rot) =>
+    return unless @anims[@anim]
+
+    {:image, :ox, :oy} = @anims[@anim][@frame]
+
+    love.graphics.setColor 255, 255, 255
+    love.graphics.draw image, x, y, rot, nil, nil, ox, oy if image
+
 {
   :PSDSheet,
+  :MultiSheet,
 }

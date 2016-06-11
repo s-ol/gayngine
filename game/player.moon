@@ -1,4 +1,4 @@
-import PSDSheet from require "psdsheet"
+import MultiSheet from require "psdsheet"
 import Reloadable from require "util"
 Vector = require "lib.hump.vector"
 
@@ -17,7 +17,7 @@ class Player extends Reloadable
   new: (@scene, @skin, @pos=Vector!) =>
     super!
 
-    @sheet = PSDSheet "game/characters/#{@skin}.psd"
+    @sheet = MultiSheet "game/characters/#{@skin}.psd", .15
 
   reload: (...) =>
     new = super ...
@@ -25,8 +25,7 @@ class Player extends Reloadable
     setmetatable @, new.Player.__base
 
   update: (dt) =>
-    @sheet\update dt
-
+    total = Vector!
     if @path
       @path.index or= 1
 
@@ -42,11 +41,18 @@ class Player extends Reloadable
           travel_dist -= delta\len!
           @path.index += 1
           @pos = goal
+          total += delta
         else
-          @pos += delta\trimmed travel_dist
-          @path.cb! if @path.cb
-          @path.cb = nil
+          delta = delta\trimmed travel_dist
+          @pos += delta
+          total += delta
           break
+
+      if not @path._nodes[@path.index]
+        @path.cb! if @path.cb
+        @path = nil
+
+    @sheet\update total, dt
 
   draw: =>
     { :x, :y } = @scene\project_3d(@pos) - ORIGIN
@@ -75,7 +81,8 @@ class Player extends Reloadable
     gx, gy = runpack nav\world_to_grid goal
     if nav.grid\isWalkableAt gx, gy
       @path = nav.finder\getPath sx, sy, gx, gy
-      @path.cb = cb
+      if @path
+        @path.cb = cb
     else
       print "not walkable!"
       cb!
