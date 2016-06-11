@@ -7,6 +7,9 @@ HC = require "lib.HC"
 
 SCALE = 4
 
+hand = lm.getSystemCursor "hand"
+arrow = lm.getSystemCursor "arrow"
+
 class PSDScene
   new: (@scene) =>
     @hit = HC.new!
@@ -100,6 +103,10 @@ class PSDScene
     mouse = @unproject_2d Vector lm.getPosition!
     @cursor\moveTo mouse\unpack!
     @hoveritems = @hit\collisions @cursor
+    if next @hoveritems
+      lm.setCursor hand
+    else
+      lm.setCursor arrow
 
   mousepressed: (x, y, btn) =>
     mouse = @unproject_2d Vector x, y
@@ -116,8 +123,7 @@ class PSDScene
         break
     elseif btn == 2 and @tags.player
       if not DIALOGUE
-        mouse = @unproject_3d mouse
-        @tags.player\moveTo mouse.x, mouse.y
+        @tags.player\moveTo @unproject_3d mouse
 
   update_group: (dt, group) =>
     return unless group
