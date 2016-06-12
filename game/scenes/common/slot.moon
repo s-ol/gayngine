@@ -5,7 +5,7 @@ Vector = require "lib.hump.vector"
 
 dummy = Vector!
 
-wrapping_ class DialogueSlot extends Mixin
+wrapping_ class Slot extends Mixin
   @INSTANCES = {}
   new: (@scene, @character) =>
     super!
@@ -23,11 +23,12 @@ wrapping_ class DialogueSlot extends Mixin
       @textpos = one
       @limit = math.abs (one - two).x
 
-    @@INSTANCES[@character] = @
+    if @character
+      @@INSTANCES[@character] = @
+    else
+      table.insert @@INSTANCES, @
 
   print: (text, x, y, width, height, align, hover) =>
-
-
     if hover
       x += 2
       lg.setColor 0, 0, 0, 200
@@ -47,7 +48,7 @@ wrapping_ class DialogueSlot extends Mixin
       @scene.hit\remove choice.shape
     @choices = {}
 
-  say: (strand, text, next) =>
+  say: (text, next) =>
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
     width, height = font\getWrap text, limit
@@ -60,11 +61,13 @@ wrapping_ class DialogueSlot extends Mixin
       :width, :height
     }
     choice.shape.mousepressed = ->
-      strand\next next
+      DIALOGUE\next next
     choice.shape.prio = 200
     @choices = { choice }
 
-  choice: (strand, ...) =>
+    coroutine.yield! unless next
+
+  choice: (...) =>
     choices = { ... }
 
     font = lg.getFont!
@@ -87,9 +90,11 @@ wrapping_ class DialogueSlot extends Mixin
         }
         choice.shape.mousepressed = ->
           @clear!
-          @say strand, tbl[key], key
+          @say tbl[key], key
         choice.shape.prio = 200
         y += height
+
+    coroutine.yield!
 
   draw: (draw_group, draw_layer) =>
     for { :text, :x, :y, :width, :height, :shape } in *@choices

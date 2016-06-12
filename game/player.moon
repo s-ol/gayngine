@@ -13,7 +13,7 @@ runpack = (vec) ->
 
 class Player extends Reloadable
   ORIGIN = Vector 16, 65
-  SPEED = 120
+  SPEED = 80
   new: (@scene, @skin, @pos=Vector!) =>
     super!
 
@@ -58,7 +58,7 @@ class Player extends Reloadable
     { :x, :y } = @scene\project_3d(@pos) - ORIGIN
     @sheet\draw math.floor(x), math.floor(y)
 
-    if @path and DEBUG
+    if @path and DEBUG.navmesh
       love.graphics.setColor 0, 0, 255
       nav = @scene.tags.nav
 
@@ -81,11 +81,10 @@ class Player extends Reloadable
     gx, gy = runpack nav\world_to_grid goal
     if nav.grid\isWalkableAt gx, gy
       @path = nav.finder\getPath sx, sy, gx, gy
-      if @path
-        @path.cb = cb
+      @path.cb = cb if @path
     else
       print "not walkable!"
-      cb!
+      cb! if cb
 
 {
   :Player,

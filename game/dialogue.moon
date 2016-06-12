@@ -1,31 +1,28 @@
-DialogueSlot = require "game.scenes.common.dialogueslot"
+Slot = require "game.scenes.common.slot"
 
 export DIALOGUE
 
 class Dialogue
   new: (@script) =>
 
-  start: =>
+  start: (slots={}) =>
     @routine = coroutine.create @script
 
-    wrapped = {}
-    for name, slot in pairs DialogueSlot.INSTANCES
+    for name, slot in pairs Slot.INSTANCES
       slot\clear!
-      wrapped[name] = setmetatable {}, __index: (_, key) ->
-        (_, ...) ->
-          slot[key] slot, @, ...
-          coroutine.yield!
+      slots[name] = slot
 
     DIALOGUE = @
 
-    coroutine.resume @routine, wrapped
+    coroutine.resume @routine, slots
 
     if "dead" == coroutine.status @routine
       DIALOGUE = nil
 
   next: (...) =>
-    for name, slot in pairs DialogueSlot.INSTANCES
+    for name, slot in pairs Slot.INSTANCES
       slot\clear!
+
     coroutine.resume @routine, ...
 
     if "dead" == coroutine.status @routine
