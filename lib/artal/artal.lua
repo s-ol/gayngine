@@ -92,7 +92,6 @@ local function directFileReader(C_fileData)
 		
 		assert(stepLength == 1 or stepLength == 2 or stepLength == 4 ,"Artal: ink must be a power of 2. No higher than 4.")
 
-		if self.count > 1099843 then return 0 end
 		local first = C_fileData[self.count]
 		local second
 		local third
@@ -270,7 +269,6 @@ local function artalNewLayerImageData(layerLoadData,askIsImageLayer)
 						if yPixelPos < clampH + clampY then
 							local xPixelPos = clampX
 							while artal.count < countEnd do
-								if artal.count > 1000000 then break end
 								local headByte = artal:ink(nil,1,"int")
 								--print("head",headByte)
 								if headByte >= 0 then
