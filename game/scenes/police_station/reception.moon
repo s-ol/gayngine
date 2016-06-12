@@ -5,6 +5,7 @@ import wrapping_, Mixin from  require "util"
 vector = Vector!
 
 reception_dialogue = Dialogue =>
+
   ray = @raymond_reception
 
   @receptionist\say "hey, what do you need?"
