@@ -6,6 +6,7 @@ Vector = require "lib.hump.vector"
 HC = require "lib.HC"
 
 SCALE = 4
+KEYHOLE = lg.getWidth! * 0.2
 
 hand = lm.getSystemCursor "hand"
 arrow = lm.getSystemCursor "arrow"
@@ -85,8 +86,8 @@ class PSDScene
           LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
           mixin layer, @, unpack params
 
-  unproject_2d: (vec) => vec / SCALE - @scroll
-  project_2d: (vec) => (vec + @scroll) * SCALE
+  unproject_2d: (vec) => vec / SCALE + @scroll
+  project_2d: (vec) => (vec - @scroll) * SCALE
 
   unproject_3d: (vec) =>
     --Vector vec.x - vec.y, 2*vec.y
@@ -99,6 +100,15 @@ class PSDScene
 
   update: (dt) =>
     @update_group dt, @tree
+
+    if @tags.player
+      pos = @tags.player.pos
+      keyhole_right = (Vector (WIDTH + KEYHOLE) / 2, 0) / SCALE
+      keyhole_left = (Vector (WIDTH - KEYHOLE) / 2, 0) / SCALE
+      if pos > @scroll + keyhole_right
+        @scroll.x = (pos - keyhole_right).x
+      elseif pos < @scroll + keyhole_left
+        @scroll.x = (pos - keyhole_left).x
 
     mouse = @unproject_2d Vector lm.getPosition!
     @cursor\moveTo mouse\unpack!
@@ -144,7 +154,7 @@ class PSDScene
     lg.push!
     lg.scale SCALE
     lg.setColor 255, 255, 255
-    lg.translate @scroll.x, @scroll.y
+    lg.translate -@scroll.x, -@scroll.y
     lg.draw @target_canvas
     lg.pop!
 

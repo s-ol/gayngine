@@ -56,10 +56,8 @@ love.keypressed = (key) ->
       le.push "quit"
     when "d"
       DEBUG "enabled"
-      print rawget DEBUG, "enabled"
     when "n"
       DEBUG "navmesh"
-      print DEBUG.navmesh
     when "r"
       SCENE\reload! if DEBUG!
     when "right"
