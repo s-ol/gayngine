@@ -1,14 +1,13 @@
 Vector = require "lib.hump.vector"
+Slot = require "game.scenes.common.slot"
 import Dialogue from require "game.dialogue"
 import wrapping_, Mixin from  require "util"
 
 vector = Vector!
 
 reception_dialogue = Dialogue =>
-  ray = @raymond_reception
-
   @receptionist\say "hey, what do you need?"
-  ray\say "nothing, you just suck man"
+  @player\say "nothing, you just suck man"
   @receptionist\say "cmon, don't be like that...."
 
 wrapping_ class ReceptionDialogue extends Mixin
@@ -24,12 +23,20 @@ wrapping_ class ReceptionDialogue extends Mixin
     @hitarea.mousepressed = @\mousepressed
     @hitarea.prio = 0
 
-    @playerpos = vector.clone @[1].mask.paths[1][1].cp
-    @playerdir = vector.clone(@[1].mask.paths[1][2].cp) - @playerpos
+    local player, slot
+    for layer in *@
+      if layer.name == "player"
+        player = layer
+      elseif layer.name\match "slot%(%)"
+        @slot = layer
+
+    @playerpos = vector.clone player.mask.paths[1][1].cp
+    @playerdir = vector.clone(player.mask.paths[1][2].cp) - @playerpos
 
   mousepressed: =>
     SCENE.tags.player\moveTo SCENE\unproject_3d(@playerpos), ->
       -- TODO: turn to @playerdir
-      reception_dialogue\start!
+      reception_dialogue\start player: @slot
 
-  draw: =>
+  draw: (draw_group, draw_layer) =>
+    draw_group { @slot }
