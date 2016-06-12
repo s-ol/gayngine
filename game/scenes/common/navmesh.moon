@@ -59,7 +59,7 @@ wrapping_ class NavMesh extends Mixin
     Vector(1, 1) + (vec - @startpos)\permul UNSTEP
 
   draw: (draw_group, draw_layer) =>
-    if DEBUG
+    if DEBUG.navmesh
       for y=1,#@map
         for x=1,#@map[y]
           if @map[y][x] == 1

@@ -7,9 +7,22 @@ Vector = require "lib.hump.vector"
 import PSDScene from require "psdscene"
 export ^
 
-DEBUG = not _BUILD
+DEBUG = do
+  proxy = {}
+  setmetatable { enabled: not _BUILD },
+    __call: (tgl) =>
+      if tgl
+        @[tgl] = not @[tgl]
+      @enabled
+    __newindex: proxy
+    __index: (key) =>
+      enabled = @enabled
+      if enabled
+        proxy[key]
+      else
+        false
 
-if DEBUG
+if DEBUG!
   export MOON, WATCHER
   import Watcher from require "watcher"
   MOON = require "moon"
@@ -30,7 +43,7 @@ LOG_ERROR = (msg, indent=0) ->
 
   print "ERR", indent .. "#{name}#{source}:#{currentline}", msg
 
-  unless DEBUG
+  unless DEBUG!
     error "error logged in STDOUT"
 
 WIDTH, HEIGHT = lg.getDimensions!
@@ -42,14 +55,17 @@ love.keypressed = (key) ->
     when "escape"
       le.push "quit"
     when "d"
-      DEBUG = not DEBUG
+      DEBUG "enabled"
+      print rawget DEBUG, "enabled"
+    when "n"
+      DEBUG "navmesh"
+      print DEBUG.navmesh
     when "r"
-      if DEBUG
-        SCENE\reload!
+      SCENE\reload! if DEBUG!
     when "right"
-      SCENE.scroll -= Vector 4, 0
+      SCENE.scroll -= Vector 4, 0 if DEBUG!
     when "left"
-      SCENE.scroll += Vector 4, 0
+      SCENE.scroll += Vector 4, 0 if DEBUG!
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER

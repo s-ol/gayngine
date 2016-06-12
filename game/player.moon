@@ -58,7 +58,7 @@ class Player extends Reloadable
     { :x, :y } = @scene\project_3d(@pos) - ORIGIN
     @sheet\draw math.floor(x), math.floor(y)
 
-    if @path and DEBUG
+    if @path and DEBUG.navmesh
       love.graphics.setColor 0, 0, 255
       nav = @scene.tags.nav
 
