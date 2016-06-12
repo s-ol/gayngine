@@ -61,9 +61,9 @@ love.keypressed = (key) ->
     when "r"
       SCENE\reload! if DEBUG!
     when "right"
-      SCENE.scroll -= Vector 4, 0 if DEBUG!
-    when "left"
       SCENE.scroll += Vector 4, 0 if DEBUG!
+    when "left"
+      SCENE.scroll -= Vector 4, 0 if DEBUG!
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER
