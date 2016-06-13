@@ -5,7 +5,7 @@ psshaders = require "shaders"
 Vector = require "lib.hump.vector"
 HC = require "lib.HC"
 
-SCALE = 4
+SCALE = tonumber arg[3] or 4
 KEYHOLE = lg.getWidth! * 0.2
 
 hand = lm.getSystemCursor "hand"
