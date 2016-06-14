@@ -6,6 +6,7 @@ Vector = require "lib.hump.vector"
 dummy = Vector!
 
 wrapping_ class Slot extends Mixin
+  SPEED = 25
   @INSTANCES = {}
   new: (@scene, @character) =>
     super!
@@ -29,6 +30,11 @@ wrapping_ class Slot extends Mixin
       table.insert @@INSTANCES, @
 
   print: (text, x, y, width, height, align, hover) =>
+    text = text\sub(1, math.floor @chars)\gsub("%%", "")
+
+    if align == "right"
+      x -= width - @limit
+
     if hover
       x += 2
       lg.setColor 0, 0, 0, 200
@@ -37,11 +43,8 @@ wrapping_ class Slot extends Mixin
       lg.setColor 0, 0, 0, 120
       lg.rectangle "fill", x, y, width+1, height
 
-     -- lg.printf text, x+2, y-4, width, align
-     -- lg.printf text, x+2, y-3, width, align
-
     lg.setColor 255, 255, 255, 255
-    lg.printf text, x+1, y-4, width, align
+    lg.printf text, x+1, y-4, width
 
   clear: =>
     for choice in *@choices
@@ -49,6 +52,7 @@ wrapping_ class Slot extends Mixin
     @choices = {}
 
   say: (text, next) =>
+    @chars = 0
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
     width, height = font\getWrap text, limit
@@ -70,6 +74,7 @@ wrapping_ class Slot extends Mixin
   choice: (...) =>
     choices = { ... }
 
+    @chars = 0
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
     @choices = for tbl in *choices
@@ -78,6 +83,7 @@ wrapping_ class Slot extends Mixin
         key = next tbl, key
 
       text = "- #{tbl._label or key}"
+      @chars = math.max text\len!, @chars
 
       width, height = font\getWrap text, limit
       height = 7 * #height
@@ -95,6 +101,9 @@ wrapping_ class Slot extends Mixin
         y += height
 
     coroutine.yield!
+
+  update: (dt) =>
+    @chars += dt * SPEED if @chars
 
   draw: (draw_group, draw_layer) =>
     for { :text, :x, :y, :width, :height, :shape } in *@choices
