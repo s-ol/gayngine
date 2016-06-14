@@ -7,6 +7,7 @@ Pathfinder = require "lib.jumper.jumper.pathfinder"
 wrapping_ class NavMesh extends Mixin
   STEP = Vector 8, 20
   UNSTEP = Vector 1/STEP.x, 1/STEP.y
+  CHAR_SIZE = Vector 18, 4
 
   new: (@scene, sx, sy, ex, ey) =>
     super!
@@ -29,13 +30,15 @@ wrapping_ class NavMesh extends Mixin
           pos.y += step.y
         else
           return nil
-        pos
+        pos\clone!
 
     sx or= -@ox
     sy or= -@oy
-    ex or= @image\getWidth!
-    ex or= @image\getHeight!
+    ex or= @image\getWidth! - @ox
+    ey or= @image\getHeight! - @oy
     sx, sy, ex, ey = tonumber(sx), tonumber(sy), tonumber(ex), tonumber ey
+
+    checks = [check for check in vec_step_iter CHAR_SIZE/-2, CHAR_SIZE/2, Vector 3, 4]
 
     @map = {}
     @startpos = @scene\unproject_3d Vector sx, sy
@@ -44,7 +47,13 @@ wrapping_ class NavMesh extends Mixin
       grid = @world_to_grid world
       @map[grid.y] or= {}
       screen = @scene\project_3d world
-      @map[grid.y][grid.x] = if polygon\contains screen.x, screen.y then 1 else 0
+
+      res = 1
+      for vec in *checks
+        if not polygon\contains (screen + vec)\unpack!
+          res = 0
+          break
+      @map[grid.y][grid.x] = res
 
     @grid = Grid @map
     @finder = Pathfinder @grid, "THETASTAR", 1
