@@ -30,7 +30,8 @@ wrapping_ class Slot extends Mixin
       table.insert @@INSTANCES, @
 
   print: (text, x, y, width, height, align, hover) =>
-    text = text\sub(1, math.floor @chars)\gsub("%%", "")
+    start = text\sub 1, math.floor @chars
+    text = start\gsub "%%", ""
 
     if align == "right"
       x -= width - @limit
@@ -55,7 +56,7 @@ wrapping_ class Slot extends Mixin
     @chars = 0
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
-    width, height = font\getWrap text, limit
+    width, height = font\getWrap text\gsub("%%", ""), limit
     height = 7 * #height
     shape = @scene.hit\rectangle 0, 0, @scene.width, @scene.height
     choice = {
@@ -85,7 +86,7 @@ wrapping_ class Slot extends Mixin
       text = "- #{tbl._label or key}"
       @chars = math.max text\len!, @chars
 
-      width, height = font\getWrap text, limit
+      width, height = font\getWrap text\gsub("%%", ""), limit
       height = 7 * #height
       shape = @scene.hit\rectangle x, y, width+3, height
       with choice = {
