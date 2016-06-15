@@ -20,8 +20,6 @@ class PSDScene
 
     @reload!
 
-    @init!
-
     if WATCHER
       WATCHER\register @filename!, @
 
@@ -29,6 +27,7 @@ class PSDScene
     @last_scene = @scene
     @scene = next_scene
     @reload!
+    @init!
 
   filename: =>
     scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
@@ -38,8 +37,12 @@ class PSDScene
       "game/scenes/#{@scene}/main.psd"
 
   init: =>
-    if pcall require, "game.scenes.#{@scene}"
+    scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
+
+    _, module = pcall require, "game.scenes.#{scene or @scene}"
+    if _ and type(module) == "table" and module.init
       print "running init for #{@scene}..."
+      module.init @
 
   load: (name, ...) =>
     scene = @scene

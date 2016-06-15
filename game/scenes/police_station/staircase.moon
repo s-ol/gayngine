@@ -13,7 +13,6 @@ levels = {
 selection = Dialogue =>
   local index
   for i, level in ipairs levels
-    print level, SCENE.scene
     if level == SCENE.scene
       index = i
       break

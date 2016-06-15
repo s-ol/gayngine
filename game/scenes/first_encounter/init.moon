@@ -25,4 +25,6 @@ main = Dialogue =>
 
   SCENE\transition_to "police_station", 1500
 
-main\start!
+{
+  init: -> main\start!
+}
