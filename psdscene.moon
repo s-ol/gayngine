@@ -11,6 +11,8 @@ KEYHOLE = lg.getWidth! * 0.2
 hand = lm.getSystemCursor "hand"
 arrow = lm.getSystemCursor "arrow"
 
+export DIALOGUE
+
 class PSDScene
   new: (@scene) =>
     @hit = HC.new!
@@ -26,6 +28,7 @@ class PSDScene
   transition_to: (next_scene) =>
     @last_scene = @scene
     @scene = next_scene
+    DIALOGUE = nil
     @reload!
     @init!
 

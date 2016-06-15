@@ -74,5 +74,10 @@ love.update = (dt) ->
 love.draw = ->
   SCENE\draw!
 
+  if DEBUG!
+    love.graphics.setColor 255, 255, 255
+    love.graphics.print "[DEBUG]", 10, 10
+    love.graphics.print "DIALOGUE: #{DIALOGUE}", 10, 20
+
 love.mousepressed = (x, y, btn) ->
   SCENE\mousepressed x, y, btn
