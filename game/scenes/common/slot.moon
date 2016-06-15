@@ -2,6 +2,7 @@
 
 import wrapping_, Mixin from  require "util"
 Vector = require "lib.hump.vector"
+utf8 = require "utf8"
 
 dummy = Vector!
 
@@ -32,7 +33,7 @@ wrapping_ class Slot extends Mixin
 
   print: (text, x, y, width, height, align, hover) =>
     if @chars
-      start = text\sub 1, math.floor @chars
+      start = text\sub 1, utf8.offset(text, math.floor @chars + 1) - 1
       text = start\gsub "%%", ""
 
     if align == "right"
@@ -78,7 +79,7 @@ wrapping_ class Slot extends Mixin
     choice.shape.prio = 200
     @choices = { choice }
     @chars = 0
-    @maxchars = text\len!
+    @maxchars = utf8.len text
 
     coroutine.yield! unless next
 
