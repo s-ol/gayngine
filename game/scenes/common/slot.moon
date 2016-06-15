@@ -7,6 +7,7 @@ dummy = Vector!
 
 wrapping_ class Slot extends Mixin
   SPEED = 25
+  FAST_SPEED = SPEED * 4
   @INSTANCES = {}
   new: (@scene, @character) =>
     super!
@@ -30,8 +31,9 @@ wrapping_ class Slot extends Mixin
       table.insert @@INSTANCES, @
 
   print: (text, x, y, width, height, align, hover) =>
-    start = text\sub 1, math.floor @chars
-    text = start\gsub "%%", ""
+    if @chars
+      start = text\sub 1, math.floor @chars
+      text = start\gsub "%%", ""
 
     if align == "right"
       x -= width - @limit
@@ -52,8 +54,10 @@ wrapping_ class Slot extends Mixin
       @scene.hit\remove choice.shape
     @choices = {}
 
+    @speed = SPEED
+    @chars, @maxchars = nil, nil
+
   say: (text, next) =>
-    @chars = 0
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
     width, height = font\getWrap text\gsub("%%", ""), limit
@@ -66,20 +70,24 @@ wrapping_ class Slot extends Mixin
       :width, :height
     }
     choice.shape.mousepressed = ->
-      DIALOGUE\next next
+      if @chars >= @maxchars
+        DIALOGUE\next next
+      else
+        @speed = FAST_SPEED
+
     choice.shape.prio = 200
     @choices = { choice }
+    @chars = 0
+    @maxchars = text\len!
 
     coroutine.yield! unless next
 
   rchoice: (choices) =>
-    @chars = 0
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
     @choices = for tbl in *choices
       key, label = next tbl
       text = "- #{label}"
-      @chars = math.max text\len!, @chars
 
       width, height = font\getWrap text\gsub("%%", ""), limit
       height = 7 * #height
@@ -91,7 +99,6 @@ wrapping_ class Slot extends Mixin
           :width, :height
         }
         choice.shape.mousepressed = ->
-          print "NEXT", key
           DIALOGUE\next key
         choice.shape.prio = 200
         y += height
@@ -101,7 +108,6 @@ wrapping_ class Slot extends Mixin
   choice: (...) =>
     choices = { ... }
 
-    @chars = 0
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
     @choices = for tbl in *choices
@@ -110,7 +116,6 @@ wrapping_ class Slot extends Mixin
         key = next tbl, key
 
       text = "- #{tbl._label or key}"
-      @chars = math.max text\len!, @chars
 
       width, height = font\getWrap text\gsub("%%", ""), limit
       height = 7 * #height
@@ -130,7 +135,7 @@ wrapping_ class Slot extends Mixin
     coroutine.yield!
 
   update: (dt) =>
-    @chars += dt * SPEED if @chars
+    @chars = math.min @maxchars, @chars + dt * @speed if @chars and @maxchars
 
   draw: (draw_group, draw_layer) =>
     for { :text, :x, :y, :width, :height, :shape } in *@choices
