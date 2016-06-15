@@ -26,6 +26,7 @@ class PSDScene
       WATCHER\register @filename!, @
 
   transition_to: (next_scene) =>
+    @last_scene = @scene
     @scene = next_scene
     @reload!
 
@@ -48,8 +49,8 @@ class PSDScene
     _, mixin = pcall require, "game.scenes.#{scene}.#{name}"
     return mixin if _ and mixin
 
-    _, module = pcall require, "game.scenes.#{scene}"
-    return module[name] if _ and module[name]
+    --_, module = pcall require, "game.scenes.#{scene}"
+    --return module[name] if _ and module[name]
 
     _, mixin = pcall require, "game.scenes.common.#{name}"
     return mixin if _ and mixin
