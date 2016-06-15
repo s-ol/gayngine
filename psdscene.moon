@@ -41,7 +41,11 @@ class PSDScene
       print "running init for #{@scene}..."
 
   load: (name, ...) =>
-    _, mixin = pcall require, "game.scenes.#{@scene}.#{name}"
+    scene = @scene
+    if rscene = scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
+      scene = rscene
+
+    _, mixin = pcall require, "game.scenes.#{scene}.#{name}"
     return mixin if _ and mixin
 
     _, module = pcall require, "game.scenes.#{scene}"
