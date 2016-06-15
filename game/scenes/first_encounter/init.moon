@@ -23,4 +23,6 @@ main = Dialogue =>
   @raymond\say "now you're clearly suggesting that someone is you."
   @hector\say "i'm not. but i believe i am qualified."
 
+  SCENE\transition_to "police_station", 1500
+
 main\start!
