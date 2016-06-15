@@ -84,12 +84,13 @@ class MultiSheet
 
   set: (vec) =>
     new = if vec\len2! < .1
-      "idle"
+      "idle" .. (@last or "right")
     else
-      if vec.x > 0
+      @last = if vec.x > 0
         "right"
       else
         "left"
+      @last
 
     if new != @anim
       @time = 0
