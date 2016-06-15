@@ -1,5 +1,8 @@
 import wrapping_, Mixin from  require "util"
 import Dialogue from require "game.dialogue"
+Vector = require "lib.hump.vector"
+
+vector = Vector!
 
 levels = {
   "police_station.upper",
@@ -22,11 +25,11 @@ selection = Dialogue =>
   table.insert choices, {[above]: "go upstairs"} if above
   table.insert choices, {[below]: "go downstairs"} if below
   table.insert choices, {cancel: "cancel"}
-  MOON.p choices
 
   destination = @slot\rchoice choices
-  SCENE.tags.player\moveTo SCENE\unproject_3d(@playerpos), ->
-    SCENE\transition_to destination unless destination == "cancel"
+  if destination and destination != "cancel"
+    SCENE.tags.player\moveTo SCENE\unproject_3d(@playerpos), ->
+      SCENE\transition_to destination
 
 wrapping_ class Staircase extends Mixin
   new: (scene) =>
