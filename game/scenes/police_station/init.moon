@@ -1,3 +1,8 @@
+import Dialogue from require "game.dialogue"
+
+main = Dialogue =>
+  @lieutenant\say "test test test"
+
 {
   init: =>
     if @last_scene
