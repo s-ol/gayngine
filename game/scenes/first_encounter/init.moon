@@ -21,7 +21,11 @@ main = Dialogue =>
   @hector\say "hey look around. everybody here is a misfit weirdo."
   @hector\say "if you have problems, this is the place where you find someone to share it with."
   @raymond\say "now you're clearly suggesting that someone is you."
-  @hector\say "i'm not. but i believe i am qualified."
+  @hector\say ".%%%%%.%%%%%.%%%%%"
+  @hector\say "maybe i am"
+  @raymond\say ".%%%%%%%%%.%%%%%%%%%.%%%%%%%%%"
+  @raymond\say "maybe"
+  @raymond\say ".%%%%%%%%%.%%%%%%%%%.%%%%%%%%%"
 
   SCENE\transition_to "police_station", 1500
 

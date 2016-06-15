@@ -1,7 +1,8 @@
 import Dialogue from require "game.dialogue"
 
 main = Dialogue =>
-  @lieutenant\say "ok fellas, we all know whats on stake here. weve been preparing for this operation for two months now!"
+  @lieutenant\say "ok fellas, listen up!"
+  @lieutenant\say "we all know whats on stake here. weve been preparing for this operation for two months now!"
   @lieutenant\say "i will go over the details quickly:"
   @lieutenant\say "as you all know have we been investigating on several nightclubs and comparable establishments in the past months."
   @lieutenant\say "reports by our undercover investigators revealed a healthy amount of drug use and most likely drug trafficking within those clubs."
