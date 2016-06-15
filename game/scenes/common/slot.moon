@@ -72,6 +72,32 @@ wrapping_ class Slot extends Mixin
 
     coroutine.yield! unless next
 
+  rchoice: (choices) =>
+    @chars = 0
+    font = lg.getFont!
+    { textpos: { :x, :y }, :limit } = @
+    @choices = for tbl in *choices
+      key, label = next tbl
+      text = "- #{label}"
+      @chars = math.max text\len!, @chars
+
+      width, height = font\getWrap text\gsub("%%", ""), limit
+      height = 7 * #height
+      shape = @scene.hit\rectangle x, y, width+3, height
+      with choice = {
+          :text,
+          :shape,
+          :x, :y,
+          :width, :height
+        }
+        choice.shape.mousepressed = ->
+          print "NEXT", key
+          DIALOGUE\next key
+        choice.shape.prio = 200
+        y += height
+
+    coroutine.yield!
+
   choice: (...) =>
     choices = { ... }
 

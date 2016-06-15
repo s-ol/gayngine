@@ -25,6 +25,10 @@ class PSDScene
     if WATCHER
       WATCHER\register @filename!, @
 
+  transition_to: (next_scene) =>
+    @scene = next_scene
+    @reload!
+
   filename: =>
     scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
     if scene and subscene
