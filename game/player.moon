@@ -48,11 +48,11 @@ class Player extends Reloadable
           total += delta
           break
 
-      if not @path._nodes[@path.index]
-        @path.cb! if @path.cb
-        @path = nil
-
     @sheet\update total, dt
+
+    if @path and not @path._nodes[@path.index]
+      @path.cb! if @path.cb
+      @path = nil
 
   draw: =>
     { :x, :y } = @scene\project_3d(@pos) - ORIGIN

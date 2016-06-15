@@ -57,8 +57,10 @@ clickable_dialogue = (dialogue) ->
       @playerdir = vector.clone(player.mask.paths[1][2].cp) - @playerpos
 
     mousepressed: =>
-      SCENE.tags.player\moveTo SCENE\unproject_3d(@playerpos), ->
-        -- TODO: turn to @playerdir
+      player = SCENE.tags.player
+      player\moveTo SCENE\unproject_3d(@playerpos), ->
+        anim = player.sheet\get @playerdir\normalized!
+        --player.sheet.anim = anim
         dialogue\start player: @slot
 
     draw: (draw_group, draw_layer) =>

@@ -59,7 +59,6 @@ class MultiSheet
     if WATCHER
       WATCHER\register @filename, @
 
-
   reload: =>
     print "reloading #{@filename}..."
 
@@ -82,8 +81,8 @@ class MultiSheet
         else
           table.insert @anims[anim], layer
 
-  set: (vec) =>
-    new = if vec\len2! < .1
+  get: (vec) =>
+    if vec\len2! < .1
       "idle" .. (@last or "right")
     else
       @last = if vec.x > 0
@@ -92,12 +91,12 @@ class MultiSheet
         "left"
       @last
 
+  update: (vec, dt) =>
+    new = @get vec
     if new != @anim
       @time = 0
       @anim = new
 
-  update: (vec, dt) =>
-    @set vec
     return unless @anims[@anim]
 
     @time += dt
