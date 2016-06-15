@@ -99,6 +99,9 @@ class MultiSheet
 
     return unless @anims[@anim]
 
+    if @anim\match "idle"
+      dt /= 4
+
     @time += dt
 
     @frame = 1 + (math.floor(@time/@frametime) % #@anims[@anim])
