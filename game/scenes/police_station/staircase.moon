@@ -1,9 +1,5 @@
-Vector = require "lib.hump.vector"
 Slot = require "game.scenes.common.slot"
 import Dialogue from require "game.dialogue"
-import wrapping_, Mixin from  require "util"
-
-vector = Vector!
 
 levels = {
   "police_station.upper",
