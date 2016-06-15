@@ -13,9 +13,10 @@ wrapping_ class Photoguy extends Mixin
     @current = { @idle }
 
   draw: (draw_group, draw_layer) =>
-    draw_group @current
+    draw_group { @current }
 
   update: (dt, update_group) =>
-    @current = { if SCENE.state.photoguy then @talking else @idle }
+    @current = if SCENE.state.photoguy then @talking else @idle
 
-    update_group @current
+    @current\update dt if @current.update
+
