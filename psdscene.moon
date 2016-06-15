@@ -155,7 +155,7 @@ class PSDScene
 
     for layer in *group
       if layer.update
-        layer\update dt, @\update
+        layer\update dt, @\update_group
       elseif layer.type == "open"
         @update_group dt, layer
 

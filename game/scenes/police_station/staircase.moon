@@ -1,4 +1,4 @@
-Slot = require "game.scenes.common.slot"
+import wrapping_, Mixin from  require "util"
 import Dialogue from require "game.dialogue"
 
 levels = {
