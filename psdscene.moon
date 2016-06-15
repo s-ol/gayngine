@@ -23,7 +23,14 @@ class PSDScene
     @init!
 
     if WATCHER
-      WATCHER\register "game/scenes/#{@scene}/main.psd", @
+      WATCHER\register @filename!, @
+
+  filename: =>
+    scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
+    if scene and subscene
+      "game/scenes/#{scene}/#{subscene}.psd"
+    else
+      "game/scenes/#{@scene}/main.psd"
 
   init: =>
     if pcall require, "game.scenes.#{@scene}"
@@ -46,7 +53,7 @@ class PSDScene
     nil
 
   reload: (filename) =>
-    filename = "game/scenes/#{@scene}/main.psd" unless filename
+    filename = filename or @filename!
     print "reloading scene #{filename}..."
 
     @tree, @tags = {}, {}
