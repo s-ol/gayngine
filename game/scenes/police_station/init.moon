@@ -9,12 +9,13 @@ main = Dialogue =>
   @lieutenant\say "after last weeks razzia of club cyclops we have confiscated less than expected and i sincerely hope that we can change this tonight"
   @lieutenant\say "further investigation is still pending but as far a i know the pictures being developed as we speak. "
   @lieutenant\say "in fact i would like officer parelli to go down to the lab and pick them up. i am sure you are familiar with the details parelli?!"
-  
+
   res = @rayintro\choice { ofcourse: "of course, sir", _label: "of course"},
                        { work: "sure thing, sir", _label: "sure"},
                        { onehundred: "one hundred percent, sir", _label: "one hundred percent"}
 
-  @lieutenant\say "ok go ahead, then!" 
+  @lieutenant\say "ok go ahead, then!"
+
 {
   init: =>
     if @last_scene
@@ -25,6 +26,6 @@ main = Dialogue =>
     else
       k, v = next @tags.spawns
       v\init!
-	  
-  main\start!
+
+    main\start!
 }

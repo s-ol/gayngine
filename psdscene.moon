@@ -166,7 +166,7 @@ class PSDScene
       elseif layer.type == "open"
         @update_group dt, layer
 
-  draw: () =>
+  draw: =>
     lg.setCanvas @target_canvas
     lg.clear!
     lg.setCanvas!

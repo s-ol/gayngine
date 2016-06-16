@@ -28,6 +28,7 @@ main = Dialogue =>
   @raymond\say ".%%%%%%%%%.%%%%%%%%%.%%%%%%%%%"
 
   SCENE\transition_to "police_station", 1500
+  coroutine.yield!
 
 {
   init: -> main\start!
