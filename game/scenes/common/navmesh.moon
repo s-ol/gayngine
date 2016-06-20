@@ -12,12 +12,12 @@ wrapping_ class NavMesh extends Mixin
   new: (@scene, sx, sy, ex, ey) =>
     super!
 
-    points = {}
+    @points = {}
     for cp in *@mask.paths[1]
-      points[#points+1] = cp.cp.x
-      points[#points+1] = cp.cp.y
+      @points[#@points+1] = cp.cp.x
+      @points[#@points+1] = cp.cp.y
 
-    polygon = Polygon unpack points
+    polygon = Polygon unpack @points
 
     vec_step_iter = (start, stop, step) ->
       pos = start\clone!
@@ -69,11 +69,13 @@ wrapping_ class NavMesh extends Mixin
 
   draw: (draw_group, draw_layer) =>
     if DEBUG.navmesh
+      love.graphics.setColor 0, 255, 0, 120
+      love.graphics.polygon "line", unpack @points
       for y=1,#@map
         for x=1,#@map[y]
           if @map[y][x] == 1
-            love.graphics.setColor 255, 0, 0
-          else
             love.graphics.setColor 0, 255, 0
+          else
+            love.graphics.setColor 255, 0, 0, 120
           pos = @grid_to_screen Vector x, y
           love.graphics.points pos.x, pos.y

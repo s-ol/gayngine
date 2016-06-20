@@ -6,8 +6,6 @@ wrapping_ class PlayerSpawn extends Mixin
   new: (scene, @skin, last_scene) =>
     super!
 
-    print "-----adding '#{last_scene or ""}'"
-
     scene.tags.spawns = scene.tags.spawns or {}
     scene.tags.spawns[last_scene or ""] = @
 

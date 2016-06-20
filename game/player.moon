@@ -59,7 +59,7 @@ class Player extends Reloadable
     @sheet\draw math.floor(x), math.floor(y)
 
     if @path and DEBUG.navmesh
-      love.graphics.setColor 0, 0, 255
+      love.graphics.setColor 0, 0, 255, 80
       nav = @scene.tags.nav
 
       goal = @path._nodes[#@path._nodes]
