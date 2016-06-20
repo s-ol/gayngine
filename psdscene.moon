@@ -178,6 +178,11 @@ class PSDScene
     lg.setColor 255, 255, 255
     lg.translate -@scroll.x, -@scroll.y
     lg.draw @target_canvas
+
+    if DEBUG.hitboxes
+      lg.setColor 255, 255, 0, 120
+      for shape,_ in pairs @hit.hash\shapes!
+        shape\draw "line"
     lg.pop!
 
   _canvas = nil
