@@ -4,6 +4,22 @@ Polygon = require "lib.HC.polygon"
 Grid = require "lib.jumper.jumper.grid"
 Pathfinder = require "lib.jumper.jumper.pathfinder"
 
+runpack = (vec) -> math.floor(vec.x + .5), math.floor vec.y + .5
+rounded = (vec) -> Vector math.floor(vec.x + .5), math.floor vec.y + .5
+
+vec_step_iter = (start, stop, step=Vector(1, 1)) ->
+  pos = start\clone!
+  pos.x -= step.x -- patch first iteration
+  ->
+    if pos.x < stop.x
+      pos.x += step.x
+    elseif pos.y < stop.y - step.y
+      pos.x = start.x
+      pos.y += step.y
+    else
+      return nil
+    pos\clone!
+
 wrapping_ class NavMesh extends Mixin
   STEP = Vector 8, 20
   UNSTEP = Vector 1/STEP.x, 1/STEP.y
@@ -18,19 +34,6 @@ wrapping_ class NavMesh extends Mixin
       @points[#@points+1] = cp.cp.y
 
     polygon = Polygon unpack @points
-
-    vec_step_iter = (start, stop, step) ->
-      pos = start\clone!
-      pos.x -= step.x -- patch first iteration
-      ->
-        if pos.x < stop.x
-          pos.x += step.x
-        elseif pos.y < stop.y - step.y
-          pos.x = start.x
-          pos.y += step.y
-        else
-          return nil
-        pos\clone!
 
     sx or= -@ox
     sy or= -@oy
@@ -66,6 +69,20 @@ wrapping_ class NavMesh extends Mixin
 
   world_to_grid: (vec) =>
     Vector(1, 1) + (vec - @startpos)\permul UNSTEP
+
+  closest_walkable: (vec) =>
+    vec = rounded @world_to_grid vec
+    if @grid\isWalkableAt vec.x, vec.y, 1
+      vec\unpack!
+    else
+      dist = math.huge
+      local best
+      for new in vec_step_iter vec - Vector(4, 4), vec + Vector(4, 4)
+        if @grid\isWalkableAt(new.x, new.y, 1) and dist > vec\dist new
+          dist = vec\dist new
+          best = new
+
+      best\unpack! if best
 
   draw: (draw_group, draw_layer) =>
     if DEBUG.navmesh

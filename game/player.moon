@@ -2,15 +2,6 @@ import MultiSheet from require "psdsheet"
 import Reloadable from require "util"
 Vector = require "lib.hump.vector"
 
-round = (n) ->
-  if n % 1 >= .5
-    math.ceil n
-  else
-    math.floor n
-
-runpack = (vec) ->
-  round(vec.x), round vec.y
-
 class Player extends Reloadable
   ORIGIN = Vector 16, 65
   SPEED = 80
@@ -77,9 +68,10 @@ class Player extends Reloadable
 
   moveTo: (goal, cb) =>
     nav = @scene.tags.nav
-    sx, sy = runpack nav\world_to_grid @pos
-    gx, gy = runpack nav\world_to_grid goal
-    if nav.grid\isWalkableAt gx, gy
+    sx, sy = nav\closest_walkable @pos
+    gx, gy = nav\closest_walkable goal
+
+    if gx and gy
       @path = nav.finder\getPath sx, sy, gx, gy
       @path.cb = cb if @path
     else

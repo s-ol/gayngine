@@ -27,5 +27,5 @@ main = Dialogue =>
       k, v = next @tags.spawns
       v\init!
 
-    main\start!
+    --main\start!
 }
