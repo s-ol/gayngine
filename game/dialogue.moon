@@ -9,11 +9,15 @@ export DIALOGUE
 class Dialogue
   new: (@script) =>
 
+  clear: =>
+    for name, slot in pairs Slot.INSTANCES
+      slot\clear!
+
   start: (slots={}) =>
     @routine = coroutine.create @script
 
+    @clear!
     for name, slot in pairs Slot.INSTANCES
-      slot\clear!
       slots[name] = slot
 
     DIALOGUE = @
@@ -24,8 +28,7 @@ class Dialogue
       DIALOGUE = nil
 
   next: (...) =>
-    for name, slot in pairs Slot.INSTANCES
-      slot\clear!
+    @clear!
 
     coroutine.resume @routine, ...
 

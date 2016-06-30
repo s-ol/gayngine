@@ -19,6 +19,8 @@ class Player extends Reloadable
 
   update: (dt) =>
     total = Vector!
+
+    local last, delta
     if @path
       @path.index or= 2
 
@@ -41,13 +43,15 @@ class Player extends Reloadable
           delta = delta\trimmed travel_dist
           @pos += delta
           total += delta
+          last = true
           break
 
+    local close
     if @path and not @path._nodes[@path.index]
       @path.cb! if @path.cb
       @path = nil
 
-    if not DIALOGUE
+    if not DIALOGUE and (not @path or (last and delta\len2! < 2))
       walk =
         w: Vector 0, -1
         s: Vector 0,  1

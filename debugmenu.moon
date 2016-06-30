@@ -2,6 +2,8 @@
 
 Vector = require "lib.hump.vector"
 
+export DIALOGUE
+
 class DebugMenu
   new: =>
     @enabled = not _BUILD
@@ -29,10 +31,10 @@ class DebugMenu
         @enabled = not @enabled
       when "r"
         SCENE\reload! if @enabled
-      when "right"
-        SCENE.scroll += Vector 4, 0 if DEBUG!
-      when "left"
-        SCENE.scroll -= Vector 4, 0 if DEBUG!
+      when "s"
+        if DIALOGUE
+          DIALOGUE\clear!
+          DIALOGUE = nil
       else
         for name, value in pairs @proxy
           if key == name\sub 1, 1
@@ -74,7 +76,7 @@ class DebugMenu
     y += 5
 
     lg.setColor 255, 255, 255
-    for control in *{"reload", "< left", "> right"}
+    for control in *{"reload", "skip dialogue"}
       key, rest = control\sub(1, 1), control\sub 2
 
       lg.print "[#{key}]#{rest}", 10, y
