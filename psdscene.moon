@@ -71,7 +71,7 @@ class PSDScene
     filename = filename or @filename!
     print "reloading scene #{filename}..."
 
-    @tree, @tags = {}, {}
+    @tree, @instances, @tags = {}, {}, {}
     target = @tree
     local group
 
@@ -107,6 +107,8 @@ class PSDScene
         if mixin
           LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
           mixin layer, @, unpack params
+          @instances[name] or= {}
+          table.insert @instances[name], layer
 
   unproject_2d: (vec) => vec / SCALE + @scroll
   project_2d: (vec) => (vec - @scroll) * SCALE
@@ -123,7 +125,13 @@ class PSDScene
   update: (dt) =>
     @update_group dt, @tree
 
-    if @tags.player
+    local controlled_by_path
+    for path in *(@instances.camerapath or {})
+      if path.active
+        @scroll = path\apply @scroll
+        controlled_by_path = true
+
+    if not controlled_by_path and @tags.player
       pos = @tags.player.pos
       keyhole_right = (Vector (WIDTH + KEYHOLE) / 2, 0) / SCALE
       keyhole_left = (Vector (WIDTH - KEYHOLE) / 2, 0) / SCALE
