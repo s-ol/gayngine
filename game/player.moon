@@ -18,7 +18,7 @@ class Player extends Reloadable
   update: (dt) =>
     total = Vector!
     if @path
-      @path.index or= 1
+      @path.index or= 2
 
       nav = @scene.tags.nav
       travel_dist = dt * SPEED
@@ -30,6 +30,8 @@ class Player extends Reloadable
 
         if delta\len! <= travel_dist
           travel_dist -= delta\len!
+          lp = @path._nodes[@path.index]
+          @last_pos = Vector lp._x, lp._y
           @path.index += 1
           @pos = goal
           total += delta
@@ -68,7 +70,12 @@ class Player extends Reloadable
 
   moveTo: (goal, cb) =>
     nav = @scene.tags.nav
-    sx, sy = nav\closest_walkable @pos
+
+    local sx, sy
+    if @last_cp
+      sx, sy = @last_cp\unpack!
+    else
+      sx, sy = nav\closest_walkable @pos
     gx, gy = nav\closest_walkable goal
 
     if gx and gy
