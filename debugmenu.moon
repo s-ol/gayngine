@@ -1,4 +1,6 @@
-{ graphics: lg } = love
+{ graphics: lg, keyboard: lk } = love
+
+Vector = require "lib.hump.vector"
 
 class DebugMenu
   new: =>
@@ -20,13 +22,23 @@ class DebugMenu
     @lasth = 0
 
   keypressed: (key) =>
-    if key == "d"
-      @enabled = not @enabled
-    elseif @enabled
-      for name, value in pairs @proxy
-        if key == name\sub 1, 1
-          @proxy[name] = not value
-          break
+    if not @enabled
+      return unless key == "d" and lk.isDown "lshift"
+    switch key
+      when "d"
+        @enabled = not @enabled
+      when "r"
+        SCENE\reload! if @enabled
+      when "right"
+        SCENE.scroll += Vector 4, 0 if DEBUG!
+      when "left"
+        SCENE.scroll -= Vector 4, 0 if DEBUG!
+      else
+        if @enabled
+          for name, value in pairs @proxy
+            if key == name\sub 1, 1
+              @proxy[name] = not value
+              break
 
   draw: =>
     return unless @enabled
@@ -54,6 +66,17 @@ class DebugMenu
 
       lg.setColor 255, 255, 255, if enabled then 255 else 180
       lg.print "[#{key}]#{rest}: #{status}", 10, y
+      y += 10
+
+    lg.setColor 255, 255, 255, 120
+    lg.line 10, y+3, 150, y+3
+    y += 5
+
+    lg.setColor 255, 255, 255
+    for control in *{"reload", "< left", "> right"}
+      key, rest = control\sub(1, 1), control\sub 2
+
+      lg.print "[#{key}]#{rest}", 10, y
       y += 10
 
     @lasth = y

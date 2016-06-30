@@ -3,7 +3,6 @@
 lg.setDefaultFilter "nearest", "nearest"
 lg.setLineStyle "rough"
 
-Vector = require "lib.hump.vector"
 import PSDScene from require "psdscene"
 import DebugMenu from require "debugmenu"
 
@@ -45,12 +44,6 @@ love.keypressed = (key) ->
   switch key
     when "escape"
       le.push "quit"
-    when "r"
-      SCENE\reload! if DEBUG!
-    when "right"
-      SCENE.scroll += Vector 4, 0 if DEBUG!
-    when "left"
-      SCENE.scroll -= Vector 4, 0 if DEBUG!
     else
       debugmenu\keypressed key
 
