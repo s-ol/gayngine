@@ -165,6 +165,10 @@ class PSDScene
       if not DIALOGUE
         @tags.player\moveTo @unproject_3d mouse
 
+  keypressed: (key) =>
+    if @tags.player and not DIALOGUE
+      print
+
   update_group: (dt, group) =>
     return unless group
 

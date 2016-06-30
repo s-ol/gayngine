@@ -34,11 +34,12 @@ class DebugMenu
       when "left"
         SCENE.scroll -= Vector 4, 0 if DEBUG!
       else
-        if @enabled
-          for name, value in pairs @proxy
-            if key == name\sub 1, 1
-              @proxy[name] = not value
-              break
+        for name, value in pairs @proxy
+          if key == name\sub 1, 1
+            @proxy[name] = not value
+            return true
+        return false
+    true
 
   draw: =>
     return unless @enabled

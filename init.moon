@@ -45,7 +45,7 @@ love.keypressed = (key) ->
     when "escape"
       le.push "quit"
     else
-      debugmenu\keypressed key
+      SCENE\keypressed key unless debugmenu\keypressed key
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER

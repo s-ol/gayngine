@@ -2,6 +2,8 @@ import MultiSheet from require "psdsheet"
 import Reloadable from require "util"
 Vector = require "lib.hump.vector"
 
+{ keyboard: lk } = love
+
 class Player extends Reloadable
   ORIGIN = Vector 16, 65
   SPEED = 80
@@ -41,11 +43,30 @@ class Player extends Reloadable
           total += delta
           break
 
-    @sheet\update total, dt
-
     if @path and not @path._nodes[@path.index]
       @path.cb! if @path.cb
       @path = nil
+
+    if not DIALOGUE
+      walk =
+        w: Vector 0, -1
+        s: Vector 0,  1
+        a: Vector -1, 0
+        d: Vector  1, 0
+        up: Vector 0, -1
+        down: Vector 0,  1
+        left: Vector -1, 0
+        right: Vector  1, 0
+
+      dir = Vector!
+      for key, vec in pairs walk
+        if lk.isDown key
+          dir += vec
+
+      if dir\len2! > 0
+        @moveTo @pos + dir * 20
+
+    @sheet\update total, dt
 
   draw: =>
     { :x, :y } = @scene\project_3d(@pos) - ORIGIN
