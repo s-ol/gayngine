@@ -30,7 +30,9 @@ class DebugMenu
       when "d"
         @enabled = not @enabled
       when "r"
-        SCENE\reload! if @enabled
+        if @enabled
+          SCENE\reload!
+          SCENE\init!
       when "s"
         if DIALOGUE
           DIALOGUE\clear!

@@ -1,6 +1,7 @@
 import Dialogue from require "game.dialogue"
 
 main = Dialogue =>
+  SCENE.state.received_briefing = true
   @lieutenant\say "ok fellas, listen up!"
   @lieutenant\say "we all know whats on stake here. weve been preparing for this operation for two months now!"
   @lieutenant\say "i will go over the details quickly:"
@@ -27,5 +28,6 @@ main = Dialogue =>
       k, v = next @tags.spawns
       v\init!
 
-    main\start!
+    print @scene
+    main\start! if @scene == "police_station" and not @state.received_briefing
 }

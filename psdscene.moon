@@ -7,6 +7,7 @@ HC = require "lib.HC"
 
 SCALE = tonumber arg[3] or 4
 KEYHOLE = lg.getWidth! * 0.2
+TRANSITION_TIME = 2 / 2
 
 hand = lm.getSystemCursor "hand"
 arrow = lm.getSystemCursor "arrow"
@@ -26,11 +27,8 @@ class PSDScene
       WATCHER\register @filename!, @
 
   transition_to: (next_scene) =>
-    @last_scene = @scene
-    @scene = next_scene
-    DIALOGUE = nil
-    @reload!
-    @init!
+    @next_scene = next_scene
+    @transition_time = TRANSITION_TIME
 
   filename: =>
     scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
@@ -123,6 +121,16 @@ class PSDScene
     vec\permul Vector 1, 1/3
 
   update: (dt) =>
+    if @transition_time
+      @transition_time -= dt
+      if @transition_time + dt > 0 and @transition_time < 0
+        @last_scene, @scene, @next_scene = @scene, @next_scene
+        DIALOGUE = nil
+        @reload!
+        @init!
+      elseif @transition_time <= -TRANSITION_TIME
+        @transition_time = nil
+
     @update_group dt, @tree
 
     local controlled_by_path
@@ -187,7 +195,8 @@ class PSDScene
 
     lg.push!
     lg.scale SCALE
-    lg.setColor 255, 255, 255
+    fade = math.max 0, math.abs((@transition_time or TRANSITION_TIME) / TRANSITION_TIME) - .3
+    lg.setColor 255, 255, 255, fade * 255 / (1 - .3)
     lg.translate -@scroll.x, -@scroll.y
     lg.draw @target_canvas
 

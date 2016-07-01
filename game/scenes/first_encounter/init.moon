@@ -27,8 +27,7 @@ main = Dialogue =>
   @raymond\say "maybe"
   @raymond\say ".%%%%%%%%%.%%%%%%%%%.%%%%%%%%%"
 
-  SCENE\transition_to "police_station", 1500
-  coroutine.yield!
+  SCENE\transition_to "police_station"
 
 {
   init: -> main\start!
