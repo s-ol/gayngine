@@ -5,6 +5,8 @@ Vector = require "lib.hump.vector"
 utf8 = require "utf8"
 
 dummy = Vector!
+clearfix = "                                "
+clearfix ..= clearfix .. clearfix .. clearfix
 
 wrapping_ class Slot extends Mixin
   SPEED = 25
@@ -31,24 +33,35 @@ wrapping_ class Slot extends Mixin
     else
       table.insert @@INSTANCES, @
 
-  print: (text, x, y, width, height, align, hover) =>
-    if @chars
-      start = text\sub 1, utf8.offset(text, math.floor @chars + 1) - 1
-      text = start\gsub "%%", ""
-
+  print: (lines, x, y, width, height, align, hover) =>
     if align == "right"
       x -= width - @limit
 
     if hover
       x += 2
-      lg.setColor 0, 0, 0, 200
-      lg.rectangle "fill", x, y, width+2, height
-    else
-      lg.setColor 0, 0, 0, 120
-      lg.rectangle "fill", x, y, width+1, height
 
-    lg.setColor 255, 255, 255, 255
-    lg.printf text, x+1, y-4, width
+    height = 7
+
+    chars = @chars
+    for text in *lines
+      if chars
+        if chars < 1
+          text = ""
+        else
+          start = text\sub 1, (utf8.offset(text, math.floor chars + 1) or math.floor chars + 1) - 1
+          chars -= utf8.len text
+          text = start\gsub "%%", ""
+
+      if hover
+        lg.setColor 0, 0, 0, 200
+        lg.rectangle "fill", x, y, width+2, height
+      else
+        lg.setColor 0, 0, 0, 120
+        lg.rectangle "fill", x, y, width+1, height
+
+      lg.setColor 255, 255, 255, 255
+      lg.printf text, x+1, y-4, width
+      y += 7
 
   clear: =>
     for choice in *@choices
@@ -61,11 +74,11 @@ wrapping_ class Slot extends Mixin
   say: (text, next) =>
     font = lg.getFont!
     { textpos: { :x, :y }, :limit } = @
-    width, height = font\getWrap text\gsub("%%", ""), limit
-    height = 7 * #height
+    width, lines = font\getWrap text\gsub("%%", ""), limit
+    height = 7 * #lines
     shape = @scene.hit\rectangle 0, 0, @scene.width, @scene.height
     choice = {
-      :text,
+      :lines,
       :shape,
       :x, :y,
       :width, :height
@@ -90,11 +103,11 @@ wrapping_ class Slot extends Mixin
       key, label = next tbl
       text = "- #{label}"
 
-      width, height = font\getWrap text\gsub("%%", ""), limit
-      height = 7 * #height
+      width, lines = font\getWrap text\gsub("%%", ""), limit
+      height = 7 * #lines
       shape = @scene.hit\rectangle x, y, width+3, height
       with choice = {
-          :text,
+          :lines,
           :shape,
           :x, :y,
           :width, :height
@@ -118,11 +131,11 @@ wrapping_ class Slot extends Mixin
 
       text = "- #{tbl._label or key}"
 
-      width, height = font\getWrap text\gsub("%%", ""), limit
-      height = 7 * #height
+      width, lines = font\getWrap text\gsub("%%", ""), limit
+      height = 7 * #lines
       shape = @scene.hit\rectangle x, y, width+3, height
       with choice = {
-          :text,
+          :lines,
           :shape,
           :x, :y,
           :width, :height
@@ -139,5 +152,5 @@ wrapping_ class Slot extends Mixin
     @chars = math.min @maxchars, @chars + dt * @speed if @chars and @maxchars
 
   draw: (draw_group, draw_layer) =>
-    for { :text, :x, :y, :width, :height, :shape } in *@choices
-      @print text, x, y, width, height, @align, @scene.hoveritems[shape] and #@choices != 1
+    for { :lines, :x, :y, :width, :height, :shape } in *@choices
+      @print lines, x, y, width, height, @align, @scene.hoveritems[shape] and #@choices != 1
