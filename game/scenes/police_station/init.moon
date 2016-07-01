@@ -20,14 +20,13 @@ main = Dialogue =>
 {
   init: =>
     if @last_scene
-      for pattern, spawn in pairs @tags.spawns
-        if @last_scene\match pattern
-          spawn\init!
+      for spawn in *@instances.playerspawn
+        if @last_scene\match spawn.pattern
+          spawn\start!
           break
     else
-      k, v = next @tags.spawns
-      v\init!
+      @instances.playerspawn[1]\start!
 
-    print @scene
-    main\start! if @scene == "police_station" and not @state.received_briefing
+    if @scene == "police_station" and not @state.received_briefing and (not @lastscene or not @last_scene\match "police_station")
+      main\start!
 }

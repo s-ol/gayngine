@@ -16,9 +16,7 @@ export DIALOGUE
 
 class PSDScene
   new: (@scene) =>
-    @hit = HC.new!
     @cursor = HC.point 0, 0
-    @scroll = Vector!
     @state = {}
 
     @reload!
@@ -69,6 +67,8 @@ class PSDScene
     filename = filename or @filename!
     print "reloading scene #{filename}..."
 
+    @scroll = Vector!
+    @hit = HC.new!
     @tree, @instances, @tags = {}, {}, {}
     target = @tree
     local group

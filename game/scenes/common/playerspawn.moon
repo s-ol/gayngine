@@ -3,13 +3,10 @@ import Player from require "game.player"
 Vector = require "lib.hump.vector"
 
 wrapping_ class PlayerSpawn extends Mixin
-  new: (scene, @skin, last_scene) =>
+  new: (scene, @skin, @pattern="") =>
     super!
 
-    scene.tags.spawns = scene.tags.spawns or {}
-    scene.tags.spawns[last_scene or ""] = @
-
-  init: =>
+  start: =>
     point = @mask.paths[1][1]
     pos = Vector point.cp.x, point.cp.y
     @player = Player SCENE, @skin, SCENE\unproject_3d pos
