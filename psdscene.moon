@@ -151,6 +151,8 @@ class PSDScene
       elseif pos < @scroll + keyhole_left
         @scroll.x = (pos - keyhole_left).x
 
+      @scroll.x = math.max 0, math.min @scroll.x, @width - WIDTH/SCALE
+
     mouse = @unproject_2d Vector lm.getPosition!
     @cursor\moveTo mouse\unpack!
     @hoveritems = @hit\collisions @cursor
