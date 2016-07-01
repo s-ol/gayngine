@@ -41,11 +41,12 @@ PSDScene arg[2] or "first_encounter"
 SCENE\init!
 
 love.keypressed = (key) ->
+  return if debugmenu\keypressed key
   switch key
     when "escape"
       le.push "quit"
     else
-      SCENE\keypressed key unless debugmenu\keypressed key
+      SCENE\keypressed key
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER
