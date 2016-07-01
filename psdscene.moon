@@ -12,10 +12,12 @@ TRANSITION_TIME = 2 / 2
 hand = lm.getSystemCursor "hand"
 arrow = lm.getSystemCursor "arrow"
 
-export DIALOGUE
+export DIALOGUE, SCENE
 
 class PSDScene
   new: (@scene) =>
+    SCENE = @
+
     @cursor = HC.point 0, 0
     @state = {}
 

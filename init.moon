@@ -37,7 +37,7 @@ LOG_ERROR = (msg, indent=0) ->
 
 WIDTH, HEIGHT = lg.getDimensions!
 
-SCENE = PSDScene arg[2] or "first_encounter"
+PSDScene arg[2] or "first_encounter"
 SCENE\init!
 
 love.keypressed = (key) ->

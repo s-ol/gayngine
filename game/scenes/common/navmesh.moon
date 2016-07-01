@@ -41,7 +41,8 @@ wrapping_ class NavMesh extends Mixin
     ey or= @image\getHeight! - @oy
     sx, sy, ex, ey = tonumber(sx), tonumber(sy), tonumber(ex), tonumber ey
 
-    checks = [check for check in vec_step_iter CHAR_SIZE/-2, CHAR_SIZE/2, Vector 3, 4]
+    checks = [check for check in vec_step_iter CHAR_SIZE/-2, CHAR_SIZE/2, Vector 3, 2]
+    for c in *checks do print c
 
     @map = {}
     @startpos = @scene\unproject_3d Vector sx, sy

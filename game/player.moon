@@ -72,7 +72,9 @@ class Player extends Reloadable
 
     @sheet\update total, dt
 
-  draw: =>
+  draw: (obey=true) =>
+    return if @hidden and obey
+
     { :x, :y } = @scene\project_3d(@pos) - ORIGIN
     @sheet\draw math.floor(x), math.floor(y)
 
