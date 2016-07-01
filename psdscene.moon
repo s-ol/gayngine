@@ -9,8 +9,9 @@ SCALE = tonumber arg[3] or 4
 KEYHOLE = lg.getWidth! * 0.2
 TRANSITION_TIME = 2 / 2
 
-hand = lm.getSystemCursor "hand"
-arrow = lm.getSystemCursor "arrow"
+cursor = lm.newCursor "assets/cursor_hand.png", 11, 1
+cursor_clicked = lm.newCursor "assets/cursor_hand_clicked.png", 11, 1
+cursor_hover = lm.newCursor "assets/cursor_hand_hover.png", 11, 1
 
 export DIALOGUE, SCENE
 
@@ -153,10 +154,12 @@ class PSDScene
     mouse = @unproject_2d Vector lm.getPosition!
     @cursor\moveTo mouse\unpack!
     @hoveritems = @hit\collisions @cursor
-    if next @hoveritems
-      lm.setCursor hand
+    if lm.isDown 1
+      lm.setCursor cursor_clicked
+    elseif next @hoveritems
+      lm.setCursor cursor_hover
     else
-      lm.setCursor arrow
+      lm.setCursor cursor
 
   mousepressed: (x, y, btn) =>
     mouse = @unproject_2d Vector x, y
