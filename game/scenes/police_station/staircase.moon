@@ -4,18 +4,20 @@ Vector = require "lib.hump.vector"
 
 vector = Vector!
 
-levels = {
-  "police_station.upper",
-  "police_station",
-  "police_station.basement",
-}
-
 selection = Dialogue =>
   local index
   for i, level in ipairs levels
     if level == SCENE.scene
       index = i
       break
+
+  stage = SCENE.state.police
+
+  levels = {
+    if stage >= 2 then "police_station.upper.stage2" else "police_station.upper",
+    if stage >= 1 then "police_station.main.stage2" else "police_station.main",
+    "police_station.basement",
+  }
 
   above = levels[index - 1]
   below = levels[index + 1]
