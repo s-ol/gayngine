@@ -8,8 +8,8 @@ selection = Dialogue =>
   stage = SCENE.state.police or 0
 
   levels = {
-    if stage >= 2 then "police_station.upper.stage2" else "police_station.upper",
-    if stage >= 1 then "police_station.main.stage2" else "police_station",
+    if stage >= 2 then "police_station.upper-next" else "police_station.upper",
+    if stage >= 1 then "police_station.main-next" else "police_station",
     "police_station.basement",
   }
 
