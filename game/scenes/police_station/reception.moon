@@ -5,6 +5,9 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-  @receptionist\say "hey, what do you need?"
-  @player\say "nothing, you just suck man"
-  @receptionist\say "cmon, don't be like that...."
+  if SCENE.state.police == nil
+	@receptionist\say "'ill be back in 10'"
+	@receptionist\say "-kimberlay"
+  elseif SCENE.state.police == 1
+	@receptionist\say "One moment"
+	@player\say ".%%%.%%%.%%%"
