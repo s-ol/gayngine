@@ -5,8 +5,8 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-  SCENE.state.photoguy = true
-  if SCENE.state.police == nil
+	SCENE.state.photoguy = "talking"
+	if SCENE.state.police == nil
 		@photoguy\say "parelli, to what do i owe the honour of your visit?"
 		@player\say "hi .%%%%%.%%%%%.%%%%%."
 		@photoguy\say "schnitzler, joseph, but nevermind pal" 
@@ -69,7 +69,7 @@ clickable_dialogue Dialogue =>
 			@photoguy\say "im not the one who took the picture"
 			@photoguy\say "so at least one other person has seen you."
 		SCENE.state.police = 1
-  elseif SCENE.state.police == 1
+	elseif SCENE.state.police == 1
 		@photoguy\say "you stupid fuck"
 	
-	
+	SCENE.state.photoguy = nil

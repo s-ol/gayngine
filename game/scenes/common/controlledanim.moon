@@ -1,7 +1,7 @@
 import wrapping_, Mixin from  require "util"
 
-wrapping_ class Photoguy extends Mixin
-  new: (scene) =>
+wrapping_ class ControlledAnim extends Mixin
+  new: (scene, @key) =>
     super!
 
     for layer in *@
@@ -10,13 +10,14 @@ wrapping_ class Photoguy extends Mixin
       else
         @talking = layer
 
-    @current = { @idle }
-
   draw: (draw_group, draw_layer) =>
     draw_group { @current }
 
   update: (dt, update_group) =>
-    @current = if SCENE.state.photoguy then @talking else @idle
+    name = SCENE.state[@key] or "idle"
+    for child in *@
+      if child.name\match "^#{name}"
+        @current = child
+        break
 
-    @current\update dt if @current.update
-
+    @current\update dt if @current and @current.update
