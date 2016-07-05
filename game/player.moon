@@ -46,6 +46,8 @@ class Player extends Reloadable
           last = true
           break
 
+    @sheet\update total, dt
+
     local close
     if @path and not @path._nodes[@path.index]
       @path.cb! if @path.cb
@@ -69,8 +71,6 @@ class Player extends Reloadable
 
       if dir\len2! > 0
         @moveTo @pos + dir * 20
-
-    @sheet\update total, dt
 
   draw: (obey=true) =>
     return if @hidden and obey

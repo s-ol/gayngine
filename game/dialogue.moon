@@ -62,8 +62,7 @@ clickable_dialogue = (dialogue) ->
     mousepressed: =>
       player = SCENE.tags.player
       player\moveTo SCENE\unproject_3d(@playerpos), ->
-        anim = player.sheet\get @playerdir\normalized!
-        --player.sheet.anim = anim
+        player.sheet.last = player.sheet\get @playerdir\normalized!
         dialogue\start player: @slot
 
     draw: (draw_group, draw_layer) =>

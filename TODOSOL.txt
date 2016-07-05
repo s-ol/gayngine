@@ -1,3 +1,0 @@
-- Scene state in Debuggwindow
-- Animationstool
-- Drehung auf Playerposition erst beim zweiten mal
