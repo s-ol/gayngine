@@ -135,6 +135,15 @@ class DebugMenu
         lg.print scene, x, y
         y += 10
 
+    lg.setColor 255, 255, 255, 120
+    lg.line 10, y+3, 150, y+3
+    y += 5
+
+    lg.setColor 255, 255, 255
+    for k, v in pairs SCENE.state
+      lg.print "#{k}: #{v}", 10, y
+      y += 10
+
     @lasth = y
 
 {
