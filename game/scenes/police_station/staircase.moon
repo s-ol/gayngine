@@ -19,6 +19,10 @@ selection = Dialogue =>
       index = i
       break
 
+  if not index
+    print "no such scene in staircase: '#{SCENE.scene}'"
+    index = 2
+
   above = levels[index - 1]
   below = levels[index + 1]
 
