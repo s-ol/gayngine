@@ -1,4 +1,5 @@
 import Dialogue from require "game.dialogue"
+Vector = require "lib.hump.vector"
 
 main = Dialogue =>
   @hector\say "hi!"
@@ -30,5 +31,13 @@ main = Dialogue =>
   SCENE\transition_to "police_station"
 
 {
-  init: -> main\start!
+  init: =>
+    switch @scene
+      when "first_encounter", "first_encounter.main"
+        main\start!
+      when "first_encounter.menu"
+        hit = @hit\rectangle 0, 0, @width, @height
+        hit.mousepressed = ->
+          @hit\remove hit
+          @tags.path\start!
 }
