@@ -7,7 +7,7 @@ HC = require "lib.HC"
 
 SCALE = tonumber arg[3] or 4
 KEYHOLE = lg.getWidth! * 0.2
-TRANSITION_TIME = 2 / 2
+TRANSITION_TIME = 2
 
 cursor = lm.newCursor "assets/cursor_hand.png", 11, 1
 cursor_clicked = lm.newCursor "assets/cursor_hand_clicked.png", 11, 1
@@ -27,9 +27,10 @@ class PSDScene
     if WATCHER
       WATCHER\register @filename!, @
 
-  transition_to: (next_scene) =>
+  transition_to: (next_scene, transition_time=TRANSITION_TIME) =>
     @next_scene = next_scene
-    @transition_time = TRANSITION_TIME
+    @transition_time = 1
+    @transition_speed = transition_time/TRANSITION_TIME
 
   filename: =>
     scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
@@ -124,14 +125,22 @@ class PSDScene
     vec\permul Vector 1, 1/3
 
   update: (dt) =>
+    scene, subscene = @scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
+
+    _, module = pcall require, "game.scenes.#{scene or @scene}"
+    if _ and type(module) == "table" and module.update
+      module.update @, dt
+
+
     if @transition_time
-      @transition_time -= dt
-      if @transition_time + dt > 0 and @transition_time < 0
+      tdt = dt / @transition_speed
+      @transition_time -= tdt
+      if @transition_time + tdt > 0 and @transition_time < 0
         @last_scene, @scene, @next_scene = @scene, @next_scene
         DIALOGUE = nil
         @reload!
         @init!
-      elseif @transition_time <= -TRANSITION_TIME
+      elseif @transition_time <= -1
         @transition_time = nil
 
     @update_group dt, @tree
@@ -202,7 +211,7 @@ class PSDScene
 
     lg.push!
     lg.scale SCALE
-    fade = math.max 0, math.abs((@transition_time or TRANSITION_TIME) / TRANSITION_TIME) - .3
+    fade = math.max 0, math.abs(@transition_time or 1) - .3
     lg.setColor 255, 255, 255, fade * 255 / (1 - .3)
     lg.translate -@scroll.x, -@scroll.y
     lg.draw @target_canvas

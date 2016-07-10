@@ -30,14 +30,37 @@ main = Dialogue =>
 
   SCENE\transition_to "police_station"
 
-{
+local ret
+ret = {
   init: =>
-    switch @scene
+    new = switch @scene
       when "first_encounter", "first_encounter.main"
-        main\start!
+        {
+          init: => main\start!
+        }
       when "first_encounter.menu"
-        hit = @hit\rectangle 0, 0, @width, @height
-        hit.mousepressed = ->
-          @hit\remove hit
-          @tags.path\start!
+        local timer
+        {
+          init: =>
+            hit = @hit\rectangle 0, 0, @width, @height
+            hit.mousepressed = ->
+              timer = 0
+              @hit\remove hit
+              @tags.path\start!
+
+          update: (dt) =>
+            if timer
+              timer += dt
+              if timer > 2.1
+                @transition_to "first_encounter.intro", 0.4
+                timer = nil
+        }
+      else
+        {}
+
+    new.init @ if new.init
+    for k,v in pairs new
+      ret[k] = v unless k == "init"
 }
+
+ret
