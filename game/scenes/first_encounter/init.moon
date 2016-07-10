@@ -44,15 +44,25 @@ ret = {
           init: =>
             hit = @hit\rectangle 0, 0, @width, @height
             hit.mousepressed = ->
-              timer = 0
+              timer = 2.8
               @hit\remove hit
               @tags.path\start!
 
           update: (dt) =>
             if timer
-              timer += dt
-              if timer > 2.1
-                @transition_to "first_encounter.intro", 0.4
+              timer -= dt
+              if timer < 0
+                @transition_to "first_encounter.intro", 1
+                timer = nil
+        }
+      when "first_encounter.intro"
+        timer = 2
+        {
+          update: (dt) =>
+            if timer
+              timer -= dt
+              if timer < 0
+                @transition_to "first_encounter.main", 1
                 timer = nil
         }
       else
