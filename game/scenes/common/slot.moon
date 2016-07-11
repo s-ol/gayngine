@@ -12,7 +12,7 @@ wrapping_ class Slot extends Mixin
   SPEED = 25
   FAST_SPEED = SPEED * 4
   @INSTANCES = {}
-  new: (@scene, @character) =>
+  new: (@scene, @character, @sprite) =>
     super!
 
     @choices = {}
@@ -152,5 +152,8 @@ wrapping_ class Slot extends Mixin
     @chars = math.min @maxchars, @chars + dt * @speed if @chars and @maxchars
 
   draw: (draw_group, draw_layer) =>
+    lg.push!
+    lg.translate @scene.scroll\unpack! if @sprite
     for { :lines, :x, :y, :width, :height, :shape } in *@choices
       @print lines, x, y, width, height, @align, @scene.hoveritems[shape] and #@choices != 1
+    lg.pop!
