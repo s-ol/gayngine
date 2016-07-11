@@ -4,9 +4,9 @@ Vector = require "lib.hump.vector"
 
 { keyboard: lk } = love
 
+ORIGIN = Vector 16, 65
+SPEED = 80
 class Player extends Reloadable
-  ORIGIN = Vector 16, 65
-  SPEED = 80
   new: (@scene, @skin, @pos=Vector!) =>
     super!
 
@@ -114,4 +114,6 @@ class Player extends Reloadable
 
 {
   :Player,
+  :ORIGIN,
+  :SPEED,
 }

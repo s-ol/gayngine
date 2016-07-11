@@ -3,6 +3,7 @@
 lg.setDefaultFilter "nearest", "nearest"
 lg.setLineStyle "rough"
 
+import Sound from require "sound"
 import PSDScene from require "psdscene"
 import DebugMenu from require "debugmenu"
 
@@ -37,6 +38,7 @@ LOG_ERROR = (msg, indent=0) ->
 
 WIDTH, HEIGHT = lg.getDimensions!
 
+SOUND = Sound!
 PSDScene arg[2] or "first_encounter.menu"
 SCENE\init!
 
