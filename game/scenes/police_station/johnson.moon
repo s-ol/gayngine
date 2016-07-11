@@ -72,3 +72,4 @@ clickable_dialogue Dialogue =>
 			@johnson\say "ask leo spiegel in the archives down the hall"
 			@johnson\say "im sure he can help you"
 			@player\say "thank you sir"
+			SCENE.state.johnson = 1
