@@ -620,7 +620,7 @@ function artalFunction.newPSD(fileNameOrData, structureFlagOrNumber)
 				elseif artal.layer[LC].folder == 1 or artal.layer[LC].folder == 2 then
 					local startCounter = opacityBakingTable[#opacityBakingTable]
 
-					artal.layer[startCounter].betterName = artal.layer[LC].name
+					artal.layer[startCounter].betterName = artal.layer[LC].betterName or artal.layer[LC].name
 					artal.layer[startCounter].betterBlend = artal.layer[LC].betterBlend
 					artal.layer[startCounter].betterCliping = artal.layer[LC].clipping
 					for LCback = startCounter, LC - 1 do
