@@ -1,4 +1,5 @@
 import Dialogue from require "game.dialogue"
+Vector = require "lib.hump.vector"
 
 main = Dialogue =>
   @hector\say "hi!"
@@ -29,6 +30,47 @@ main = Dialogue =>
 
   SCENE\transition_to "police_station"
 
-{
-  init: -> main\start!
+local ret
+ret = {
+  init: =>
+    new = switch @scene
+      when "first_encounter", "first_encounter.main"
+        {
+          init: => main\start!
+        }
+      when "first_encounter.menu"
+        local timer
+        {
+          init: =>
+            hit = @hit\rectangle 0, 0, @width, @height
+            hit.mousepressed = ->
+              timer = 2.8
+              @hit\remove hit
+              @tags.path\start!
+
+          update: (dt) =>
+            if timer
+              timer -= dt
+              if timer < 0
+                @transition_to "first_encounter.intro", 1
+                timer = nil
+        }
+      when "first_encounter.intro"
+        timer = 2
+        {
+          update: (dt) =>
+            if timer
+              timer -= dt
+              if timer < 0
+                @transition_to "first_encounter.main", 1
+                timer = nil
+        }
+      else
+        {}
+
+    new.init @ if new.init
+    for k,v in pairs new
+      ret[k] = v unless k == "init"
 }
+
+ret
