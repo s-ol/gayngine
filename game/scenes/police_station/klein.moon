@@ -5,18 +5,41 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
+	SCENE.state.klein or= {}
 	if SCENE.state.police == 1
 		@klein\say "parelli, what are you waiting for? mcmiller wants those pictures."
 	elseif SCENE.state.police == 2
+		choices = {
+			{ tonight: "What can you tell me about operation lovebugs, sergeant?", _label: "about tonight" },
+		  { pictures: "I need to find the one who took the pictures in the lovebug-investigation", _label: "about pictures" },
+		  { you: "I believe i never told you that,", _label: "about you"},
+			{ nothing: "I just wanted to say that im ready for tonight!", _label: "nothing"}
+		}
+
+		out = {}
+		for choice in *choices
+			key = next choice
+			while key and "_" == key\sub 1, 1
+				key = next choice, key
+
+			if not SCENE.state.klein[key]
+				table.insert out, choice
+				
 		@player\say "sergeant klein?"
 		@klein\say "yes, officer parelli?"
-		res = @player\choice { tonight: "what can you tell me about operation lovebugs, sergeant?", _label: "about tonight" },
-												 { pictures: "i need to find the one who took the pictures in the lovebug-investigation", _label: "about pictures" },
-												 { you: "i believe i never told you that,", _label: "about you"},
-												 { nothing: "i just wanted to say that im ready for tonight!", _label: "nothing"}
+		res = @player\choice unpack out
+		
 		if res == "tonight"
-			@player\say "id like to go in there as prepared as possible"
+			SCENE.state.klein.tonight = true
+			@player\say "Id like to go in there as prepared as possible"
+			@klein\say "As you know we collected evidence that a club called lovebugs may be the center of a drug-cartel"
+			@klein\say "Several previously convicted individuals appear to visit the establishment frequently"
+			@klein\say "Tonight we will raid the club and confiscate relevant material"
+			@klein\say "I am looking forward to find enough incriminating evidence to close the club and arrest its owner"
+			@klein\say "An individual called hector"
+			@player\say "Thanks for the update sergeant"
 		elseif res == "pictures"
+			SCENE.state.klein.pictures = true
 			@player\say "apparently some of the negatives went missing"
 			@player\say "do you know something about him.%%%%.%%%%.%%%%%"
 			@player\say "or her?"
@@ -28,6 +51,7 @@ clickable_dialogue Dialogue =>
 			SCENE.state.police = 3
 			SCENE.state.receptionist = "ready"
 		elseif res == "you"
+			SCENE.state.klein.you = true
 			@player\say "but i really respect you and your work"
 			@player\say "it is an honor to serve under you, sergeant."
 			@klein\say "thank you officer"
@@ -35,14 +59,30 @@ clickable_dialogue Dialogue =>
 		elseif res == "nothing"
 			@klein\say "good to hear officer!"
 	elseif SCENE.state.police == 3
+		choices = {
+			{ tonight: "what can you tell me about operation lovebugs, sergeant?", _label: "about tonight" },
+		  { you: "i believe i never told you that,", _label: "about you"},
+			{ nothing: "i just wanted to say that im ready for tonight!", _label: "nothing"}
+		}
+
+		out = {}
+		for choice in *choices
+			key = next choice
+			while key and "_" == key\sub 1, 1
+				key = next choice, key
+
+			if not SCENE.state.klein[key]
+				table.insert out, choice
+				
 		@player\say "sergeant klein?"
 		@klein\say "yes, officer parelli?"
-		res = @player\choice { tonight: "what can you tell me about operation lovebugs, sergeant?", _label: "about tonight" },
-												 { you: "i believe i never told you that,", _label: "about you"},
-												 { nothing: "i just wanted to say that im ready for tonight!", _label: "nothing"}
+		res = @player\choice unpack out
+		
 		if res == "tonight"
+			SCENE.state.klein.tonight = true
 			@player\say "id like to go in there as prepared as possible"
 		elseif res == "you"
+			SCENE.state.klein.you = true
 			@player\say "but i really respect you and your work"
 			@player\say "it is an honor to serve under you, sergeant."
 			@klein\say "thank you officer"

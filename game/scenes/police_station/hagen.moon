@@ -73,7 +73,7 @@ clickable_dialogue Dialogue =>
 	elseif SCENE.state.police >= 3
 		choices = {
 			{ tonight: "how you feel about tonight?", _label: "about tonight" },
-			{ investigator: "i was wondering:", _label: "about photos" },
+			{ investigator: "i was wondering:", _label: "about investigator" },
 			{ us: "how long have we been partners by now?", _label: "about us" },
 			{ you: "how is your daughters chickpox?", _label: "about you" },
 			{ nothing: "ahh.%%%%.%%%%.%%%% nothing", _label: "nothing" }
