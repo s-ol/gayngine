@@ -39,9 +39,9 @@ clickable_dialogue Dialogue =>
 		if res == "photos"
 			SCENE.state.davids.photos = true
 			@davids\say "?"
-		if res == "operation"
+		elseif res == "operation"
 			SCENE.state.davids.operation = true
 			@davids\say "?"
-		if res == "you"
+		elseif res == "you"
 			SCENE.state.davids.you = true
 			@davids\say "?"
