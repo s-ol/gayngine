@@ -7,7 +7,7 @@ vector = Vector!
 clickable_dialogue Dialogue =>
 	if SCENE.state.police == 1
 		@klein\say "parelli, what are you waiting for? mcmiller wants those pictures."
-	if SCENE.state.police == 2
+	elseif SCENE.state.police == 2
 		@player\say "sergeant klein?"
 		@klein\say "yes, officer parelli?"
 		res = @player\choice { tonight: "what can you tell me about operation lovebugs, sergeant?", _label: "about tonight" },
@@ -16,7 +16,7 @@ clickable_dialogue Dialogue =>
 												 { nothing: "i just wanted to say that im ready for tonight!", _label: "nothing"}
 		if res == "tonight"
 			@player\say "id like to go in there as prepared as possible"
-		if res == "pictures"
+		elseif res == "pictures"
 			@player\say "apparently some of the negatives went missing"
 			@player\say "do you know something about him.%%%%.%%%%.%%%%%"
 			@player\say "or her?"
@@ -26,8 +26,26 @@ clickable_dialogue Dialogue =>
 			@klein\say "go ahead and look for him"
 			@klein\say "maybe Ms. Clark can tell you more about it."
 			SCENE.state.police = 3
-		if res == "you"
+			SCENE.state.receptionist = "ready"
+		elseif res == "you"
 			@player\say "but i really respect you and your work"
 			@player\say "it is an honor to serve under you, sergeant."
-		if res == "nothing"
+			@klein\say "thank you officer"
+			@klein\say "i am proud to work with such dedicated and loyal men and women"
+		elseif res == "nothing"
+			@klein\say "good to hear officer!"
+	elseif SCENE.state.police == 3
+		@player\say "sergeant klein?"
+		@klein\say "yes, officer parelli?"
+		res = @player\choice { tonight: "what can you tell me about operation lovebugs, sergeant?", _label: "about tonight" },
+												 { you: "i believe i never told you that,", _label: "about you"},
+												 { nothing: "i just wanted to say that im ready for tonight!", _label: "nothing"}
+		if res == "tonight"
+			@player\say "id like to go in there as prepared as possible"
+		elseif res == "you"
+			@player\say "but i really respect you and your work"
+			@player\say "it is an honor to serve under you, sergeant."
+			@klein\say "thank you officer"
+			@klein\say "i am proud to work with such dedicated and loyal men and women"
+		elseif res == "nothing"
 			@klein\say "good to hear officer!"

@@ -60,4 +60,6 @@ love.draw = ->
 
 love.mousepressed = (x, y, btn) ->
   SCENE\mousepressed x, y, btn
+	
+SCENE.state.police = 2
 

@@ -19,7 +19,7 @@ clickable_dialogue Dialogue =>
 												 { you: "brenda i love you", _label: "about you" }
 		if res == "photos"
 			@davids\say "?"
-		if res == "operation"
+		elseif res == "operation"
 			@davids\say "?"
-		if res == "you"
+		elseif res == "you"
 			@davids\say "?"
