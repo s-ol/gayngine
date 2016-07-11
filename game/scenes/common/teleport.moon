@@ -13,7 +13,7 @@ wrapping_ class Teleporter extends Mixin
 
 		@dialogue = Dialogue =>
 			choices = {
-				{go: "go to #{name}"}
+				{go: "go #{name}"}
 				{cancel: "cancel"}
 			}
 
