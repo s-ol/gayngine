@@ -16,18 +16,19 @@ clickable_dialogue Dialogue =>
 
 	if SCENE.state.police == 2
 		choices = {
-			photos: { "davids, i was wondering", _label: "about the photos" },
-			operation: { "davids, what do you think about operation lovebug?", _label: "about the operation" },
-			you: { "brenda i love you", _label: "about you" }
+			{ photos: "davids, i was wondering", _label: "about the photos" },
+			{ operation: "davids, what do you think about operation lovebug?", _label: "about the operation" },
+			{ you: "brenda i love you", _label: "about you" }
 		}
 
-		out = for key, choice in pairs choices
-			if SCENE.state.davids[key]
-				continue
+		out = {}
+		for choice in *choices
+			key = next choice
+			while key and "_" == key\sub 1, 1
+				key = next choice, key
 
-			choice[key] = choice[1]
-			choice[1] = nil
-			choice
+			if not SCENE.state.davids[key]
+				table.insert out, choice
 
 		if #out == 0 -- no more choices
 			@player\say "..."
