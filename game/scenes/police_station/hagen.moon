@@ -125,4 +125,4 @@ clickable_dialogue Dialogue =>
 			@player\say "ahhh%%%%%%%nothing"
 			@hagen\say ".%%%%%.%%%%%.%%%%%"
 			
-	SCENE.state.hagen_animation = idle
+	SCENE.state.hagen_animation = nil
