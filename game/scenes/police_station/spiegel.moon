@@ -84,8 +84,8 @@ clickable_dialogue Dialogue =>
 			@spiegel\say ".%%%%%%%%.%%%%%%%%."
 			@spiegel\say "But thats a different story i suppose"
 			@splayer\say ".%%%%%%%%.%%%%%%%%."
-			
-		if res == "work"
+
+		elseif res == "work"
 			SCENE.state.spiegel.work = true
 			
 			@spiegel\say "Oh, i know everything about this archieves"
@@ -96,8 +96,7 @@ clickable_dialogue Dialogue =>
 			@spiegel\say "I heard they will get one of those computers though"
 			@splayer\say ".%%%%%%%%.%%%%%%%%."
 			
-		if res == "work"
-		
+		elseif res == "investigator"
 			@player\say "I need to find out which investigator took the picture of our latest investigation"
 			@player\say "Can you help me with that?"
 			@spiegel\say "Oh, yes yes"
@@ -107,7 +106,11 @@ clickable_dialogue Dialogue =>
 			@spiegel\say "You want to take a look"
 			res = @player\choice { yes: "Yes, please", _label: "yes" },
 													 { no: "No, thanks", _label: "no"}
+			if res == "yes"
+				SCENE.tags.file\start!
+			else
+				@spiegel\say "Oh, nevermind then."
 			
-		if res == "nothing"
+		elseif res == "nothing"
 			@spiegel\say "Oh, that happens from time to time"
 	
