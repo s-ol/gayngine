@@ -30,3 +30,5 @@ clickable_dialogue Dialogue =>
 	elseif SCENE.state.police > 1 and SCENE.state.police < 6
 		@lieutenant\say "Parelli, i hope it is important"
 		@player\say ".%%%%%%.%%%%%%.%%%%%% not really"
+		@lieutenant\say "Then move your lazy ass back to work!"
+	elseif SCENE.state.police == 6

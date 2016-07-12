@@ -5,6 +5,7 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
+	SCENE.state.stlouis or= {}
 	SCENE.state.stlouis_animation = "talking"
 	if SCENE.state.police == 1
 	
@@ -25,10 +26,10 @@ clickable_dialogue Dialogue =>
 		
 		@description\say "You just learned that the incriminating pictures has been taken by a private investigator"
 		
-		SCENE.state.police = 3
+		SCENE.state.receptionist = "ready"
 		SCENE.state.klein.pictures = true
 		SCENE.state.trout.pictures = true
-		SCENE.state.receptionist = "ready"
+		SCENE.state.police = 3
 		
 	elseif SCENE.state.police == 3
 	

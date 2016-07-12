@@ -105,7 +105,7 @@ clickable_dialogue Dialogue =>
 			@spiegel\say "Coincidentally i have it here under my desk"
 			@spiegel\say "You want to take a look"
 			res = @player\choice { yes: "Yes, please", _label: "yes" },
-													 { no: "No, thanks", _label: "no"}
+													 { no: "No, thanks", _label: "no"} 
 			if res == "yes"
 				SCENE.tags.file\start!
 			else
