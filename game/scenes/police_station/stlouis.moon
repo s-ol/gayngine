@@ -5,10 +5,14 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
+	SCENE.state.stlouis_animation = "talking"
 	if SCENE.state.police == 1
+	
 		@stlouis\say "I have to write this report, please give me just a minute"
-		@player\say ".%%%.%%%.%%%"
+		@player\say ".%%%%%%.%%%%%.%%%%%"
+		
 	elseif SCENE.state.police == 2
+
 		@player\say "hey st.louis"
 		@player\say "still writing on yesterdays report?"
 		@stlouis\say "hello parelli!"
@@ -18,9 +22,16 @@ clickable_dialogue Dialogue =>
 		@player\say "agreed! do you know who took them?"
 		@stlouis\say "mh, not sure. i heard it was a private investigator, but who I don't know"
 		@player\say "thanks buddy"
+		
+		@description\say "You just learned that the incriminating pictures has been taken by a private investigator"
+		
 		SCENE.state.police = 3
+		SCENE.state.klein.pictures = true
 		SCENE.state.receptionist = "ready"
+		
 	elseif SCENE.state.police == 3
+	
 		@stlouis\say "this one paragraph"
 		@stlouis\say "i just cant get it right"
-		@player\say ".&&&&.&&&&.&&&&"
+		@player\say ".%%%%%%.%%%%%.%%%%%"
+	SCENE.state.stlouis_animation = nil

@@ -16,7 +16,7 @@ clickable_dialogue Dialogue =>
 	elseif SCENE.state.police == 2
 		choices = {
 			{ tonight: "how you feel about tonight?", _label: "about tonight" },
-			{ photos: "i was wondering:", _label: "about photos" },
+			{ photos: "i was wondering:", _label: "about pictures" },
 			{ us: "how long have we been partners by now?", _label: "about us" },
 			{ you: "how is your daughters chickpox?", _label: "about you" },
 			{ nothing: "ahh.%%%%.%%%%.%%%% nothing", _label: "nothing" }
@@ -37,21 +37,31 @@ clickable_dialogue Dialogue =>
 
 		if res == "tonight"
 			SCENE.state.hagen.tonight = true
+			
 			@hagen\say "to be honest with you, i dont feel too well about it."
 			@hagen\say "i mean operation cyclops didnt gave us a whole lotta reason to go on"
 			@hagen\say "neither did the undercover investigation."
 			@hagen\say "dunno, man, maybe we should better be leavin them alone"
 			@player\say "i guess.%%%%%.%%%%%.%%%%%."
+			
 		elseif res == "photos"
 			SCENE.state.hagen.photos = true
-			SCENE.state.police = 3
+
 			@player\say "do you know who took the latest pictures of the club?"
 			@player\say "want to compliment the guy, great work of art there!"
 			@hagen\say "yeah, great undercover-artist! Haha"
 			@hagen\say "seriously though, im not sure who it did but it wasnt someone from the department"
 			@hagen\say "i heard it was some private investigator"	
+			
+			@description\say "You just learned that the incriminating pictures has been taken by a private investigator"
+			
+			SCENE.state.klein.pictures = true 
+			SCENE.state.receptionist = "ready"
+			SCENE.state.police = 3
+			
 		elseif res == "us"
 			SCENE.state.hagen.us = true
+			
 			@player\say "six years?"
 			@player\say "and you never said you loved me"
 			@hagen\say "oh man, you know i do. want me to say it?"
@@ -60,14 +70,15 @@ clickable_dialogue Dialogue =>
 			@hagen\say ".%%%%%.%%%%%.%%%%%.and then suck your dick!"
 		elseif res == "you"
 			SCENE.state.hagen.you = true
+			
 			@player\say "im sure seeing some red spots on you the other day"
 			@hagen\say "yea, you know, cindy is better, but .%%%%%.%%%%%.%%%%%"
 			@hagen\say "but i think youre right .%%%%%.%%%%%.%%%%%"
 			@hagen\say "im itching everywhere"
 			@hagen\say "not because of chickpox though"
 			@hagen\say "i think i did catch something from your mother last night."
+			player\say "ouch"
 		elseif res == "nothing"
-			@player\say "ahhh%%%%%%%nothing"
 			@hagen\say ".%%%%%.%%%%%.%%%%%"
 			
 	elseif SCENE.state.police >= 3
@@ -94,6 +105,7 @@ clickable_dialogue Dialogue =>
 
 		if res == "tonight"
 			SCENE.state.hagen.tonight = true
+			
 			@hagen\say "to be honest with you, i dont feel too well about it."
 			@hagen\say "i mean operation cyclops didnt gave us a whole lotta reason to go on"
 			@hagen\say "neither did the undercover investigation."
@@ -101,12 +113,14 @@ clickable_dialogue Dialogue =>
 			@player\say "i guess.%%%%%.%%%%%.%%%%%."
 		elseif res == "investigator"
 			SCENE.state.hagen.investigator = true
+			
 			@player\say "do you know which investigator took the pictures?"
 			@hagen\say "nope, sorry man"
 			@hagen\say "but if you really want to compliment him so badly"
 			@hagen\say "maybe you ask kimberly at the reception"
 		elseif res == "us"
 			SCENE.state.hagen.us = true
+			
 			@player\say "six years?"
 			@player\say "and you never said you loved me"
 			@hagen\say "oh man, you know i do. want me to say it?"
@@ -115,6 +129,7 @@ clickable_dialogue Dialogue =>
 			@hagen\say ".%%%%%.%%%%%.%%%%%.and then suck your dick!"
 		elseif res == "you"
 			SCENE.state.hagen.you = true
+			
 			@player\say "im sure seeing some red spots on you the other day"
 			@hagen\say "yea, you know, cindy is better, but .%%%%%.%%%%%.%%%%%"
 			@hagen\say "but i think youre right .%%%%%.%%%%%.%%%%%"
