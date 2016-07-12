@@ -5,5 +5,6 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-	@sittingguyback\say "cant you see that i am staring into oblivion right now?"
-	@player\say ".%%%.%%%.%%%"
+	if SCENE.state.police >= 1
+		SOUND\play "snore"
+		@player\say ".%%%.%%%.%%%"

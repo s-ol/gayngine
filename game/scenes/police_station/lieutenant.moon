@@ -27,6 +27,6 @@ clickable_dialogue Dialogue =>
 				@lieutenant\say "what is wrong with you parelli?"
 				@lieutenant\say "how can it be so hard to pick up some pictures?"
 
-	elseif SCENE.state.police >= 1 and SCENE.state.police < 6
+	elseif SCENE.state.police > 1 and SCENE.state.police < 6
 		@lieutenant\say "Parelli, i hope it is important"
 		@player\say ".%%%%%%.%%%%%%.%%%%%% not really"
