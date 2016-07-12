@@ -56,6 +56,7 @@ clickable_dialogue Dialogue =>
 			@description\say "You just learned that the incriminating pictures has been taken by a private investigator"
 			
 			SCENE.state.klein.pictures = true 
+			SCENE.state.trout.pictures = true
 			SCENE.state.receptionist = "ready"
 			SCENE.state.police = 3
 			

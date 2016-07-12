@@ -11,7 +11,7 @@ clickable_dialogue Dialogue =>
 		if SCENE.state.davids.approached == nil
 			@davids\say "parelli, the lieutenant waits for those photos"
 			SCENE.state.davids.approached = true
-		else SCENE.davids
+		else
 			@davids\say "%%%%%.%%%%%.%%%%%.%%%%%"
 
 	if SCENE.state.police == 2

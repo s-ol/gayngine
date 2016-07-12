@@ -27,6 +27,7 @@ clickable_dialogue Dialogue =>
 		
 		SCENE.state.police = 3
 		SCENE.state.klein.pictures = true
+		SCENE.state.trout.pictures = true
 		SCENE.state.receptionist = "ready"
 		
 	elseif SCENE.state.police == 3
