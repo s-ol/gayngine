@@ -8,10 +8,7 @@ clickable_dialogue Dialogue =>
   if SCENE.state.police == nil
 		@receptionist\say "'ill be back in 10'"
 		@receptionist\say "-kimberly clark"
-  elseif SCENE.state.police == 1
-		@receptionist\say "one moment"
-		@player\say ".%%%.%%%.%%%"
-  elseif SCENE.state.police == 2
+  elseif SCENE.state.police == 1 or SCENE.state.police == 2 or SCENE.state.police == 4 or SCENE.state.police >= 6
 		@receptionist\say "one moment"
 		@player\say ".%%%.%%%.%%%"
   elseif SCENE.state.police == 3
@@ -76,6 +73,24 @@ clickable_dialogue Dialogue =>
 			SCENE.state.police = 4
 			SCENE.state.receptionist = nil
 		
-	elseif SCENE.state.police >= 4
-		@receptionist\say "one moment"
+
+	elseif SCENE.state.police == 5
+		@receptionist\say "What now?"
+		@player\say "I did find out that the investigators name is david johnson"
+		@player\say "But i couldnt find any contact information"
+		@player\say "And i dont know how to go from here"
+		@receptionist\say "So you need my help again?"
+		@receptionist\say "Its always the same with you men"
+		@receptionist\say ".%%%.%%%.%%%"
+		@receptionist\say "Ok let me think about it"
+		@receptionist\say "Johnson .%%%.%%%.%%%"
+		@receptionist\say "There is someone called Johnson who is a good friend of the lieutenant"
+		@receptionist\say "Maybe he is your man"
+		@receptionist\say "Cant help you more, i guess you have to ask the lieutenant"
+		@player\say "Thank you kimberly, i owe you one"
+		@player\say "One?"
 		@player\say ".%%%.%%%.%%%"
+		SCENE.state.police = 6
+		SCENE.state.receptionist = nil
+		
+	
