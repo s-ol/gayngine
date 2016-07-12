@@ -1,6 +1,7 @@
 { graphics: lg } = love
 
 import wrapping_, Mixin from  require "util"
+import Dialogue from require "game.dialogue"
 Vector = require "lib.hump.vector"
 
 export DIALOGUE
@@ -36,6 +37,11 @@ wrapping_ class File extends Mixin
         @rebuild!
     else
       DIALOGUE = nil
+      SCENE.state.police = 5
+      Dialogue(=>
+        @description\say "it seems david johnson was the photographer on the case"
+      )\start!
+
 
   draw: (draw_group, draw_layer) =>
     layer = @pages[@page]
