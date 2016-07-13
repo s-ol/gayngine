@@ -38,11 +38,11 @@ wrapping_ class File extends Mixin
     else
       DIALOGUE = nil
       SCENE.state.police = 5
-			SCENE.state.receptionist = "ready"
+      SCENE.state.receptionist = "ready"
       Dialogue(=>
-				@description\say "Specialized in drug dealers and club scene?"
-				@description\say "I guess david johnson not only likes to take pictures..."
-				@description\say "But how can i find him?"
+        @description\say "Specialized in drug dealers and club scene?"
+        @description\say "I guess david johnson not only likes to take pictures..."
+        @description\say "But how can i find him?"
       )\start!
 
 
