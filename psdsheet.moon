@@ -92,7 +92,7 @@ class MultiSheet
       @last
 
   update: (vec, dt) =>
-    new = @get vec
+    new = @get vec/dt
     if new != @anim
       @time = 0
       @anim = new
