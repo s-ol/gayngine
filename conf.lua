@@ -6,8 +6,8 @@ function love.conf(t)
 
   t.window.title = "gayngine"
   t.window.fullscreen = true
-  t.window.width = 320 * 6
-  t.window.height = 180 * 6
+  t.window.width = 320 * 4.3
+  t.window.height = 180 * 4.3
   t.window.vsync = true
 
   t.modules.joystick = false
