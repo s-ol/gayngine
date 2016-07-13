@@ -5,8 +5,8 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-	@player\say "Hello, sir?"
-	@slave\say "fuck off"
+	@player\say "I think I'm in love."
+	@player\say "He'd do anything for me"
 	res = @player\choice	{ waters: "Well, I was at the lovebugs club", _label: "test the waters" },
 												{ maneuver: "Today we arrested a man for anothother drug-related felony", _label: "strategic maneuver" },
 												{ personal: "Ahh nothing special", _label: "personal interest"}
