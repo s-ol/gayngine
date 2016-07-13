@@ -8,7 +8,7 @@ clickable_dialogue Dialogue =>
 	SCENE.state.schnitzler = "talking"
 	if SCENE.state.police == nil
 		@schnitzler\say "parelli, to what do i owe the honour of your visit?"
-		@player\say "hi .%%%%%.%%%%%.%%%%%."
+		@player\say "hi ?%%%%%?%%%%%?%%%%%"
 		@schnitzler\say "schnitzler, joseph, but nevermind pal" 
 		@schnitzler\say "i only work here for two years now."
 		@player\say "im sorry joseph, im really bad with names."
@@ -68,7 +68,15 @@ clickable_dialogue Dialogue =>
 			@schnitzler\say "but maybe you should think twice where to spend your time"
 			@schnitzler\say "im not the one who took the picture"
 			@schnitzler\say "so at least one other person has seen you."
-		@comment\say "you have recieved the photos of the surveillance"
+		
+		@comment\say "Finally, he gave me the pictures..."
+		@comment\say "But he is right, next time i have to be more careful"
+		@comment\say "And for now i have to find out who took those pictures"
+		@comment\say "I sure hope he doesnt remeber my face"
+		@comment\say "And if he does?"
+		@comment\say "I sure hope he doesnt remeber my face"
+		@comment\say ".%%%%%.%%%%%.%%%%%"
+		
 		SCENE.state.police = 1
 	elseif SCENE.state.police == 1
 		@schnitzler\say "now go and deliver those photos, would you?"

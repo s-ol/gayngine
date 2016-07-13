@@ -5,7 +5,6 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-	SCENE.state.klein or= {}
 	if SCENE.state.police == 1
 		@klein\say "parelli, what are you waiting for? mcmiller wants those pictures."
 	elseif SCENE.state.police >= 2
@@ -51,7 +50,9 @@ clickable_dialogue Dialogue =>
 			@klein\say "go ahead and look for him"
 			@klein\say "maybe Ms. Clark can tell you more about it."
 			
-			@description\say "You just learned that the incriminating pictures has been taken by a private investigator"
+			@description\say "A private investigator?"
+			@description\say "I guess its because we are so hoplessly understaffed that they need the help of outsiders"
+			@description\say "Now i just have to find his name"
 			
 			SCENE.state.police = 3
 			SCENE.state.receptionist = "ready"

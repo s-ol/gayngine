@@ -5,9 +5,7 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-	SCENE.state.stlouis or= {}
-	SCENE.state.trout or= {}
-	SCENE.state.klein or= {}
+
 	SCENE.state.stlouis_animation = "talking"
 	if SCENE.state.police == 1
 	
@@ -26,7 +24,9 @@ clickable_dialogue Dialogue =>
 		@stlouis\say "mh, not sure. i heard it was a private investigator, but who I don't know"
 		@player\say "thanks buddy"
 		
-		@description\say "You just learned that the incriminating pictures have been taken by a private investigator"
+		@description\say "A private investigator?"
+		@description\say "I guess its because we are so hoplessly understaffed that they need the help of outsiders"
+		@description\say "Now i just have to find his name"
 		
 		SCENE.state.receptionist = "ready"
 		SCENE.state.klein.pictures = true

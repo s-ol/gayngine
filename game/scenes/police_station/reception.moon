@@ -33,7 +33,8 @@ clickable_dialogue Dialogue =>
 			@receptionist\say "im sure he knows more about it"
 			@player\say "thanks a bunch"
 			
-			@description\say "You just learned that leonard spiegel in the archieves might know more about the investigator who took the picture"
+			@description\say "Leo spiegel? i have heard that he is a real oldtimer but remembers everything"
+			@description\say "I guess i have to go up tehere and talk to him."
 			
 			SCENE.state.police = 4
 			SCENE.state.receptionist = nil
@@ -55,7 +56,8 @@ clickable_dialogue Dialogue =>
 			@receptionist\say "im sure he knows more about it"
 			@player\say "thanks a bunch"
 			
-			@description\say "You just learned that leonard spiegel in the archieves might know more about the investigator who took the picture"
+			@description\say "Leo spiegel? i have heard that he is a real oldtimer but remembers everything"
+			@description\say "I guess i have to go up tehere and talk to him."
 			
 			SCENE.state.police = 4
 			SCENE.state.receptionist = nil
@@ -68,7 +70,8 @@ clickable_dialogue Dialogue =>
 			@receptionist\say "ask leo spiegel in the archieves"
 			@receptionist\say "maybe he knows something"
 			
-			@description\say "You just learned that leonard spiegel in the archieves might know more about the investigator who took the picture"
+			@description\say "Leo spiegel? i have heard that he is a real oldtimer but remembers everything"
+			@description\say "I guess i have to go up tehere and talk to him."
 			
 			SCENE.state.police = 4
 			SCENE.state.receptionist = nil
@@ -85,11 +88,15 @@ clickable_dialogue Dialogue =>
 		@receptionist\say "Ok let me think about it"
 		@receptionist\say "Johnson .%%%.%%%.%%%"
 		@receptionist\say "There is someone called Johnson who is a good friend of the lieutenant"
+		@receptionist\say "I think they served in the same battalion or something like that"
 		@receptionist\say "Maybe he is your man"
 		@receptionist\say "Cant help you more, i guess you have to ask the lieutenant"
 		@player\say "Thank you kimberly, i owe you one"
-		@player\say "One?"
+		@receptionist\say "One?"
 		@player\say ".%%%.%%%.%%%"
+		
+		@description\say "A friend of the lieutenant?"
+		@description\say "Maybe i have to pay him a visit in his office upstairs"
 		SCENE.state.police = 6
 		SCENE.state.receptionist = nil
 		

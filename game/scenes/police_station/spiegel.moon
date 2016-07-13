@@ -5,7 +5,6 @@ import wrapping_, Mixin from require "util"
 vector = Vector!
 
 clickable_dialogue Dialogue =>
-	SCENE.state.spiegel or= {}
 	if SCENE.state.police < 4
 		choices = {
 			{ you: "You are leo spiegel, right?", _label: "about you" },

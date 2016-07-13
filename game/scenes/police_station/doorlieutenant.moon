@@ -10,8 +10,8 @@ clickable_dialogue Dialogue =>
 	elseif SCENE.state.police >= 1
 		@player\say "its the lieutenants office"
 	res = @player\choice { enter: "enter", _label: "enter" },
-											 { leave: "leave", _label: "leave"}
+											 { leave: "better not disturb him", _label: "leave"}
 	if res == "enter"
 		SCENE\transition_to "police_station.chief_office"
 	elseif res == "leave"
-		@player\say "better not disturb him"
+		nothing
