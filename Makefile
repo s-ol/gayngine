@@ -21,10 +21,10 @@ binaries: win32 win64 mac
 
 clean: cleanmoon cleanlove
 cleanmoon:
-	rm $(COMPILED)
+	rm -f $(COMPILED)
 
 cleanlove:
-	rm $(DIST)/$(GAMENAME).love
+	rm -f $(DIST)/$(GAMENAME).love
 
 $(COMPILED): %.lua: %.moon
 	@moonc $?
