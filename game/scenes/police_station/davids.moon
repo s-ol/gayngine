@@ -6,5 +6,5 @@ vector = Vector!
 
 clickable_dialogue Dialogue =>
 	if SCENE.state.police >= 1
-		@schnitzler\say "Go stalk someone else parelli"
+		@davids\say "Go stalk someone else parelli"
 		@player\say ".%%%%%.%%%%%.%%%%%."
