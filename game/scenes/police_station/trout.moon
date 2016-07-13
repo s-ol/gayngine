@@ -6,6 +6,9 @@ vector = Vector!
 
 clickable_dialogue Dialogue =>
 	SCENE.state.trout or= {}
+	if SCENE.state.police <= 1
+		@trout\say "Did you already bring the pictures?"
+		@trout\say "Hurry my friend!"
 	if SCENE.state.police >= 2 and SCENE.state.trout_oppinion == nil
 		choices = {
 			{ pictures: "i was wondering", _label: "about pictures" },
