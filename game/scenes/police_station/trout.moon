@@ -6,7 +6,7 @@ vector = Vector!
 
 clickable_dialogue Dialogue =>
 	SCENE.state.trout or= {}
-	if SCENE.state.police >=1 and SCENE.state.trout_oppinion == nil
+	if SCENE.state.police >= 2 and SCENE.state.trout_oppinion == nil
 		choices = {
 			{ pictures: "i was wondering", _label: "about pictures" },
 			{ tonight: "What do you think about our operation tonight", _label: "about tonight" },
