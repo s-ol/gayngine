@@ -51,7 +51,7 @@ clickable_dialogue Dialogue =>
 		if res == "nothing"
 			@spiegel\say "Oh, that happens from time to time"
 	
-	elseif SCENE.state.police = 4
+	elseif SCENE.state.police >= 4
 		choices = {
 			{ you: "You are leo spiegel, right?", _label: "about you" },
 			{ work: "What is it exactly that you are doing here?", _label: "about your work" },
