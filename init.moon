@@ -70,5 +70,5 @@ SCENE.state.klein or= {}
 SCENE.state.spiegel or= {}
 	
 
-SCENE.state.police = 4
+
 
