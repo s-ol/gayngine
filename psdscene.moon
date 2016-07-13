@@ -138,10 +138,14 @@ class PSDScene
       if @transition_time + tdt > 0 and @transition_time < 0
         @last_scene, @scene, @next_scene = @scene, @next_scene
         DIALOGUE = nil
+        SOUND\stop!
         @reload!
         @init!
       elseif @transition_time <= -1
         @transition_time = nil
+
+      SOUND\setVolume math.max(0, math.abs(@transition_time or 1) - .3) / .7
+    SOUND\setPosition @scroll + .5 * Vector 320, 180
 
     @update_group dt, @tree
 
