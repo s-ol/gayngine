@@ -34,6 +34,8 @@ ret = {
               timer = 2.8
               @hit\remove hit
               @tags.path\start!
+              for star in *@instances.stars
+                star\start!
 
           update: (dt) =>
             if timer
