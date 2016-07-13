@@ -12,6 +12,7 @@ clickable_dialogue Dialogue =>
 		res = @player\choice { enter: "Lets see if he is there", _label: "enter" },
 											 { leave: "Better not", _label: "leave"}
 		if res == "enter"
+			SOUND\play "door"
 			SCENE\transition_to "police_station.detective office"
 		elseif res == "leave"
 			nothing
