@@ -11,7 +11,7 @@ wrapping_ class CameraPath extends Mixin
 
     @path = {}
     for cp in *@mask.paths[1]
-      point = dummy.clone(cp.cp) - Vector(WIDTH, HEIGHT)/8
+      point = dummy.clone(cp.cp) - Vector(320, 180)/2
       point.speed = tonumber table.remove(speeds, 1) or 120 if @path[1]
       @path[#@path+1] = point
 
