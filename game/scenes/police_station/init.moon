@@ -19,6 +19,12 @@ main = Dialogue =>
 
 {
   init: =>
+    @state.stlouis or= {}
+    @state.hagen or= {}
+    @state.trout or= {}
+    @state.klein or= {}
+    @state.spiegel or= {}
+
     if @last_scene
       for spawn in *@instances.playerspawn
         if @last_scene\match spawn.pattern
