@@ -74,6 +74,7 @@ clickable_dialogue Dialogue =>
 		@comment\say "But he is right, next time i have to be more careful"
 		@comment\say "And for now i have to find out who took those pictures"
 		@comment\say "I sure hope he doesnt remeber my face"
+		@comment\say "And if he does?"
 		@comment\say ".%%%%%.%%%%%.%%%%%"
 		
 		SCENE.state.police = 1
