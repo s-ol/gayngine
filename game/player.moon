@@ -47,6 +47,9 @@ class Player extends Reloadable
           break
 
     @sheet\update total, dt
+    if not @sheet.anim\match "idle"
+      if not (@last_sound and @last_sound\isPlaying!)
+        @last_sound = SOUND\play "steps/#{math.random 16}", 0.6, false, @pos
 
     local close
     if @path and not @path._nodes[@path.index]
