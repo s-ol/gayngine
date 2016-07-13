@@ -7,12 +7,13 @@ vector = Vector!
 clickable_dialogue Dialogue =>
 	if SCENE.state.police == nil
 		@player\say "its the lieutenants office"
+		@player\say "noone seems to be inside"
 	elseif SCENE.state.police >= 1
 		@player\say "its the lieutenants office"
-	res = @player\choice { enter: "enter", _label: "enter" },
-											 { leave: "better not disturb him", _label: "leave"}
+	res = @player\rchoice { enter: "enter" },
+												{ leave: "leave" }
 	if res == "enter"
 		SOUND\play "door"
 		SCENE\transition_to "police_station.chief_office"
 	elseif res == "leave"
-		nothing
+		@player\say "better leave him alone..."

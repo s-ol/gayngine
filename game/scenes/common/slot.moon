@@ -60,7 +60,7 @@ wrapping_ class Slot extends Mixin
         lg.rectangle "fill", x, y, width+1, height
 
       lg.setColor 255, 255, 255, 255
-      lg.printf text, x+1, y-4, width
+      lg.printf text\lower!, x+1, y-4, width
       y += 7
 
   clear: =>

@@ -62,13 +62,3 @@ love.draw = ->
 
 love.mousepressed = (x, y, btn) ->
   SCENE\mousepressed x, y, btn
-	
-SCENE.state.stlouis or= {}
-SCENE.state.hagen or= {}
-SCENE.state.trout or= {}
-SCENE.state.klein or= {}
-SCENE.state.spiegel or= {}
-	
-
-
-
