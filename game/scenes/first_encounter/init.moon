@@ -1,8 +1,12 @@
 Vector = require "lib.hump.vector"
 
+local sound
 local ret
 ret = {
   init: =>
+    sound or= SOUND\loopWhile "club", "first_encounter"
+    sound\setPosition ((Vector(170, 90) + @scroll)/100)\unpack!, 0
+
     new = switch @scene
       when "first_encounter", "first_encounter.main"
         timer = 0
@@ -38,10 +42,12 @@ ret = {
                 star\start!
 
           update: (dt) =>
+            print @scroll
+            sound\setPosition ((Vector(170, 90) + @scroll)/100)\unpack!, 0
             if timer
               timer -= dt
               if timer < 0
-                @transition_to "first_encounter.intro", 1
+                @transition_to "first_encounter.intro", 1, true
                 timer = nil
         }
       when "first_encounter.intro"
@@ -51,7 +57,7 @@ ret = {
             if timer
               timer -= dt
               if timer < 0
-                @transition_to "first_encounter.main", 1
+                @transition_to "first_encounter.main", 1, true
                 timer = nil
         }
       else

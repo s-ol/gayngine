@@ -5,7 +5,7 @@ psshaders = require "shaders"
 Vector = require "lib.hump.vector"
 HC = require "lib.HC"
 
-SCALE = 4.3
+SCALE = 6
 KEYHOLE = lg.getWidth! * 0.2
 TRANSITION_TIME = 2
 
@@ -27,7 +27,8 @@ class PSDScene
     if WATCHER
       WATCHER\register @filename!, @
 
-  transition_to: (next_scene, transition_time=TRANSITION_TIME) =>
+  transition_to: (next_scene, transition_time=TRANSITION_TIME, nomute) =>
+    @no_mute = nomute
     @next_scene = next_scene
     @transition_time = 1
     @transition_speed = transition_time/TRANSITION_TIME
@@ -138,13 +139,13 @@ class PSDScene
       if @transition_time + tdt > 0 and @transition_time < 0
         @last_scene, @scene, @next_scene = @scene, @next_scene
         DIALOGUE = nil
-        SOUND\stop!
+        SOUND\stop @scene
         @reload!
         @init!
       elseif @transition_time <= -1
         @transition_time = nil
 
-      SOUND\setVolume math.max(0, math.abs(@transition_time or 1) - .3) / .7
+      SOUND\setVolume math.max(0, math.abs(@transition_time or 1) - .3) / .7 unless @no_mute
     SOUND\setPosition @scroll + .5 * Vector 320, 180
 
     @update_group dt, @tree

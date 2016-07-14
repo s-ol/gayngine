@@ -72,7 +72,7 @@ wrapping_ class PlayerSpawn extends Mixin
     @sheet\update total, dt
     if not @sheet.anim\match "idle"
       if not (@last_sound and @last_sound\isPlaying!)
-        @last_sound = SOUND\play "steps/step#{math.random 16}", 0.6, false, @pos
+        @last_sound = SOUND\play "steps/step#{math.random 16}", 0.4, false, @pos
 
   draw: =>
     return unless @path[@index]
