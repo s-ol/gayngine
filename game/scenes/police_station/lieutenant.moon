@@ -11,7 +11,7 @@ clickable_dialogue Dialogue =>
 			res = @player\choice { yes: "yes, sir. here you go", _label: "yes" },
 													 { no: "no, sir. ill pick them up now", _label: "no" }
 			if res == "yes"
-				@commentlieutenant\say "you gave the pictures to lieutenant mcmiller"
+				@description\say "you gave the pictures to lieutenant mcmiller"
 				SCENE.state.police = 2
 			if res == "no"
 				@lieutenant\say "hurry up parelli"
@@ -21,7 +21,7 @@ clickable_dialogue Dialogue =>
 			res = @player\choice { yes: "yes, sir. here you go", _label: "yes" },
 													 { no: "no, sir. ill pick them up now", _label: "no" }
 			if res == "yes"
-				@commentlieutenant\say "you gave the pictures to lieutenant mcmiller"
+				@cdescription\say "you gave the pictures to lieutenant mcmiller"
 				SCENE.state.police = 2
 			if res == "no"
 				@lieutenant\say "what is wrong with you parelli?"

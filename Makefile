@@ -39,8 +39,8 @@ $(BIN)/win32 $(BIN)/win64:
 
 $(WINBINS): $(BIN)/%/$(GAMENAME).exe: $(BIN)/%
 	echo $(WINBINS) ... $? ... $@
-	wget https://bitbucket.org/rude/love/downloads/love-0.10.1-win64.zip -O $?.zip
-	unzip -jd $? $?.zip
+	#wget https://bitbucket.org/rude/love/downloads/love-0.10.1-win64.zip -O $?.zip
+	#unzip -jd $? $?.zip
 	mv $?/love.exe $@
 	rm $?/game.ico $?/changes.txt $?/readme.txt
 

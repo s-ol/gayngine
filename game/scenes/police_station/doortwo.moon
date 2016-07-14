@@ -13,6 +13,6 @@ clickable_dialogue Dialogue =>
 											 { leave: "Better not", _label: "leave"}
 		if res == "enter"
 			SOUND\play "door"
-			SCENE\transition_to "police_station.detective office"
+			SCENE\transition_to "police_station.detective_office"
 		elseif res == "leave"
 			nothing

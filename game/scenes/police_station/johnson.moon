@@ -49,6 +49,13 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say "Thank you mr.johnson"
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
+
 			
 		elseif res == "dismissive"
 			@johnson\say "I can imagine its hard living a double life like that"
@@ -64,7 +71,13 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 
-		elseif res == "play along"
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
+
+		elseif res == "play"
 			@johnson\say "I appreciate your efforts"
 			@johnson\say "But next time be a bit better prepared"
 			@johnson\say "Ill have to leave now"
@@ -73,6 +86,12 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say "Sure"
 			@player\say "Thank you mr.johnson"
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
 
 		
  
@@ -100,6 +119,12 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say "Thank you mr.johnson"
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
 			
 		elseif res == "dismissive"
 			@johnson\say "I can imagine its hard living a double life like that"
@@ -115,7 +140,13 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 
-		elseif res == "play along"
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
+
+		elseif res == "play"
 			@johnson\say "Well, its true, the payment is miserable, you gotta love the job"
 			@johnson\say "People distrust you for what you are doing"
 			@johnson\say "You live kind of a double life, you know?"
@@ -131,6 +162,13 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say "Thank you mr.johnson"
+
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
 		
   elseif res == "waters"
 	
@@ -160,6 +198,13 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say "Thank you mr.johnson"
+
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
 			
 		elseif res == "dismissive"
 			@johnson\say "I can imagine its hard living a double life like that"
@@ -174,9 +219,16 @@ clickable_dialogue Dialogue =>
 			@johnson\say "You will lose everything"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
+
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
 		
 		
-		elseif res == "play along"
+		elseif res == "play"
 			@johnson\say "Well, you gotta love the job"
 			@johnson\say "People distrust you for what you are doing"
 			@johnson\say "You live kind of a double life, you know?"
@@ -192,4 +244,11 @@ clickable_dialogue Dialogue =>
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say ".%%%%.%%%%%.%%%%%%"
 			@player\say "Thank you mr.johnson"
+
+
+			@description\say "I cant go on"
+			@description\say "I feel like my game ends here"
+			@description\say ".%%%%.%%%%%.%%%%%%"
+			SCENE.state = {}
+			SCENE\transition_to "first_encounter.menu", 4
 		
