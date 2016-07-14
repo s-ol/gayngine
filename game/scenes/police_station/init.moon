@@ -19,7 +19,7 @@ main = Dialogue =>
 
 {
   init: =>
-    SOUND\play "jazz", 1, true
+    SOUND\play "funk", .05, true
 
     @state.stlouis or= {}
     @state.hagen or= {}

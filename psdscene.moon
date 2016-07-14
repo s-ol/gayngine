@@ -5,7 +5,7 @@ psshaders = require "shaders"
 Vector = require "lib.hump.vector"
 HC = require "lib.HC"
 
-SCALE = 6
+SCALE = 4.3
 KEYHOLE = lg.getWidth! * 0.2
 TRANSITION_TIME = 2
 

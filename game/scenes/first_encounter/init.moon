@@ -4,6 +4,7 @@ local sound
 local ret
 ret = {
   init: =>
+    SOUND\play "rain", .3, true unless did
     sound or= SOUND\loopWhile "club", "first_encounter"
     sound\setPosition ((Vector(170, 90) + @scroll)/100)\unpack!, 0
 
@@ -42,7 +43,6 @@ ret = {
                 star\start!
 
           update: (dt) =>
-            print @scroll
             sound\setPosition ((Vector(170, 90) + @scroll)/100)\unpack!, 0
             if timer
               timer -= dt
