@@ -1,12 +1,14 @@
-{ graphics: lg, keyboard: lk } = love
+{ graphics: lg, keyboard: lk, filesystem: lf } = love
 
 Vector = require "lib.hump.vector"
 
-SCENES = {
-  "first_encounter",
-  "police_station", "police_station.basement", "police_station.upper", "police_station.chief_office", "police_station.detective_office",
-  "club"
-}
+SCENES = {}
+
+for dir in *lf.getDirectoryItems "game/scenes"
+  if lf.isDirectory "game/scenes/#{dir}"
+    for file in *lf.getDirectoryItems "game/scenes/#{dir}"
+      if scene = file\match "(.*)%.psd$"
+        table.insert SCENES, "#{dir}.#{scene}"
 
 export DIALOGUE
 
