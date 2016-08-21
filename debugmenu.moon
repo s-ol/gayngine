@@ -1,20 +1,25 @@
 { graphics: lg, keyboard: lk, filesystem: lf } = love
 
+require "imgui"
 Vector = require "lib.hump.vector"
 
-SCENES = {}
+export DIALOGUE
 
+SCENES = {}
 for dir in *lf.getDirectoryItems "game/scenes"
   if lf.isDirectory "game/scenes/#{dir}"
+    SCENES[dir] = {}
     for file in *lf.getDirectoryItems "game/scenes/#{dir}"
       if scene = file\match "(.*)%.psd$"
-        table.insert SCENES, "#{dir}.#{scene}"
+        table.insert SCENES[dir], scene
 
-export DIALOGUE
+    SCENES[dir] = nil if not next SCENES[dir]
 
 class DebugMenu
   new: =>
     @enabled = not _BUILD
+
+    @tools = {}
 
     @proxy = setmetatable {},
       __index: (key) => @[key] = false
@@ -29,124 +34,111 @@ class DebugMenu
         else
           false
 
-    @lasth = 0
-
   keypressed: (key) =>
-    if not @enabled
-      return unless key == "d" and lk.isDown "lshift"
+    if key == "d" and lk.isDown "lshift"
+      @enabled = not @enabled
+      true
+    else
+      imgui.GetWantCaptureKeyboard!, imgui.KeyPressed key
+  keyreleased: (key) => imgui.GetWantCaptureKeyboard!, imgui.KeyReleased key
+  textinput: (t) => imgui.GetWantCaptureKeyboard!, imgui.TextInput t
 
-    switch key
-      when "d"
-        @enabled = not @enabled
-        true
-      when "r"
-        SCENE\reload!
-        SCENE\init!
-        true
-      when "s"
-        if DIALOGUE
-          DIALOGUE\clear!
-          DIALOGUE = nil
-        true
-      when "l"
-        @scene_chooser_index = 1
-        true
-      when "up"
-        if @scene_chooser_index
-          @scene_chooser_index = (@scene_chooser_index - 2) % #SCENES + 1
-          true
-        else
-          false
-      when "down"
-        if @scene_chooser_index
-          @scene_chooser_index = @scene_chooser_index % #SCENES + 1
-          true
-        else
-          false
-      when "escape"
-        if @scene_chooser_index
-          @scene_chooser_index = nil
-          true
-        else
-          false
-      when "return"
-        if @scene_chooser_index
-          SCENE\transition_to SCENES[@scene_chooser_index]
-          @scene_chooser_index = nil
-          true
-        else
-          false
-      else
-        for name, value in pairs @proxy
-          if key == name\sub 1, 1
-            @proxy[name] = not value
-            return true
-        false
+  mousepressed: (x, y, button) => imgui.GetWantCaptureMouse!, imgui.MousePressed button
+  mousemoved: (x, y) => imgui.GetWantCaptureMouse!, imgui.MouseMoved x, y
+  mousereleased: (x, y, button) => imgui.GetWantCaptureMouse!, imgui.MouseReleased button
+
+  wheelmoved: (x, y) => imgui.WheelMoved y
+
+  update: => imgui.NewFrame!
 
   draw: =>
     return unless @enabled
 
-    y = 0
+    if imgui.BeginMainMenuBar!
+      if imgui.BeginMenu "Tools"
+        if imgui.MenuItem "Switch Scene", "S"
+          imgui.OpenPopup "scene switcher"
+        imgui.EndMenu!
+    imgui.EndMainMenuBar!
 
-    lg.setColor 0, 0, 0, 120
-    lg.rectangle "fill", 5, 5, 150, @lasth
-    y += 5
+    if imgui.Button "Reload Scene"
+      SCENE\reload!
+      SCENE\init!
 
-    lg.setColor 255, 255, 255
+    imgui.SameLine!
+    if imgui.Button "Skip Dialogue"
+      DIALOGUE\clear! if DIALOGUE
+      DIALOGUE = nil
 
-    lg.print "[D]EBUG", 8, y
-    lg.line 5, y+13, 155, y+13
-    y += 15
+    _, @tools.scene_view = imgui.Checkbox "Scene View", @tools.scene_view
+    imgui.SameLine!
+    _, @tools.inspector = imgui.Checkbox "Node Inspector", @tools.inspector
 
-    lg.print "DIALOGUE: #{DIALOGUE}", 10, y
-    lg.setColor 255, 255, 255, 120
-    lg.line 10, y+13, 150, y+13
-    y += 15
+    if imgui.CollapsingHeader "Scene State"
+      imgui.LabelText "Dialogue", tostring DIALOGUE
+      imgui.Separator!
+      for key, value in pairs SCENE.state
+        imgui.LabelText key, tostring value
 
-    for option, enabled in pairs @proxy
-      key, rest = option\sub(1, 1), option\sub 2
-      status = if enabled then "on" else "off"
+    if imgui.CollapsingHeader "Scene Tags"
+      for name, node in pairs SCENE.tags
+        @draw_node node
 
-      lg.setColor 255, 255, 255, if enabled then 255 else 180
-      lg.print "[#{key}]#{rest}: #{status}", 10, y
-      y += 10
+    if imgui.CollapsingHeader "Scene Switcher"
+      @scene_switcher!
 
-    lg.setColor 255, 255, 255, 120
-    lg.line 10, y+3, 150, y+3
-    y += 5
+    if @tools.scene_view
+      _, @tools.scene_view = imgui.Begin "Scene View", true, { "AlwaysVerticalScrollbar" }
 
-    lg.setColor 255, 255, 255
-    for control in *{"reload", "skip dialogue", "load scene"}
-      key, rest = control\sub(1, 1), control\sub 2
+      for node in *SCENE.tree
+        @draw_node node
 
-      lg.print "[#{key}]#{rest}", 10, y
-      y += 10
+      imgui.End!
 
-    if @scene_chooser_index
-      lg.setColor 255, 255, 255, 120
-      lg.line 10, y+3, 150, y+3
-      y += 5
+    if @tools.inspector
+      _, @tools.inspector = imgui.Begin "Node Inspector", true, { "AlwaysVerticalScrollbar" }
 
-      lg.setColor 255, 255, 255
-      lg.print "[esc] cancel", 10, y
-      y += 10
+      if not @selected_node
+        imgui.Text "No node selected. Find one in the scene tags or the scene view"
+      else
+        imgui.Text @selected_node.name
 
-      for i, scene in ipairs SCENES
-        lg.setColor 255, 255, 255, if i == @scene_chooser_index then 255 else 180
-        x = if i == @scene_chooser_index then 14 else 10
-        lg.print scene, x, y
-        y += 10
+      imgui.End!
 
-    lg.setColor 255, 255, 255, 120
-    lg.line 10, y+3, 150, y+3
-    y += 5
+    imgui.Render!
 
-    lg.setColor 255, 255, 255
-    for k, v in pairs SCENE.state
-      lg.print "#{k}: #{v}", 10, y
-      y += 10
+  scene_switcher: =>
+    for name, scenes in pairs SCENES
+      if SCENE.scene\match name
+        imgui.TextColored .7, .7, 0, 1, name
+      else
+        imgui.TextDisabled name
+      for scene in *scenes
+        imgui.Bullet!
+        if SCENE.scene == "#{name}.#{scene}"
+          imgui.TextColored 1, 1, 0, 1, scene
+          imgui.SameLine 300
+          if imgui.SmallButton "reload"
+            SCENE\reload!
+            SCENE\init!
+        else
+          imgui.Text scene
+          imgui.SameLine 300
+          if imgui.SmallButton "load #{scene}"
+            SCENE\transition_to "#{name}.#{scene}"
 
-    @lasth = y
+  draw_node: (node) =>
+    flags = { "OpenOnArrow", "OpenOnDoubleClick" }
+    table.insert flags, "Selected" if @selected_node == node
+    table.insert flags, "Leaf" if not node[1]
+    if imgui.TreeNodeEx node.name, flags
+      for child in *node
+        @draw_node child
+
+      imgui.TreePop!
+
+    if imgui.IsItemClicked!
+      @selected_node = node
 
 {
   :DebugMenu,

@@ -49,16 +49,27 @@ love.keypressed = (key) ->
       le.push "quit"
     else
       SCENE\keypressed key
+love.keyreleased = (...) -> debugmenu\keyreleased ...
+love.textinput = (...) -> debugmenu\textinput ...
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER
 
   SCENE\update dt
+  debugmenu\update dt
 
-local lh
 love.draw = ->
   SCENE\draw!
+
+  lg.setColor 255, 255, 255
   debugmenu\draw!
 
+love.quit = -> imgui.ShutDown!
+
 love.mousepressed = (x, y, btn) ->
-  SCENE\mousepressed x, y, btn
+  unless debugmenu\mousepressed x, y, btn
+    SCENE\mousepressed x, y, btn
+love.mousemoved = (...) -> debugmenu\mousemoved ...
+love.mousereleased = (...) -> debugmenu\mousereleased ...
+love.wheelmoved = (...) -> debugmenu\wheelmoved ...
+love.textinput = (...) -> debugmenu\textinput ...

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-npm install glsl-blend glslify
+meteor npm install glsl-blend glslify
 
 shadergen() {
   cat <<EOF
@@ -25,7 +25,7 @@ vec4 effect(vec4 global_color, Image background, vec2 uv, vec2 screen_coords) {
 EOF
 }
 
+mkdir -p shaders
 for shader in node_modules/glsl-blend/*.glsl; do
-  shadergen $(basename $shader .glsl) | node_modules/.bin/glslify > ../gayngine/shaders/$(basename $shader)
+  shadergen $(basename $shader .glsl) | node_modules/.bin/glslify > shaders/$(basename $shader)
 done
-
