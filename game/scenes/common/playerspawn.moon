@@ -16,5 +16,5 @@ wrapping_ class PlayerSpawn extends Mixin
   update: (dt) =>
     @player\update dt if @player
 
-  draw: =>
+  draw: (_, _, debug) =>
     @player\draw! if @player

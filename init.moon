@@ -9,10 +9,10 @@ import DebugMenu from require "debugmenu"
 
 export ^
 
-debugmenu = DebugMenu not _BUILD
-DEBUG = debugmenu.DEBUG
+DEBUG = DebugMenu not _BUILD
+-- DEBUG = DEBUG.DEBUG
 
-if DEBUG!
+if not _BUILD
   export MOON, WATCHER
   import Watcher from require "watcher"
   MOON = require "moon"
@@ -33,7 +33,7 @@ LOG_ERROR = (msg, indent=0) ->
 
   print "ERR", indent .. "#{name}#{source}:#{currentline}", msg
 
-  unless DEBUG!
+  if _BUILD
     error "error logged in STDOUT"
 
 WIDTH, HEIGHT = lg.getDimensions!
@@ -43,33 +43,33 @@ PSDScene arg[2] or "first_encounter.menu"
 SCENE\init!
 
 love.keypressed = (key) ->
-  return if debugmenu\keypressed key
+  return if DEBUG\keypressed key
   switch key
     when "escape"
       le.push "quit"
     else
       SCENE\keypressed key
-love.keyreleased = (...) -> debugmenu\keyreleased ...
-love.textinput = (...) -> debugmenu\textinput ...
+love.keyreleased = (...) -> DEBUG\keyreleased ...
+love.textinput = (...) -> DEBUG\textinput ...
 
 love.update = (dt) ->
   WATCHER\update! if WATCHER
 
   SCENE\update dt
-  debugmenu\update dt
+  DEBUG\update dt
 
 love.draw = ->
   SCENE\draw!
 
   lg.setColor 255, 255, 255
-  debugmenu\draw!
+  DEBUG\draw!
 
 love.quit = -> imgui.ShutDown!
 
 love.mousepressed = (x, y, btn) ->
-  unless debugmenu\mousepressed x, y, btn
+  unless DEBUG\mousepressed x, y, btn
     SCENE\mousepressed x, y, btn
-love.mousemoved = (...) -> debugmenu\mousemoved ...
-love.mousereleased = (...) -> debugmenu\mousereleased ...
-love.wheelmoved = (...) -> debugmenu\wheelmoved ...
-love.textinput = (...) -> debugmenu\textinput ...
+love.mousemoved = (...) -> DEBUG\mousemoved ...
+love.mousereleased = (...) -> DEBUG\mousereleased ...
+love.wheelmoved = (...) -> DEBUG\wheelmoved ...
+love.textinput = (...) -> DEBUG\textinput ...

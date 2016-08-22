@@ -5,7 +5,7 @@ psshaders = require "shaders"
 Vector = require "lib.hump.vector"
 HC = require "lib.HC"
 
-SCALE = 6
+SCALE = 4
 KEYHOLE = lg.getWidth! * 0.2
 TRANSITION_TIME = 2
 
@@ -221,7 +221,7 @@ class PSDScene
     lg.translate -@scroll.x, -@scroll.y
     lg.draw @target_canvas
 
-    if DEBUG.hitboxes
+    if DEBUG.tools.hitboxes
       lg.setColor 255, 255, 0, 120
       for shape,_ in pairs @hit.hash\shapes!
         shape\draw "line"
@@ -266,7 +266,7 @@ class PSDScene
     for layer in *group
       if layer.draw
         lg.setCanvas @target_canvas
-        layer\draw @\draw_group, @\draw_layer
+        layer\draw @\draw_group, @\draw_layer, DEBUG.selected_node == layer
         lg.setCanvas!
       elseif layer.image
         @draw_layer layer

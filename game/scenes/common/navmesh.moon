@@ -84,8 +84,8 @@ wrapping_ class NavMesh extends Mixin
 
       best\unpack! if best
 
-  draw: (draw_group, draw_layer) =>
-    if DEBUG.navmesh
+  draw: (draw_group, draw_layer, debug) =>
+    if debug
       love.graphics.setColor 0, 255, 0, 120
       love.graphics.polygon "line", unpack @points
       for y=1,#@map
