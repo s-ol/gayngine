@@ -222,12 +222,11 @@ class DebugMenu
   keypressed: (key) =>
     if @enabled and imgui.GetWantCaptureKeyboard!
       imgui.KeyPressed key
+      imgui.GetWantCaptureKeyboard!
     else
       if key == "d" and lk.isDown "lshift"
         @enabled = not @enabled
         true
-
-    return imgui.GetWantCaptureKeyboard!
   keyreleased: (key) => imgui.GetWantCaptureKeyboard!, imgui.KeyReleased key
   textinput: (t) => imgui.GetWantCaptureKeyboard!, imgui.TextInput t
 

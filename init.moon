@@ -34,7 +34,7 @@ love.keypressed = (key) ->
     when "escape"
       le.push "quit"
     else
-      SCENE\keypressed key
+      SCENE\keypressed key if SCENE.keypressed
 love.keyreleased = (...) -> DEBUG\keyreleased ...
 love.textinput = (...) -> DEBUG\textinput ...
 
@@ -57,6 +57,8 @@ love.errhand = (msg) ->
 
   msg = tostring msg
   trace = debug.traceback!
+  print msg
+  print trace
 
   while true
     love.event.pump!
