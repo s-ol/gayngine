@@ -206,16 +206,12 @@ class PSDScene
       if not DIALOGUE
         @tags.player\moveTo @unproject_3d mouse
 
-  keypressed: (key) =>
-    if @tags.player and not DIALOGUE
-      print
-
   update_group: (dt, group) =>
     return unless group
 
     for layer in *group
       if layer.update
-        layer\update dt, @\update_group
+        DEBUG\assert pcall layer.update, layer, dt, @\update_group
       elseif layer.type == "open"
         @update_group dt, layer
 
@@ -278,7 +274,7 @@ class PSDScene
     for layer in *group
       if layer.draw
         lg.setCanvas @target_canvas
-        layer\draw @\draw_group, @\draw_layer, DEBUG.selected_node == layer
+        DEBUG\assert pcall layer.draw, layer, @\draw_group, @\draw_layer, DEBUG.selected_node == layer
         lg.setCanvas!
       elseif layer.image
         @draw_layer layer

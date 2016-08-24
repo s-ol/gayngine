@@ -50,6 +50,41 @@ love.draw = ->
   lg.setColor 255, 255, 255
   DEBUG\draw!
 
+love.errhand = (msg) ->
+  lg.setBackgroundColor 0, 0, 0
+  lg.setNewFont!
+  lg.origin!
+
+  msg = tostring msg
+  trace = debug.traceback!
+
+  while true
+    love.event.pump!
+
+    for e, a, b, c in love.event.poll!
+      switch e
+        when "quit" then return
+        when "mousepressed" then DEBUG\mousepressed a, b, c
+        when "mousemoved" then DEBUG\mousemoved a, b, c
+        when "mousereleased" then DEBUG\mousereleased a, b, c
+        when "wheelmoved" then DEBUG\wheelmoved a, b, c
+        when "textinput" then DEBUG\textinput a, b, c
+        when "keyreleased" then DEBUG\keyreleased a, b, c
+        when "keypressed" then return unless b != "escape" or DEBUG\keypressed a, b, c
+
+    lg.clear lg.getBackgroundColor!
+
+    lg.setColor 255, 255, 255
+    lg.print "ERROR", 460, 30
+    lg.print msg .. "\n\n" .. trace, 460, 50
+    DEBUG\draw!
+
+    lg.present!
+
+    DEBUG\update!
+
+    love.timer.sleep 0.1
+
 love.quit = -> imgui.ShutDown!
 
 love.mousepressed = (x, y, btn) ->
@@ -58,4 +93,3 @@ love.mousepressed = (x, y, btn) ->
 love.mousemoved = (...) -> DEBUG\mousemoved ...
 love.mousereleased = (...) -> DEBUG\mousereleased ...
 love.wheelmoved = (...) -> DEBUG\wheelmoved ...
-love.textinput = (...) -> DEBUG\textinput ...

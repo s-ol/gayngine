@@ -109,7 +109,13 @@ help        - this text
       interactive: true,
     }
 
-  add: (entry) => table.insert @log, entry
+  add: (entry) =>
+    last = @log[#@log]
+    if last and last.text == entry.text and last.type == entry.type
+      last.number = (last.number or 1) + 1
+      return
+
+    table.insert @log, entry
 
   colors =
     input: { 1, 1, 1, 1 },
@@ -134,9 +140,13 @@ help        - this text
       continue unless @filter[entry.type] or entry.interactive
 
       imgui.PushStyleColor "Text", unpack colors[entry.type]
-      --imgui.TextUnformatted entry.text
       imgui.TextWrapped entry.text
       imgui.PopStyleColor!
+      if entry.number
+        if entry.number > 1000
+          imgui.Text "[ca. #{100 * math.floor entry.number / 100} times]"
+        else
+          imgui.Text "[#{entry.number} times]"
 
       if entry.extra and imgui.BeginPopupContextWindow!
         imgui.Text entry.extra
