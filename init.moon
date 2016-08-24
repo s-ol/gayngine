@@ -22,20 +22,6 @@ if not _BUILD
 lg.setNewFont("assets/SomepxNew.ttf", 16)\setLineHeight 0.56
 lk.setKeyRepeat true
 
-LOG = (msg, indent=0) ->
-  indent = " "\rep indent
-
-  print "LOG", indent .. msg
-
-LOG_ERROR = (msg, indent=0) ->
-  indent = " "\rep indent
-  {:name, :source, :currentline} = debug.getinfo 2
-
-  print "ERR", indent .. "#{name}#{source}:#{currentline}", msg
-
-  if _BUILD
-    error "error logged in STDOUT"
-
 WIDTH, HEIGHT = lg.getDimensions!
 
 SOUND = Sound!

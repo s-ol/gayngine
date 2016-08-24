@@ -1,9 +1,23 @@
 { graphics: lg, keyboard: lk, filesystem: lf } = love
 
 require "imgui"
+ffi = require "ffi"
 Vector = require "lib.hump.vector"
 
 export DIALOGUE
+
+coolstring = do
+  (val) ->
+    switch type val
+      when "function"
+        { :name, :short_src, :linedefined } = debug.getinfo val
+        file = (short_src or "")\match ".?/?(.*)"
+        file = file\match("(.*)%.lua") or file\match("(.*)%.moon") or file
+        "<F:#{name or linedefined}:#{file}>"
+      when "string"
+        "\"#{val}\""
+      else
+        tostring val
 
 SCENES = {}
 for dir in *lf.getDirectoryItems "game/scenes"
@@ -15,31 +29,191 @@ for dir in *lf.getDirectoryItems "game/scenes"
 
     SCENES[dir] = nil if not next SCENES[dir]
 
+class Console
+  new: =>
+    log = (...) ->
+      a = {...}
+
+      @add {
+        text: table.concat a, "  "
+        type: "debug",
+        interactive: true,
+      }
+
+    help = ->
+      @add {
+        text: "
+Just type lua.
+
+Useful functions and variables:
+
+SCENE
+T.player    - alias for SCENE.tags.player
+I.slot      - alias for SCENE.instances.slot
+log, print  - print to Console
+help        - this text
+",
+      type: "debug",
+      interactive: true,
+    }
+
+    @history = {}
+    @log = {}
+    @env = setmetatable {
+      :log, :help,
+      print: log,
+    }, __index: (key) =>
+      switch key
+        when "T" then SCENE.tags
+        when "I" then SCENE.instances
+        else _G[key]
+
+    @filter = warn: true, error: true, input: true
+
+  submit: =>
+    table.insert @history, @buffer
+    table.insert @log, {
+      text: "# #{@buffer}",
+      type: "input",
+    }
+
+    unless @buffer\match("^[^%s]+%s*=") or @buffer\match("for") or @buffer\match "while"
+      @buffer = "return " .. @buffer
+
+    f, err = loadstring @buffer
+    @buffer = nil
+
+    local out
+    if f
+      out = { pcall setfenv f, @env }
+
+      err = out[2] if not out[1]
+
+    if err
+      table.insert @log, {
+        text: err
+        type: "error"
+        interactive: true,
+      }
+
+      return ret
+
+    table.remove out, 1
+
+    out = [coolstring val for val in *out]
+    out = { "nil" } if #out == 0
+
+    table.insert @log, {
+      text: "=> " .. table.concat out, ", "
+      type: "debug",
+      interactive: true,
+    }
+
+  add: (entry) => table.insert @log, entry
+
+  colors =
+    input: { 1, 1, 1, 1 },
+    debug: { .7, .7, .7, 1 },
+    warn: { .7, .7, 0, 1 },
+    error: { .7, 0, 0, 1 },
+
+  draw: =>
+    imgui.SetNextWindowSize 520, 600, "FirstUseEver"
+    _, ret = imgui.Begin "Console", true
+
+    _, @filter.debug = imgui.Checkbox "DEBUG", @filter.debug
+    imgui.SameLine!
+    _, @filter.warn = imgui.Checkbox "WARN", @filter.warn
+    imgui.SameLine!
+    _, @filter.error = imgui.Checkbox "ERROR", @filter.error
+
+    imgui.Separator!
+    imgui.BeginChild "ScrollingRegion", 0, -imgui.GetItemsLineHeightWithSpacing!, false, "HorizontalScrollbar"
+
+    if imgui.BeginPopupContextWindow!
+      imgui.Selectable "Clear"
+      imgui.EndPopup!
+
+    for entry in *@log
+      continue unless @filter[entry.type] or entry.interactive
+
+      imgui.PushStyleColor "Text", unpack colors[entry.type]
+      imgui.TextUnformatted entry.text
+      imgui.PopStyleColor!
+
+    imgui.SetScrollHere 1 if @scroll_bottom
+    @scroll_bottom = false
+
+    imgui.EndChild!
+    imgui.Separator!
+
+    submit, @buffer = imgui.InputText "Input", @buffer or "", 512, { "EnterReturnsTrue" }
+    if submit
+      @submit!
+      @scroll_bottom = true
+      imgui.SetKeyboardFocusHere -1
+
+    imgui.End!
+
+    ret
+
 class DebugMenu
   new: =>
     @enabled = not _BUILD
-
+    @console = Console!
     @tools = {}
 
-    @proxy = setmetatable {},
-      __index: (key) => @[key] = false
+  log: (text, add=0) =>
+    { :name, :source, :currentline } = debug.getinfo 2 + add
 
-    @DEBUG = setmetatable {},
-      __call: (_, tgl) ->
-        @enabled
-      __newindex: @proxy
-      __index: (_, key) ->
-        if @enabled
-          @proxy[key]
-        else
-          false
+    @console\add {
+      :text,
+      type: "debug",
+      extra: "#{name}#{source}:#{currentline}",
+    }
+
+  warn: (text, add=0) =>
+    { :name, :source, :currentline } = debug.getinfo 2 + add
+
+    @console\add {
+      :text,
+      type: "warn",
+      extra: "#{name}#{source}:#{currentline}",
+    }
+
+  error: (msg, add=0) =>
+    { :name, :source, :currentline } = debug.getinfo 2 + add
+
+    if _BUILD
+      error "#{name}#{source}:#{currentline}: #{msg}"
+    else
+      @console\add {
+        text: "#{name}#{source}:#{currentline}  #{msg}",
+        type: "error",
+      }
+
+  assert: (cond, msg, add=0) =>
+    return if cond
+
+    { :name, :source, :currentline } = debug.getinfo 2 + add
+
+    if _BUILD
+      error "#{name}#{source}:#{currentline}: #{msg}"
+    else
+      @console\add {
+        text: "#{name}#{source}:#{currentline}  #{msg}",
+        type: "error",
+      }
 
   keypressed: (key) =>
-    if key == "d" and lk.isDown "lshift"
-      @enabled = not @enabled
-      true
+    if @enabled and imgui.GetWantCaptureKeyboard!
+      imgui.KeyPressed key
     else
-      imgui.GetWantCaptureKeyboard!, imgui.KeyPressed key
+      if key == "d" and lk.isDown "lshift"
+        @enabled = not @enabled
+        true
+
+    return imgui.GetWantCaptureKeyboard!
   keyreleased: (key) => imgui.GetWantCaptureKeyboard!, imgui.KeyReleased key
   textinput: (t) => imgui.GetWantCaptureKeyboard!, imgui.TextInput t
 
@@ -86,13 +260,19 @@ class DebugMenu
     _, @tools.scene_view = imgui.Checkbox "Scene View", @tools.scene_view
     imgui.SameLine!
     _, @tools.inspector = imgui.Checkbox "Node Inspector", @tools.inspector
+    imgui.SameLine!
+    _, @tools.console = imgui.Checkbox "Console", @tools.console
     _, @tools.hitboxes = imgui.Checkbox "Show Hitboxes", @tools.hitboxes
 
     if imgui.CollapsingHeader "Scene State"
-      imgui.LabelText "Dialogue", tostring DIALOGUE
+      imgui.LabelText "Dialogue", coolstring DIALOGUE
+      if imgui.IsItemClicked!
+        @tools.inspector = true
+        @selected_node = DIALOGUE
+
       imgui.Separator!
       for key, value in pairs SCENE.state
-        imgui.LabelText key, tostring value
+        imgui.LabelText key, coolstring value
 
     if imgui.CollapsingHeader "Scene Tags"
       for name, node in pairs SCENE.tags
@@ -118,12 +298,15 @@ class DebugMenu
         imgui.Text @selected_node.name or "<no name>"
         imgui.Separator!
         for key, value in pairs @selected_node
-          imgui.LabelText tostring(key), tostring value
+          imgui.LabelText coolstring(key), coolstring value
 
       imgui.End!
 
     if @tools.test_window
       @tools.test_window = imgui.ShowTestWindow true
+
+    if @tools.console
+      @tools.console = @console\draw!
 
     imgui.Render!
 
@@ -136,23 +319,17 @@ class DebugMenu
       for scene in *scenes
         imgui.Bullet!
         if SCENE.scene == "#{name}.#{scene}"
-          imgui.TextColored 1, 1, 0, 1, scene
-          imgui.SameLine 300
-          if imgui.SmallButton "reload"
+          if imgui.Selectable "reload #{scene}"
             SCENE\reload!
             SCENE\init!
-            imgui.CloseCurrentPopup!
         else
-          imgui.Text scene
-          imgui.SameLine 300
-          if imgui.SmallButton "load###{name}#{scene}"
+          if imgui.Selectable "#{scene}###{name}"
             SCENE\transition_to "#{name}.#{scene}"
-            imgui.CloseCurrentPopup!
 
   draw_node: (node, name) =>
-    flags = { "OpenOnArrow", "OpenOnDoubleClick" }
+    flags = { "OpenOnArrow", "OpenOnDoubleClick", "DefaultOpen" }
     table.insert flags, "Selected" if @selected_node == node
-    table.insert flags, "Leaf" if not node[1]
+    table.insert flags, "Bullet" if not node[1]
     if imgui.TreeNodeEx name or node.name, flags
       for child in *node
         @draw_node child

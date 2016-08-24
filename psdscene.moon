@@ -65,7 +65,7 @@ class PSDScene
     _, module = pcall require, "game.scenes.common"
     return module[name] if _ and module[name]
 
-    LOG_ERROR "couldn't find mixin '#{name}' for scene '#{@scene}'"
+    DEBUG\warn "couldn't find mixin '#{name}' for scene '#{@scene}'"
     nil
 
   reload: (filename) =>
@@ -86,12 +86,15 @@ class PSDScene
     @target_canvas = lg.newCanvas @width, @height
     @source_canvas = lg.newCanvas @width, @height
 
+
+    log_indented = (indent, text) -> DEBUG\log " "\rep(indent) .. text, 1
+
     for layer in *psd
       if layer.type == "open"
         table.insert target, layer
         layer.parent = target
         target = layer
-        LOG "+ #{layer.name}", indent
+        log_indented indent, "+ #{layer.name}"
         indent += 1
         continue -- skip until close
       elseif layer.type == "close"
@@ -100,7 +103,7 @@ class PSDScene
         target = target.parent
         indent -= 1
       else
-        LOG "- #{layer.name}", indent
+        log_indented indent, "- #{layer.name}"
         table.insert target, layer
 
       for name, params in layer.name\gmatch "([a-z]+)%((.-)%)"
@@ -108,7 +111,7 @@ class PSDScene
 
         mixin = @load name
         if mixin
-          LOG "loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})", indent
+          log_indented indent, "  > loading mixin '#{@scene}/#{name}' (#{table.concat params, ", "})"
           mixin layer, @, unpack params
           @instances[name] or= {}
           table.insert @instances[name], layer

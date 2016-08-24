@@ -5,7 +5,6 @@ wrapping_ class Parallax extends Mixin
   new: (@scene, x, y, scale=0) =>
     @scale = tonumber scale
     @move = Vector -tonumber(x), -tonumber(y)
-    print @move
     @origin = Vector @ox - 44, @oy - 10
     @paused = true
 
