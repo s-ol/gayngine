@@ -22,7 +22,7 @@ class Dialogue
 
     DIALOGUE = @
 
-    coroutine.resume @routine, slots
+    DEBUG\assert_ 0, coroutine.resume @routine, slots
 
     if "dead" == coroutine.status @routine
       DIALOGUE = nil
@@ -30,7 +30,7 @@ class Dialogue
   next: (...) =>
     @clear!
 
-    coroutine.resume @routine, ...
+    DEBUG\assert_ 0, coroutine.resume @routine, ...
 
     if "dead" == coroutine.status @routine
       DIALOGUE = nil

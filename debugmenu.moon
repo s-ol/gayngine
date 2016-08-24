@@ -130,16 +130,17 @@ help        - this text
     imgui.Separator!
     imgui.BeginChild "ScrollingRegion", 0, -imgui.GetItemsLineHeightWithSpacing!, false, "HorizontalScrollbar"
 
-    if imgui.BeginPopupContextWindow!
-      imgui.Selectable "Clear"
-      imgui.EndPopup!
-
     for entry in *@log
       continue unless @filter[entry.type] or entry.interactive
 
       imgui.PushStyleColor "Text", unpack colors[entry.type]
-      imgui.TextUnformatted entry.text
+      --imgui.TextUnformatted entry.text
+      imgui.TextWrapped entry.text
       imgui.PopStyleColor!
+
+      if entry.extra and imgui.BeginPopupContextWindow!
+        imgui.Text entry.extra
+        imgui.EndPopup!
 
     imgui.SetScrollHere 1 if @scroll_bottom
     @scroll_bottom = false
@@ -188,22 +189,25 @@ class DebugMenu
       error "#{name}#{source}:#{currentline}: #{msg}"
     else
       @console\add {
-        text: "#{name}#{source}:#{currentline}  #{msg}",
+        text: "#{name}:#{currentline}  #{msg}",
+        extra: "#{name}#{source}:#{currentline}",
         type: "error",
       }
 
-  assert: (cond, msg, add=0) =>
-    return if cond
+  assert_: (level, cond, msg, ...) =>
+    return cond, msg, ... if cond
 
-    { :name, :source, :currentline } = debug.getinfo 2 + add
+    { :name, :source, :currentline } = debug.getinfo 2 + level
 
     if _BUILD
       error "#{name}#{source}:#{currentline}: #{msg}"
     else
       @console\add {
-        text: "#{name}#{source}:#{currentline}  #{msg}",
+        text: "#{name}:#{currentline}  #{msg}",
+        extra: "#{name}#{source}:#{currentline}",
         type: "error",
       }
+  assert: (...) => @assert_ 1, ...
 
   keypressed: (key) =>
     if @enabled and imgui.GetWantCaptureKeyboard!

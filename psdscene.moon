@@ -1,4 +1,4 @@
-{ graphics: lg, mouse: lm } = love
+{ graphics: lg, mouse: lm, filesystem: lf } = love
 
 artal = require "lib.artal.artal"
 psshaders = require "shaders"
@@ -48,22 +48,31 @@ class PSDScene
       print "running init for #{@scene}..."
       module.init @
 
-  load: (name, ...) =>
+  load: (name) =>
     scene = @scene
     if rscene = scene\match "([a-zA-Z-_]+)%.([a-zA-Z-_]+)"
       scene = rscene
 
-    _, mixin = pcall require, "game.scenes.#{scene}.#{name}"
-    return mixin if _ and mixin
+    try_load = (name) ->
+      if (lf.exists "game/scenes/#{name}.lua") or
+        (lf.exists "game/scenes/#{name}.moon") or
+        (lf.exists "game/scenes/#{name}/init.lua") or
+        (lf.exists "game/scenes/#{name}/init.moon")
+        status, module = pcall require, "game.scenes.#{name\gsub "/", "."}"
 
-    --_, module = pcall require, "game.scenes.#{scene}"
-    --return module[name] if _ and module[name]
+        select 2, DEBUG\assert status, module
 
-    _, mixin = pcall require, "game.scenes.common.#{name}"
-    return mixin if _ and mixin
+    if mixin = try_load "#{scene}/#{name}"
+      return mixin
 
-    _, module = pcall require, "game.scenes.common"
-    return module[name] if _ and module[name]
+    if module = try_load "#{scene}"
+      return module[name] if module[name]
+
+    if mixin = try_load "common/#{name}"
+      return mixin
+
+    if module = try_load "common"
+      return module[name] if module[name]
 
     DEBUG\warn "couldn't find mixin '#{name}' for scene '#{@scene}'"
     nil
