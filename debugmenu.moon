@@ -76,6 +76,7 @@ help        - this text
       text: "# #{@buffer}",
       type: "input",
     }
+    @history.index = nil
 
     unless @buffer\match("^[^%s]+%s*=") or @buffer\match("for") or @buffer\match "while"
       @buffer = "return " .. @buffer
@@ -116,6 +117,31 @@ help        - this text
       return
 
     table.insert @log, entry
+
+  keypressed: (key) =>
+    return unless @typing and #@history > 0
+
+    switch key
+      when "up"
+        if @history.index
+          @history.index = math.max 1, @history.index - 1
+        else
+          if @buffer and @buffer != ""
+            @history.stash = @buffer
+          @history.index = #@history
+
+        @buffer = @history[@history.index]
+        @set_focus = true
+
+      when "down"
+        if @history.index
+          if @history.index == #@history
+            @buffer = @history.stash
+            @history.index = nil
+          else
+            @history.index = math.min #@history, @history.index + 1
+            @buffer = @history[@history.index]
+        @set_focus = true
 
   colors =
     input: { 1, 1, 1, 1 },
@@ -158,11 +184,17 @@ help        - this text
     imgui.EndChild!
     imgui.Separator!
 
-    submit, @buffer = imgui.InputText "Input", @buffer or "", 512, { "EnterReturnsTrue" }
+    submit, @buffer = imgui.InputText "Input###{@history.index}", @buffer or "", 512, { "EnterReturnsTrue" }
+
+    @typing = imgui.IsItemActive!
+
     if submit
       @submit!
       @scroll_bottom = true
+
+    if @set_focus or submit
       imgui.SetKeyboardFocusHere -1
+      @set_focus = nil
 
     imgui.End!
 
@@ -222,6 +254,7 @@ class DebugMenu
   keypressed: (key) =>
     if @enabled and imgui.GetWantCaptureKeyboard!
       imgui.KeyPressed key
+      @console\keypressed key if @tools.console
       imgui.GetWantCaptureKeyboard!
     else
       if key == "d" and lk.isDown "lshift"
