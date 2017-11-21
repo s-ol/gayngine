@@ -50,6 +50,7 @@ Useful functions and variables:
 SCENE
 T.player    - alias for SCENE.tags.player
 I.slot      - alias for SCENE.instances.slot
+S           - alias for debugger node selection
 log, print  - print to Console
 help        - this text
 ",
@@ -66,6 +67,7 @@ help        - this text
       switch key
         when "T" then SCENE.tags
         when "I" then SCENE.instances
+        when "S" then DEBUG.selected_node
         else _G[key]
 
     @filter = warn: true, error: true, input: true
