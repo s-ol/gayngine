@@ -34,16 +34,18 @@ ret = {
         local timer
         {
           init: =>
-            hit = @hit\rectangle 0, 0, @width, @height
-            hit.mousepressed = ->
+            @tags.hit = @hit\rectangle 0, 0, @width, @height
+            @tags.hit.mousepressed = ->
               timer = 2.8
-              @hit\remove hit
+              @hit\remove @tags.hit
+              @tags.hit = nil
               @tags.path\start!
               for star in *@instances.stars
                 star\start!
 
           update: (dt) =>
             sound\setPosition ((Vector(170, 90) + @scroll)/100)\unpack!, 0
+
             if timer
               timer -= dt
               if timer < 0
