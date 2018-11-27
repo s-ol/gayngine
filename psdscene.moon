@@ -3,7 +3,6 @@
 artal = require "lib.artal.artal"
 psshaders = require "shaders"
 Vector = require "lib.hump.vector"
-moonscript = if pcall require, "moonscript.base" then require "moonscript.base"
 HC = require "lib.HC"
 
 SCALE = 4
@@ -55,20 +54,9 @@ class PSDScene
       scene = rscene
 
     try_load = (name) ->
-      local suff
-      if moonscript
-        suff = if lf.exists "game/scenes/#{name}.moon" then ".moon"
-        elseif lf.exists "game/scenes/#{name}/init.moon" then "/init.moon"
-
-      suff or= if lf.exists "game/scenes/#{name}.lua" then ".lua"
-      elseif lf.exists "game/scenes/#{name}/init.lua" then "/init.moon"
-
-      return unless suff
-
-      name = "game/scenes/#{name}#{suff}"
-      ls = if suff\match "moon$" then moonscript.loadstring else loadstring
-
-      (DEBUG\assert ls (lf.read name), "@#{name}")!
+      module = "game.scenes.#{name\gsub "/", "."}"
+      ok, mod = pcall require, module
+      ok and mod
 
     if mixin = try_load "#{scene}/#{name}"
       return mixin

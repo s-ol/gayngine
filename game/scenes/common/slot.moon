@@ -5,8 +5,6 @@ Vector = require "lib.hump.vector"
 utf8 = require "utf8"
 
 dummy = Vector!
-clearfix = "                                "
-clearfix ..= clearfix .. clearfix .. clearfix
 
 wrapping_ class Slot extends Mixin
   SPEED = 25

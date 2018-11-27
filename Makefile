@@ -12,7 +12,7 @@ WINBINS = $(BIN)/win64/$(GAMENAME).exe $(BIN)/win32/$(GAMENAME).exe
 LOVE = $(NATIVE) $(SCENES) $(ASSETS) $(COMPILED) heythere.txt
 
 .PHONY: all run cleanmoon cleanlove clean win32 win64 mac binaries
-all: game.love
+all: $(DIST)/$(GAMENAME).love
 
 run:
 	love .
