@@ -21,7 +21,7 @@ coolstring = do
 
 SCENES = {}
 for dir in *lf.getDirectoryItems "game/scenes"
-  if lf.isDirectory "game/scenes/#{dir}"
+  if lf.getInfo "game/scenes/#{dir}", "directory"
     SCENES[dir] = {}
     for file in *lf.getDirectoryItems "game/scenes/#{dir}"
       if scene = file\match "(.*)%.psd$"
@@ -153,16 +153,16 @@ help        - this text
 
   draw: =>
     imgui.SetNextWindowSize 520, 600, "FirstUseEver"
-    _, ret = imgui.Begin "Console", true
+    ret = imgui.Begin "Console", true
 
-    _, @filter.debug = imgui.Checkbox "DEBUG", @filter.debug
+    @filter.debug = imgui.Checkbox "DEBUG", @filter.debug
     imgui.SameLine!
-    _, @filter.warn = imgui.Checkbox "WARN", @filter.warn
+    @filter.warn = imgui.Checkbox "WARN", @filter.warn
     imgui.SameLine!
-    _, @filter.error = imgui.Checkbox "ERROR", @filter.error
+    @filter.error = imgui.Checkbox "ERROR", @filter.error
 
     imgui.Separator!
-    imgui.BeginChild "ScrollingRegion", 0, -imgui.GetItemsLineHeightWithSpacing!, false, "HorizontalScrollbar"
+    imgui.BeginChild "ScrollingRegion", 0, -imgui.GetTextLineHeightWithSpacing!, false, "HorizontalScrollbar"
 
     for entry in *@log
       continue unless @filter[entry.type] or entry.interactive
@@ -186,7 +186,7 @@ help        - this text
     imgui.EndChild!
     imgui.Separator!
 
-    submit, @buffer = imgui.InputText "Input###{@history.index}", @buffer or "", 512, { "EnterReturnsTrue" }
+    @buffer, submit = imgui.InputText "Input###{@history.index}", @buffer or "", 512, { "EnterReturnsTrue" }
 
     @typing = imgui.IsItemActive!
 
@@ -305,12 +305,12 @@ class DebugMenu
       @scene_switcher!
       imgui.EndPopup!
 
-    _, @tools.scene_view = imgui.Checkbox "Scene View", @tools.scene_view
+    @tools.scene_view = imgui.Checkbox "Scene View", @tools.scene_view
     imgui.SameLine!
-    _, @tools.inspector = imgui.Checkbox "Node Inspector", @tools.inspector
+    @tools.inspector = imgui.Checkbox "Node Inspector", @tools.inspector
     imgui.SameLine!
-    _, @tools.console = imgui.Checkbox "Console", @tools.console
-    _, @tools.hitboxes = imgui.Checkbox "Show Hitboxes", @tools.hitboxes
+    @tools.console = imgui.Checkbox "Console", @tools.console
+    @tools.hitboxes = imgui.Checkbox "Show Hitboxes", @tools.hitboxes
 
     if imgui.CollapsingHeader "Scene State"
       imgui.LabelText "Dialogue", coolstring DIALOGUE
@@ -327,7 +327,7 @@ class DebugMenu
         @draw_node node, "#{name}: #{node.name or "<no name>"}"
 
     if @tools.scene_view
-      _, @tools.scene_view = imgui.Begin "Scene View", true, { "AlwaysVerticalScrollbar" }
+      @tools.scene_view = imgui.Begin "Scene View", true, { "AlwaysVerticalScrollbar" }
 
       for node in *SCENE.tree
         @draw_node node
@@ -338,7 +338,7 @@ class DebugMenu
       name = "Node Inspector"
       if @selected_node
         name = "Node Inspector: #{@selected_node.name or "<no name>"}"
-      _, @tools.inspector = imgui.Begin "#{name}###inspector", true, { "AlwaysVerticalScrollbar" }
+      @tools.inspector = imgui.Begin "#{name}###inspector", true, { "AlwaysVerticalScrollbar" }
 
       if not @selected_node
         imgui.Text "No node selected. Find one in the scene tags or the scene view"

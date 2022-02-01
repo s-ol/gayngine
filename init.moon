@@ -47,7 +47,7 @@ love.update = (dt) ->
 love.draw = ->
   SCENE\draw!
 
-  lg.setColor 255, 255, 255
+  lg.setColor 1, 1, 1
   DEBUG\draw!
 
 love.errhand = (msg) ->
@@ -76,7 +76,7 @@ love.errhand = (msg) ->
 
     lg.clear lg.getBackgroundColor!
 
-    lg.setColor 255, 255, 255
+    lg.setColor 1, 1, 1
     lg.print "ERROR", 460, 30
     lg.print msg .. "\n\n" .. trace, 460, 50
     DEBUG\draw!

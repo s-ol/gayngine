@@ -221,12 +221,12 @@ class PSDScene
     lg.push!
     lg.scale SCALE
     fade = math.max 0, math.abs(@transition_time or 1) - .3
-    lg.setColor 255, 255, 255, fade * 255 / (1 - .3)
+    lg.setColor 1, 1, 1, fade / (1 - .3)
     lg.translate -@scroll.x, -@scroll.y
     lg.draw @target_canvas
 
     if DEBUG.tools.hitboxes
-      lg.setColor 255, 255, 0, 120
+      lg.setColor 1, 1, 0, .5
       for shape,_ in pairs @hit.hash\shapes!
         shape\draw "line"
     lg.pop!
@@ -256,7 +256,7 @@ class PSDScene
 
     lg.setShader shader
 
-    lg.setColor 255, 255, 255
+    lg.setColor 1, 1, 1
     lg.draw @source_canvas
 
     lg.setShader!

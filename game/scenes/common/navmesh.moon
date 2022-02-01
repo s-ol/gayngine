@@ -86,13 +86,13 @@ wrapping_ class NavMesh extends Mixin
 
   draw: (draw_group, draw_layer, debug) =>
     if debug
-      love.graphics.setColor 0, 255, 0, 120
+      love.graphics.setColor 0, 1, 0, .5
       love.graphics.polygon "line", unpack @points
       for y=1,#@map
         for x=1,#@map[y]
           if @map[y][x] == 1
-            love.graphics.setColor 0, 255, 0
+            love.graphics.setColor 0, 1, 0
           else
-            love.graphics.setColor 255, 0, 0, 120
+            love.graphics.setColor 1, 0, 0, .5
           pos = @grid_to_screen Vector x, y
           love.graphics.points pos.x, pos.y

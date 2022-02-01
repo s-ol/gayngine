@@ -43,7 +43,7 @@ class Watcher
       table.insert @files[filename], obj
     else
       print "listening to changes for #{filename}..."
-      @files[filename] = setmetatable { obj, modified: love.filesystem.getLastModified filename }, weakmt
+      @files[filename] = setmetatable { obj, modified: love.filesystem.getInfo(filename).modtime }, weakmt
 
   update: =>
     local changes
@@ -55,7 +55,7 @@ class Watcher
 
     if changes
       for name, objs in pairs @files
-        modified = love.filesystem.getLastModified name
+        modified = love.filesystem.getInfo(name).modtime
         if objs.modified < modified
           print "modified #{name}"
           objs.modified = modified

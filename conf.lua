@@ -1,6 +1,6 @@
 function love.conf(t)
   t.identity = "twoshootingstars"
-  t.version = "0.10.1"
+  t.version = "11.4"
   t.gammacorrect = false
   t.console = true
 

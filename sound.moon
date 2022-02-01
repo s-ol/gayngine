@@ -7,7 +7,7 @@ class Sound
 
   get: (sound) =>
     unless @sounds[sound]
-      @sounds[sound] = la.newSource "assets/sounds/#{sound}.wav"
+      @sounds[sound] = la.newSource "assets/sounds/#{sound}.wav", "static"
 
     @sounds[sound]
 
@@ -31,9 +31,9 @@ class Sound
   loopWhile: (sound, scene, volume=1, pos) =>
     return if @loops[scene]
 
-    with @loops[scene] = la.newSource "assets/sounds/#{sound}.wav"
+    with @loops[scene] = la.newSource "assets/sounds/#{sound}.wav", "stream"
       \setVolume volume
-      \setLooping loop
+      \setLooping true
       \setPosition (pos/100)\unpack!, 0 if pos
       \play!
 
